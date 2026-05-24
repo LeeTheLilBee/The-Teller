@@ -226,3 +226,33 @@
     display: grid;
   }
 }
+
+@media (max-width: 900px) {
+  .drawer-action-zone {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .selected-intent-footer {
+    display: grid;
+  }
+}
+
+@media (max-width: 980px) {
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .note-entry {
+    display: grid;
+  }
+}
+
+@media (max-width: 640px) {
+  .stepup-input-row {
+    display: grid;
+  }
+}

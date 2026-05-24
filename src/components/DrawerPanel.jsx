@@ -12,6 +12,19 @@ import PayGuardPanel from "./PayGuardPanel.jsx";
 import PayGuardDetailGrid from "./PayGuardDetailGrid.jsx";
 import PaySkyPanel from "./PaySkyPanel.jsx";
 import PayCalendarPanel from "./PayCalendarPanel.jsx";
+import ActionBar from "./ActionBar.jsx";
+import IntentStatus from "./IntentStatus.jsx";
+import SelectedIntentPanel from "./SelectedIntentPanel.jsx";
+import RecentIntents from "./RecentIntents.jsx";
+import NotesPanel from "./NotesPanel.jsx";
+import ActivityTimeline from "./ActivityTimeline.jsx";
+import ApprovalCenterPanel from "./ApprovalCenterPanel.jsx";
+import DocumentRequestPanel from "./DocumentRequestPanel.jsx";
+import ProofSealPanel from "./ProofSealPanel.jsx";
+import StepUpFlowPanel from "./StepUpFlowPanel.jsx";
+import CompanyScopePanel from "./CompanyScopePanel.jsx";
+import RoleSafetyPanel from "./RoleSafetyPanel.jsx";
+import BatchSummaryPanel from "./BatchSummaryPanel.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -33,8 +46,29 @@ export default function DrawerPanel({
   payGuardSummary,
   paySkySummary,
   calendarSummary,
+  workflowIntents,
+  onWorkflowAction,
+  localNotes,
+  noteDraft,
+  setNoteDraft,
+  onAddNote,
+  activityTimeline,
+  approvalSummary,
+  documentRequestSummary,
+  sealWorkflowSummary,
+  stepUpFlowSummary,
+  stepUpReason,
+  setStepUpReason,
+  onCreateStepUp,
+  latestStepUp,
+  companyScopeSummary,
+  setActiveEntity,
+  roleSafetySummary,
+  allRoleCards,
+  batchSummary,
 }) {
   const modelCards = modelSummaries?.[activeDrawer] || [];
+  const latestIntent = workflowIntents?.[0] || null;
 
   return (
     <section className="drawer-card">
@@ -54,10 +88,35 @@ export default function DrawerPanel({
         </div>
       </div>
 
+      <div className="drawer-action-zone">
+        <ActionBar drawerKey={activeDrawer} onAction={onWorkflowAction} />
+        <IntentStatus latestIntent={latestIntent} />
+      </div>
+
+      <CompanyScopePanel summary={companyScopeSummary} activeEntity={entity.key} setActiveEntity={setActiveEntity} />
+      <RoleSafetyPanel summary={roleSafetySummary} allRoleCards={allRoleCards} />
+      <BatchSummaryPanel summary={batchSummary} />
+      <SelectedIntentPanel latestIntent={latestIntent} intentCount={workflowIntents?.length || 0} />
+      <RecentIntents intents={workflowIntents} />
+      <div className="support-grid">
+        <NotesPanel notes={localNotes} noteDraft={noteDraft} setNoteDraft={setNoteDraft} onAddNote={onAddNote} entity={entity} />
+        <ActivityTimeline items={activityTimeline} />
+      </div>
+
       <motion.div key={activeDrawer} className="drawer-content" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
 
         {activeDrawer === "workerLanes" && (
           <PayOnboardPanel summary={payOnboardSummary} entity={entity} />
+        )}
+
+
+
+        {activeDrawer === "docs" && (
+          <DocumentRequestPanel summary={documentRequestSummary} entity={entity} />
+        )}
+
+        {activeDrawer === "approvals" && (
+          <ApprovalCenterPanel summary={approvalSummary} entity={entity} />
         )}
 
         {activeDrawer === "payRun" && (
@@ -76,15 +135,32 @@ export default function DrawerPanel({
         )}
 
         {activeDrawer === "stepUp" && (
-          <PayGuardDetailGrid title={`${entity.label} step-up requests`} cards={payGuardSummary.stepUpCards} />
+          <StepUpFlowPanel
+            summary={stepUpFlowSummary}
+            entity={entity}
+            stepUpReason={stepUpReason}
+            setStepUpReason={setStepUpReason}
+            onCreateStepUp={onCreateStepUp}
+            latestStepUp={latestStepUp}
+          />
         )}
 
         {activeDrawer === "redaction" && (
-          <PayGuardDetailGrid title={`${entity.label} redaction rules`} cards={payGuardSummary.redactionCards} />
+          <StepUpFlowPanel
+            summary={stepUpFlowSummary}
+            entity={entity}
+            stepUpReason={stepUpReason}
+            setStepUpReason={setStepUpReason}
+            onCreateStepUp={onCreateStepUp}
+            latestStepUp={latestStepUp}
+          />
         )}
 
         {activeDrawer === "proof" && (
-          <PayProofPanel summary={payProofSummary} entity={entity} />
+          <>
+            <PayProofPanel summary={payProofSummary} entity={entity} />
+            <ProofSealPanel summary={sealWorkflowSummary} entity={entity} />
+          </>
         )}
 
         {activeDrawer === "docs" && (
@@ -184,7 +260,7 @@ export default function DrawerPanel({
 
         {activeDrawer === "audit" && entity.key === "world" && <DevChecks checks={devChecks} />}
 
-        {!["rollup", "workerLanes", "payRun", "exceptions", "cashFlow", "restricted", "proof", "docs", "foundationDocs", "doors", "stepUp", "redaction", "calendar"].includes(activeDrawer) && modelCards.length > 0 &&
+        {!["rollup", "workerLanes", "payRun", "exceptions", "approvals", "cashFlow", "restricted", "proof", "docs", "foundationDocs", "doors", "stepUp", "redaction", "calendar"].includes(activeDrawer) && modelCards.length > 0 &&
           modelCards.map((item) => (
             <div className="info-tile" key={`${activeDrawer}-${item.title}`}>
               <strong>{item.title}</strong>
@@ -193,7 +269,7 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {!["rollup", "workerLanes", "payRun", "exceptions", "cashFlow", "restricted", "proof", "docs", "foundationDocs", "doors", "stepUp", "redaction", "calendar"].includes(activeDrawer) && modelCards.length === 0 &&
+        {!["rollup", "workerLanes", "payRun", "exceptions", "approvals", "cashFlow", "restricted", "proof", "docs", "foundationDocs", "doors", "stepUp", "redaction", "calendar"].includes(activeDrawer) && modelCards.length === 0 &&
           simpleDrawerContent[activeDrawer]?.map((item) => (
             <div className="info-tile" key={item}>
               <strong>{item}</strong>

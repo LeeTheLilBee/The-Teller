@@ -1,0 +1,49 @@
+import { formatIntentTime } from "../lib/workflowIntents.js";
+
+export default function SelectedIntentPanel({ latestIntent, intentCount }) {
+  if (!latestIntent) {
+    return (
+      <section className="selected-intent-panel empty">
+        <div>
+          <p className="eyebrow">Action Preview</p>
+          <h2>No workflow action selected yet.</h2>
+          <p>Choose an action above to preview the safe mock workflow intent before we wire real backend actions.</p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="selected-intent-panel">
+      <div className="selected-intent-main">
+        <p className="eyebrow">Selected Workflow Intent</p>
+        <h2>{latestIntent.actionLabel}</h2>
+        <p>{latestIntent.detail}</p>
+      </div>
+
+      <div className="selected-intent-grid">
+        <div>
+          <span>Company</span>
+          <strong>{latestIntent.entityLabel}</strong>
+        </div>
+        <div>
+          <span>Drawer</span>
+          <strong>{latestIntent.drawer}</strong>
+        </div>
+        <div>
+          <span>Record</span>
+          <strong>{latestIntent.recordTitle}</strong>
+        </div>
+        <div>
+          <span>Captured</span>
+          <strong>{formatIntentTime(latestIntent.createdAt)}</strong>
+        </div>
+      </div>
+
+      <div className="selected-intent-footer">
+        <span>{intentCount} recent mock intent(s) held in local UI state</span>
+        <strong>{latestIntent.status}</strong>
+      </div>
+    </section>
+  );
+}

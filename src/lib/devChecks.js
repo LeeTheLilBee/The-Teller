@@ -4,6 +4,8 @@ import { payrollExceptions, payrollRuns, fundingSources } from "../data/payrollS
 import { reserveBuckets, restrictedFunds, cashMovementRules, moneyMovements } from "../data/payFlowSeed.js";
 import { exportRequests, proofRequirements, sealedPacketRules } from "../data/payProofSeed.js";
 import { securityDoors, stepUpRequests, redactionRules, deniedActions, revealRequests } from "../data/payGuardSeed.js";
+import { documentRequests } from "../data/documentRequestsSeed.js";
+import { proofPackets } from "../data/proofSeed.js";
 import { calendarItems } from "../data/tellerSeed.js";
 import {
   assignedEntityKeys,
@@ -54,6 +56,9 @@ export function runDevChecks() {
     { name: "Denied actions are entity-scoped", pass: deniedActions.every((item) => entityKeys.includes(item.entityKey) && item.reason && item.status) },
     { name: "Reveal requests are entity-scoped", pass: revealRequests.every((item) => entityKeys.includes(item.entityKey) && item.sensitivity && item.status) },
     { name: "Calendar items have labels and dates", pass: calendarItems.every((item) => item.label && item.date && item.scope) },
+    { name: "Document requests are entity-scoped", pass: documentRequests.every((item) => entityKeys.includes(item.entityKey) && item.requestType && item.status) },
+    { name: "Proof packets have receipt counts", pass: proofPackets.every((item) => entityKeys.includes(item.entityKey) && typeof item.receiptCount === "number") },
+    { name: "Step-up requests requiring reasons declare reasonRequired", pass: stepUpRequests.every((item) => typeof item.reasonRequired === "boolean") },
   ];
 }
 

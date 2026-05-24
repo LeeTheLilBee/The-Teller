@@ -1,0 +1,38 @@
+export const activitySeed = [
+  {
+    id: "activity-001",
+    entityKey: "pay",
+    title: "Payroll export review opened",
+    source: "PayGuard",
+    detail: "Sensitive payroll export requires owner step-up before release.",
+    timestampLabel: "Today",
+    tone: "guarded",
+  },
+  {
+    id: "activity-002",
+    entityKey: "skincare",
+    title: "Creator invoice moved to review",
+    source: "PayRun",
+    detail: "Manager approval is needed before the creator payout can move.",
+    timestampLabel: "Today",
+    tone: "watch",
+  },
+  {
+    id: "activity-003",
+    entityKey: "onthego",
+    title: "Route worker clearance blocked",
+    source: "PayOnboard",
+    detail: "Cash-handling acknowledgment is missing before route work clears.",
+    timestampLabel: "Today",
+    tone: "blocked",
+  },
+  {
+    id: "activity-004",
+    entityKey: "safehaven",
+    title: "Aid packet opened in redacted mode",
+    source: "PayProof",
+    detail: "Recipient-sensitive records remained redacted by default.",
+    timestampLabel: "Today",
+    tone: "guarded",
+  },
+];

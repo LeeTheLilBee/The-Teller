@@ -1,4 +1,6 @@
-export default function TopBar({ room, entity, role, entities, activeEntity, setActiveEntity }) {
+import SaveStatus from "./SaveStatus.jsx";
+
+export default function TopBar({ room, role, entities, activeEntity, setActiveEntity, saveStatus }) {
   return (
     <header className="top-bar">
       <div>
@@ -10,23 +12,27 @@ export default function TopBar({ room, entity, role, entities, activeEntity, set
         <p className="description">{room.copy}</p>
       </div>
 
-      <div className="context-grid">
-        <label>
-          <small>Current Company</small>
-          <select value={activeEntity} onChange={(event) => setActiveEntity(event.target.value)}>
-            {entities.map((item) => (
-              <option key={item.key} value={item.key}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
+      <div className="context-stack">
+        <div className="context-grid">
+          <label>
+            <small>Current Company</small>
+            <select value={activeEntity} onChange={(event) => setActiveEntity(event.target.value)}>
+              {entities.map((item) => (
+                <option key={item.key} value={item.key}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        <div className="context-card">
-          <small>Current PayRole</small>
-          <strong>{role.label}</strong>
-          <span>{role.scope}</span>
+          <div className="context-card">
+            <small>Current PayRole</small>
+            <strong>{role.label}</strong>
+            <span>{role.scope}</span>
+          </div>
         </div>
+
+        <SaveStatus saveStatus={saveStatus} />
       </div>
     </header>
   );

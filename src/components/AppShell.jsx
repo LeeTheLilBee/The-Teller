@@ -7,6 +7,8 @@ import {
   givingPrograms,
   worldRollup,
 } from "../data/tellerSeed.js";
+import { useAutoSave } from "../lib/autoSave.js";
+import { runDevChecks } from "../lib/devChecks.js";
 import {
   getNextAllowedEntityKey,
   getVisibleEntities,
@@ -14,6 +16,7 @@ import {
   resolveEntity,
   resolveRole,
 } from "../lib/permissions.js";
+import { buildModelSummaries } from "../lib/recordFilters.js";
 import { buildMetricRows, buildPriorities, getSnapshot } from "../lib/snapshotHelpers.js";
 import DrawerPanel from "./DrawerPanel.jsx";
 import FocusSnapshot from "./FocusSnapshot.jsx";
@@ -24,6 +27,7 @@ import TopBar from "./TopBar.jsx";
 export default function AppShell() {
   const visibleEntities = useMemo(() => getVisibleEntities(), []);
   const visibleRoles = useMemo(() => getVisibleRoles(), []);
+  const devChecks = useMemo(() => runDevChecks(), []);
 
   const [activeRoom, setActiveRoom] = useState("command");
   const [activeEntity, setActiveEntity] = useState("world");
@@ -37,6 +41,20 @@ export default function AppShell() {
   const snapshot = getSnapshot(entity.key);
   const metricRows = buildMetricRows(profile, snapshot);
   const priorities = buildPriorities(profile, snapshot, role);
+  const modelSummaries = useMemo(() => buildModelSummaries(entity.key), [entity.key]);
+
+  const saveStatus = useAutoSave(
+    {
+      activeRoom,
+      activeEntity,
+      activeRole,
+      activeDrawer,
+    },
+    {
+      storageKey: "the-teller-ui-state",
+      intervalMs: 15000,
+    }
+  );
 
   const filteredDebt = entity.key === "world" ? debtCatalog : debtCatalog.filter((item) => item.entityKey === entity.key);
   const filteredGiving = entity.key === "world" ? givingPrograms : givingPrograms.filter((item) => item.entityKey === entity.key);
@@ -72,11 +90,11 @@ export default function AppShell() {
         <main className="main-area">
           <TopBar
             room={room}
-            entity={entity}
             role={role}
             entities={visibleEntities}
             activeEntity={activeEntity}
             setActiveEntity={setActiveEntity}
+            saveStatus={saveStatus}
           />
 
           <section className="hero-grid">
@@ -95,6 +113,8 @@ export default function AppShell() {
             filteredGiving={filteredGiving}
             foundationDocs={foundationDocs}
             showFoundationDocs={showFoundationDocs}
+            devChecks={devChecks}
+            modelSummaries={modelSummaries}
           />
         </main>
       </div>

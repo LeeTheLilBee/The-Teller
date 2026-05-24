@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { calendarItems } from "../data/tellerSeed.js";
 import { simpleDrawerContent } from "../config/drawerProfiles.js";
+import DevChecks from "./DevChecks.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -13,7 +14,11 @@ export default function DrawerPanel({
   filteredGiving,
   foundationDocs,
   showFoundationDocs,
+  devChecks,
+  modelSummaries,
 }) {
+  const modelCards = modelSummaries?.[activeDrawer] || [];
+
   return (
     <section className="drawer-card">
       <div className="drawer-header">
@@ -96,12 +101,24 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {simpleDrawerContent[activeDrawer]?.map((item) => (
-          <div className="info-tile" key={item}>
-            <strong>{item}</strong>
-            <small>Scoped to {entity.label}</small>
-          </div>
-        ))}
+        {activeDrawer === "audit" && entity.key === "world" && <DevChecks checks={devChecks} />}
+
+        {modelCards.length > 0 &&
+          modelCards.map((item) => (
+            <div className="info-tile" key={`${activeDrawer}-${item.title}`}>
+              <strong>{item.title}</strong>
+              <small>{item.detail}</small>
+              {item.meta && <div className="tile-note">{item.meta}</div>}
+            </div>
+          ))}
+
+        {modelCards.length === 0 &&
+          simpleDrawerContent[activeDrawer]?.map((item) => (
+            <div className="info-tile" key={item}>
+              <strong>{item}</strong>
+              <small>Scoped to {entity.label}</small>
+            </div>
+          ))}
       </motion.div>
     </section>
   );

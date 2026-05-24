@@ -295,3 +295,115 @@
   font-weight: 900;
   color: inherit;
 }
+
+.context-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.save-strip {
+  display: grid;
+  gap: 4px;
+  padding: 11px 13px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 18px;
+  background: rgba(255, 248, 238, 0.9);
+  color: #5a2f22;
+}
+
+.save-strip span {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7b4a32;
+}
+
+.save-strip strong {
+  font-size: 13px;
+  color: #1b100c;
+}
+
+.save-strip small {
+  color: #5a2f22;
+}
+
+.save-strip.error {
+  border-color: rgba(123, 40, 20, 0.45);
+  background: rgba(255, 226, 197, 0.95);
+}
+
+.dev-check-card {
+  grid-column: 1 / -1;
+  padding: 18px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 22px;
+  background: #fff8ee;
+}
+
+.dev-check-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.dev-check-header h2 {
+  margin: 4px 0 0;
+  color: #1b100c;
+}
+
+.health-pill {
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.health-pill.healthy {
+  background: #d6a15f;
+  color: #1b100c;
+}
+
+.health-pill.warning {
+  background: #5a2f22;
+  color: #fff1df;
+}
+
+.dev-check-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.check-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.check-row.pass {
+  background: rgba(214, 161, 95, 0.24);
+  color: #2a1811;
+}
+
+.check-row.fail {
+  background: #2a1811;
+  color: #fff1df;
+}
+
+.tile-note {
+  margin-top: 12px;
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: rgba(246, 212, 182, 0.68);
+  color: #5a2f22;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}

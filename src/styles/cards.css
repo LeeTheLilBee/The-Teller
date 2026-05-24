@@ -514,3 +514,24 @@
   font-weight: 900;
   line-height: 1.35;
 }
+
+.payflow-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.mini-stack {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.flat-content {
+  grid-column: 1 / -1;
+}
+
+.dark-note {
+  background: rgba(214, 161, 95, 0.18);
+  color: #f6d4b6;
+}

@@ -4,6 +4,8 @@ import { simpleDrawerContent } from "../config/drawerProfiles.js";
 import DevChecks from "./DevChecks.jsx";
 import PayOnboardPanel from "./PayOnboardPanel.jsx";
 import PayRunPanel from "./PayRunPanel.jsx";
+import PayFlowPanel from "./PayFlowPanel.jsx";
+import RestrictedFundsPanel from "./RestrictedFundsPanel.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -20,6 +22,7 @@ export default function DrawerPanel({
   modelSummaries,
   payOnboardSummary,
   payRunSummary,
+  payFlowSummary,
 }) {
   const modelCards = modelSummaries?.[activeDrawer] || [];
 
@@ -50,6 +53,15 @@ export default function DrawerPanel({
         {activeDrawer === "payRun" && (
           <PayRunPanel summary={payRunSummary} entity={entity} />
         )}
+
+        {activeDrawer === "cashFlow" && (
+          <PayFlowPanel summary={payFlowSummary} entity={entity} />
+        )}
+
+        {activeDrawer === "restricted" && (
+          <RestrictedFundsPanel summary={payFlowSummary} entity={entity} />
+        )}
+
 
         {activeDrawer === "exceptions" &&
           payRunSummary.exceptionCards.map((item) => (
@@ -126,7 +138,7 @@ export default function DrawerPanel({
 
         {activeDrawer === "audit" && entity.key === "world" && <DevChecks checks={devChecks} />}
 
-        {!["workerLanes", "payRun", "exceptions"].includes(activeDrawer) && modelCards.length > 0 &&
+        {!["workerLanes", "payRun", "exceptions", "cashFlow", "restricted"].includes(activeDrawer) && modelCards.length > 0 &&
           modelCards.map((item) => (
             <div className="info-tile" key={`${activeDrawer}-${item.title}`}>
               <strong>{item.title}</strong>
@@ -135,7 +147,7 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {!["workerLanes", "payRun", "exceptions"].includes(activeDrawer) && modelCards.length === 0 &&
+        {!["workerLanes", "payRun", "exceptions", "cashFlow", "restricted"].includes(activeDrawer) && modelCards.length === 0 &&
           simpleDrawerContent[activeDrawer]?.map((item) => (
             <div className="info-tile" key={item}>
               <strong>{item}</strong>

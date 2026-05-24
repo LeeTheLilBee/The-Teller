@@ -214,3 +214,9 @@
     display: grid;
   }
 }
+
+@media (max-width: 900px) {
+  .payflow-split {
+    grid-template-columns: 1fr;
+  }
+}

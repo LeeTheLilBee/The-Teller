@@ -1,6 +1,7 @@
 import { profiles, simpleDrawerContent } from "../config/drawerProfiles.js";
 import { rooms } from "../config/rooms.js";
 import { payrollExceptions, payrollRuns, fundingSources } from "../data/payrollSeed.js";
+import { reserveBuckets, restrictedFunds, cashMovementRules, moneyMovements } from "../data/payFlowSeed.js";
 import {
   assignedEntityKeys,
   assignedRoleKeys,
@@ -81,6 +82,22 @@ export function runDevChecks() {
     {
       name: "Funding sources are entity-scoped",
       pass: fundingSources.every((item) => entityKeys.includes(item.entityKey) && item.maskedAccount),
+    },
+    {
+      name: "Reserve buckets are entity-scoped",
+      pass: reserveBuckets.every((item) => entityKeys.includes(item.entityKey) && item.current && item.target),
+    },
+    {
+      name: "Restricted funds stay in foundation lane",
+      pass: restrictedFunds.every((item) => item.entityKey === "safehaven" && item.amount && item.status),
+    },
+    {
+      name: "Cash movement rules are entity-scoped",
+      pass: cashMovementRules.every((item) => entityKeys.includes(item.entityKey) && item.ruleType && item.status),
+    },
+    {
+      name: "Money movements are entity-scoped",
+      pass: moneyMovements.every((item) => entityKeys.includes(item.entityKey) && item.amount && item.status),
     },
   ];
 }

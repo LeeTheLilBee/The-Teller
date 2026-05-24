@@ -6,6 +6,12 @@ import PayOnboardPanel from "./PayOnboardPanel.jsx";
 import PayRunPanel from "./PayRunPanel.jsx";
 import PayFlowPanel from "./PayFlowPanel.jsx";
 import RestrictedFundsPanel from "./RestrictedFundsPanel.jsx";
+import PayProofPanel from "./PayProofPanel.jsx";
+import PayProofDetailGrid from "./PayProofDetailGrid.jsx";
+import PayGuardPanel from "./PayGuardPanel.jsx";
+import PayGuardDetailGrid from "./PayGuardDetailGrid.jsx";
+import PaySkyPanel from "./PaySkyPanel.jsx";
+import PayCalendarPanel from "./PayCalendarPanel.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -23,6 +29,10 @@ export default function DrawerPanel({
   payOnboardSummary,
   payRunSummary,
   payFlowSummary,
+  payProofSummary,
+  payGuardSummary,
+  paySkySummary,
+  calendarSummary,
 }) {
   const modelCards = modelSummaries?.[activeDrawer] || [];
 
@@ -54,6 +64,37 @@ export default function DrawerPanel({
           <PayRunPanel summary={payRunSummary} entity={entity} />
         )}
 
+
+
+
+        {activeDrawer === "calendar" && (
+          <PayCalendarPanel summary={calendarSummary} entity={entity} />
+        )}
+
+        {activeDrawer === "doors" && (
+          <PayGuardPanel summary={payGuardSummary} entity={entity} />
+        )}
+
+        {activeDrawer === "stepUp" && (
+          <PayGuardDetailGrid title={`${entity.label} step-up requests`} cards={payGuardSummary.stepUpCards} />
+        )}
+
+        {activeDrawer === "redaction" && (
+          <PayGuardDetailGrid title={`${entity.label} redaction rules`} cards={payGuardSummary.redactionCards} />
+        )}
+
+        {activeDrawer === "proof" && (
+          <PayProofPanel summary={payProofSummary} entity={entity} />
+        )}
+
+        {activeDrawer === "docs" && (
+          <PayProofDetailGrid title={`${entity.label} document proof`} cards={payProofSummary.documentCards} />
+        )}
+
+        {activeDrawer === "foundationDocs" && (
+          <PayProofDetailGrid title={`${entity.label} foundation documents`} cards={payProofSummary.foundationCards} dark />
+        )}
+
         {activeDrawer === "cashFlow" && (
           <PayFlowPanel summary={payFlowSummary} entity={entity} />
         )}
@@ -73,7 +114,12 @@ export default function DrawerPanel({
           ))}
 
 
-        {activeDrawer === "rollup" &&
+
+        {activeDrawer === "rollup" && (
+          <PaySkyPanel summary={paySkySummary} entity={entity} />
+        )}
+
+        {false && activeDrawer === "rollup" &&
           (entity.key === "world"
             ? worldRollup
             : [{ key: entity.key, label: entity.label, kind: entity.type, cash: snapshot.balance, pay: snapshot.payrollDue, debt: snapshot.debt }]
@@ -125,7 +171,7 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {activeDrawer === "calendar" &&
+        {false && activeDrawer === "calendar" &&
           calendarItems.map((item) => (
             <div className="dark-tile" key={`${item.label}-${item.date}`}>
               <strong>{item.label}</strong>
@@ -138,7 +184,7 @@ export default function DrawerPanel({
 
         {activeDrawer === "audit" && entity.key === "world" && <DevChecks checks={devChecks} />}
 
-        {!["workerLanes", "payRun", "exceptions", "cashFlow", "restricted"].includes(activeDrawer) && modelCards.length > 0 &&
+        {!["rollup", "workerLanes", "payRun", "exceptions", "cashFlow", "restricted", "proof", "docs", "foundationDocs", "doors", "stepUp", "redaction", "calendar"].includes(activeDrawer) && modelCards.length > 0 &&
           modelCards.map((item) => (
             <div className="info-tile" key={`${activeDrawer}-${item.title}`}>
               <strong>{item.title}</strong>
@@ -147,7 +193,7 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {!["workerLanes", "payRun", "exceptions", "cashFlow", "restricted"].includes(activeDrawer) && modelCards.length === 0 &&
+        {!["rollup", "workerLanes", "payRun", "exceptions", "cashFlow", "restricted", "proof", "docs", "foundationDocs", "doors", "stepUp", "redaction", "calendar"].includes(activeDrawer) && modelCards.length === 0 &&
           simpleDrawerContent[activeDrawer]?.map((item) => (
             <div className="info-tile" key={item}>
               <strong>{item}</strong>

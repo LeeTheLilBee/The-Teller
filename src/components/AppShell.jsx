@@ -11,6 +11,8 @@ import { useAutoSave } from "../lib/autoSave.js";
 import { getPayOnboardSummary } from "../lib/payOnboard.js";
 import { getPayRunSummary } from "../lib/payRun.js";
 import { getPayFlowSummary } from "../lib/payFlow.js";
+import { getPayProofSummary } from "../lib/payProof.js";
+import { getPayGuardSummary } from "../lib/payGuard.js";
 import { runDevChecks } from "../lib/devChecks.js";
 import {
   getNextAllowedEntityKey,
@@ -21,10 +23,12 @@ import {
 } from "../lib/permissions.js";
 import { buildModelSummaries } from "../lib/recordFilters.js";
 import { buildMetricRows, buildPriorities, getSnapshot } from "../lib/snapshotHelpers.js";
+import { getSystemStatus } from "../lib/systemStatus.js";
 import DrawerPanel from "./DrawerPanel.jsx";
 import FocusSnapshot from "./FocusSnapshot.jsx";
 import PriorityQueue from "./PriorityQueue.jsx";
 import SideRail from "./SideRail.jsx";
+import SystemStatusStrip from "./SystemStatusStrip.jsx";
 import TopBar from "./TopBar.jsx";
 
 export default function AppShell() {
@@ -44,10 +48,14 @@ export default function AppShell() {
   const snapshot = getSnapshot(entity.key);
   const metricRows = buildMetricRows(profile, snapshot);
   const priorities = buildPriorities(profile, snapshot, role);
+  const paySkySummary = useMemo(() => getPaySkySummary(entity.key, snapshot), [entity.key, snapshot]);
+  const calendarSummary = useMemo(() => getCalendarSummary(entity.key), [entity.key]);
   const modelSummaries = useMemo(() => buildModelSummaries(entity.key), [entity.key]);
   const payOnboardSummary = useMemo(() => getPayOnboardSummary(entity.key), [entity.key]);
   const payRunSummary = useMemo(() => getPayRunSummary(entity.key), [entity.key]);
   const payFlowSummary = useMemo(() => getPayFlowSummary(entity.key), [entity.key]);
+  const payProofSummary = useMemo(() => getPayProofSummary(entity.key), [entity.key]);
+  const payGuardSummary = useMemo(() => getPayGuardSummary(entity.key), [entity.key]);
 
   const saveStatus = useAutoSave(
     {
@@ -61,6 +69,8 @@ export default function AppShell() {
       intervalMs: 15000,
     }
   );
+
+  const systemStatus = useMemo(() => getSystemStatus(devChecks, saveStatus), [devChecks, saveStatus]);
 
   const filteredDebt = entity.key === "world" ? debtCatalog : debtCatalog.filter((item) => item.entityKey === entity.key);
   const filteredGiving = entity.key === "world" ? givingPrograms : givingPrograms.filter((item) => item.entityKey === entity.key);
@@ -103,6 +113,8 @@ export default function AppShell() {
             saveStatus={saveStatus}
           />
 
+          <SystemStatusStrip status={systemStatus} />
+
           <section className="hero-grid">
             <FocusSnapshot room={room} profile={profile} entity={entity} snapshot={snapshot} metricRows={metricRows} />
             <PriorityQueue priorities={priorities} />
@@ -124,6 +136,10 @@ export default function AppShell() {
             payOnboardSummary={payOnboardSummary}
             payRunSummary={payRunSummary}
             payFlowSummary={payFlowSummary}
+            payProofSummary={payProofSummary}
+            payGuardSummary={payGuardSummary}
+            paySkySummary={paySkySummary}
+            calendarSummary={calendarSummary}
           />
         </main>
       </div>

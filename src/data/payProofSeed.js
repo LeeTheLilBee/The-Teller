@@ -1,0 +1,95 @@
+export const exportRequests = [
+  {
+    id: "export-001",
+    entityKey: "pay",
+    title: "Sensitive payroll export",
+    exportType: "Payroll report",
+    status: "Needs owner review",
+    riskLevel: "High",
+    redactionStatus: "Redaction required",
+    nextAction: "Owner step-up required before export release.",
+  },
+  {
+    id: "export-002",
+    entityKey: "skincare",
+    title: "Creator payout proof export",
+    exportType: "Giving + invoice proof",
+    status: "Review",
+    riskLevel: "Medium",
+    redactionStatus: "Ready with limited fields",
+    nextAction: "Attach creator invoice approval before release.",
+  },
+  {
+    id: "export-003",
+    entityKey: "safehaven",
+    title: "Foundation aid packet export",
+    exportType: "Foundation proof packet",
+    status: "Protected",
+    riskLevel: "Recipient-sensitive",
+    redactionStatus: "Redacted by default",
+    nextAction: "Only approved foundation lane can reveal details.",
+  },
+];
+
+export const proofRequirements = [
+  {
+    id: "proofreq-001",
+    entityKey: "pay",
+    title: "Payroll release proof",
+    requirementType: "Payroll",
+    status: "Draft",
+    requiredItems: ["Payroll run", "Approval receipt", "Funding check", "Final seal"],
+    nextAction: "Seal after owner approval.",
+  },
+  {
+    id: "proofreq-002",
+    entityKey: "skincare",
+    title: "Skin Relief Butter Drops proof",
+    requirementType: "Giving",
+    status: "Open",
+    requiredItems: ["Recipient list", "Product value", "Donation note", "Photo/receipt proof"],
+    nextAction: "Attach product donation proof.",
+  },
+  {
+    id: "proofreq-003",
+    entityKey: "onthego",
+    title: "Route worker clearance proof",
+    requirementType: "Worker clearance",
+    status: "Blocked",
+    requiredItems: ["Worker acknowledgment", "Manager review", "Owner clearance"],
+    nextAction: "Resolve cash-handling acknowledgment.",
+  },
+  {
+    id: "proofreq-004",
+    entityKey: "safehaven",
+    title: "Foundation aid proof",
+    requirementType: "Foundation aid",
+    status: "Protected",
+    requiredItems: ["Aid request", "Eligibility review", "Decision receipt", "Redacted packet"],
+    nextAction: "Keep recipient-sensitive fields redacted.",
+  },
+];
+
+export const sealedPacketRules = [
+  {
+    id: "sealrule-001",
+    entityKey: "pay",
+    title: "Payroll packets seal after approval",
+    status: "Active",
+    detail: "A payroll proof packet cannot seal until funding and approval records are attached.",
+  },
+  {
+    id: "sealrule-002",
+    entityKey: "skincare",
+    title: "Giving proof requires source record",
+    status: "Active",
+    detail: "Business giving must attach product, service, invoice, or donation support.",
+  },
+  {
+    id: "sealrule-003",
+    entityKey: "safehaven",
+    title: "Foundation packets redact first",
+    status: "Locked",
+    detail: "Recipient-sensitive records remain redacted unless approved clearance opens them.",
+  },
+];

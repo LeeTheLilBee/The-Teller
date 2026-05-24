@@ -196,3 +196,21 @@
     font-size: 30px;
   }
 }
+
+@media (max-width: 900px) {
+  .workflow-header {
+    display: grid;
+  }
+
+  .workflow-stats {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .workflow-meta,
+  .workflow-steps,
+  .workflow-stats {
+    display: grid;
+  }
+}

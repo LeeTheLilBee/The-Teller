@@ -8,6 +8,7 @@ import {
   worldRollup,
 } from "../data/tellerSeed.js";
 import { useAutoSave } from "../lib/autoSave.js";
+import { getPayOnboardSummary } from "../lib/payOnboard.js";
 import { runDevChecks } from "../lib/devChecks.js";
 import {
   getNextAllowedEntityKey,
@@ -42,6 +43,7 @@ export default function AppShell() {
   const metricRows = buildMetricRows(profile, snapshot);
   const priorities = buildPriorities(profile, snapshot, role);
   const modelSummaries = useMemo(() => buildModelSummaries(entity.key), [entity.key]);
+  const payOnboardSummary = useMemo(() => getPayOnboardSummary(entity.key), [entity.key]);
 
   const saveStatus = useAutoSave(
     {
@@ -115,6 +117,7 @@ export default function AppShell() {
             showFoundationDocs={showFoundationDocs}
             devChecks={devChecks}
             modelSummaries={modelSummaries}
+            payOnboardSummary={payOnboardSummary}
           />
         </main>
       </div>

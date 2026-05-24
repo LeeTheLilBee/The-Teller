@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { calendarItems } from "../data/tellerSeed.js";
 import { simpleDrawerContent } from "../config/drawerProfiles.js";
 import DevChecks from "./DevChecks.jsx";
+import PayOnboardPanel from "./PayOnboardPanel.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -16,6 +17,7 @@ export default function DrawerPanel({
   showFoundationDocs,
   devChecks,
   modelSummaries,
+  payOnboardSummary,
 }) {
   const modelCards = modelSummaries?.[activeDrawer] || [];
 
@@ -38,6 +40,11 @@ export default function DrawerPanel({
       </div>
 
       <motion.div key={activeDrawer} className="drawer-content" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+
+        {activeDrawer === "workerLanes" && (
+          <PayOnboardPanel summary={payOnboardSummary} entity={entity} />
+        )}
+
         {activeDrawer === "rollup" &&
           (entity.key === "world"
             ? worldRollup
@@ -103,7 +110,7 @@ export default function DrawerPanel({
 
         {activeDrawer === "audit" && entity.key === "world" && <DevChecks checks={devChecks} />}
 
-        {modelCards.length > 0 &&
+        {activeDrawer !== "workerLanes" && modelCards.length > 0 &&
           modelCards.map((item) => (
             <div className="info-tile" key={`${activeDrawer}-${item.title}`}>
               <strong>{item.title}</strong>
@@ -112,7 +119,7 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {modelCards.length === 0 &&
+        {activeDrawer !== "workerLanes" && modelCards.length === 0 &&
           simpleDrawerContent[activeDrawer]?.map((item) => (
             <div className="info-tile" key={item}>
               <strong>{item}</strong>

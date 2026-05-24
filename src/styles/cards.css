@@ -502,3 +502,15 @@
   font-size: 12px;
   font-weight: 900;
 }
+
+.workflow-alert {
+  margin-top: 2px;
+  padding: 10px 11px;
+  border: 1px solid rgba(90, 47, 34, 0.3);
+  border-radius: 14px;
+  background: rgba(42, 24, 17, 0.92);
+  color: #fff1df;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.35;
+}

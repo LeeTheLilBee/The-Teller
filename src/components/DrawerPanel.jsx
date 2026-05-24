@@ -3,6 +3,7 @@ import { calendarItems } from "../data/tellerSeed.js";
 import { simpleDrawerContent } from "../config/drawerProfiles.js";
 import DevChecks from "./DevChecks.jsx";
 import PayOnboardPanel from "./PayOnboardPanel.jsx";
+import PayRunPanel from "./PayRunPanel.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -18,6 +19,7 @@ export default function DrawerPanel({
   devChecks,
   modelSummaries,
   payOnboardSummary,
+  payRunSummary,
 }) {
   const modelCards = modelSummaries?.[activeDrawer] || [];
 
@@ -44,6 +46,20 @@ export default function DrawerPanel({
         {activeDrawer === "workerLanes" && (
           <PayOnboardPanel summary={payOnboardSummary} entity={entity} />
         )}
+
+        {activeDrawer === "payRun" && (
+          <PayRunPanel summary={payRunSummary} entity={entity} />
+        )}
+
+        {activeDrawer === "exceptions" &&
+          payRunSummary.exceptionCards.map((item) => (
+            <div className="info-tile" key={`${activeDrawer}-${item.title}`}>
+              <strong>{item.title}</strong>
+              <small>{item.detail}</small>
+              {item.meta && <div className="tile-note">{item.meta}</div>}
+            </div>
+          ))}
+
 
         {activeDrawer === "rollup" &&
           (entity.key === "world"
@@ -110,7 +126,7 @@ export default function DrawerPanel({
 
         {activeDrawer === "audit" && entity.key === "world" && <DevChecks checks={devChecks} />}
 
-        {activeDrawer !== "workerLanes" && modelCards.length > 0 &&
+        {!["workerLanes", "payRun", "exceptions"].includes(activeDrawer) && modelCards.length > 0 &&
           modelCards.map((item) => (
             <div className="info-tile" key={`${activeDrawer}-${item.title}`}>
               <strong>{item.title}</strong>
@@ -119,7 +135,7 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {activeDrawer !== "workerLanes" && modelCards.length === 0 &&
+        {!["workerLanes", "payRun", "exceptions"].includes(activeDrawer) && modelCards.length === 0 &&
           simpleDrawerContent[activeDrawer]?.map((item) => (
             <div className="info-tile" key={item}>
               <strong>{item}</strong>

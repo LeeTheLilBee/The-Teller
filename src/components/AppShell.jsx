@@ -9,6 +9,7 @@ import {
 } from "../data/tellerSeed.js";
 import { useAutoSave } from "../lib/autoSave.js";
 import { getPayOnboardSummary } from "../lib/payOnboard.js";
+import { getPayRunSummary } from "../lib/payRun.js";
 import { runDevChecks } from "../lib/devChecks.js";
 import {
   getNextAllowedEntityKey,
@@ -44,6 +45,7 @@ export default function AppShell() {
   const priorities = buildPriorities(profile, snapshot, role);
   const modelSummaries = useMemo(() => buildModelSummaries(entity.key), [entity.key]);
   const payOnboardSummary = useMemo(() => getPayOnboardSummary(entity.key), [entity.key]);
+  const payRunSummary = useMemo(() => getPayRunSummary(entity.key), [entity.key]);
 
   const saveStatus = useAutoSave(
     {
@@ -118,6 +120,7 @@ export default function AppShell() {
             devChecks={devChecks}
             modelSummaries={modelSummaries}
             payOnboardSummary={payOnboardSummary}
+            payRunSummary={payRunSummary}
           />
         </main>
       </div>

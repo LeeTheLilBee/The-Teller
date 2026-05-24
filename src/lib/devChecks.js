@@ -1,5 +1,6 @@
 import { profiles, simpleDrawerContent } from "../config/drawerProfiles.js";
 import { rooms } from "../config/rooms.js";
+import { payrollExceptions, payrollRuns, fundingSources } from "../data/payrollSeed.js";
 import {
   assignedEntityKeys,
   assignedRoleKeys,
@@ -68,6 +69,18 @@ export function runDevChecks() {
     {
       name: "Foundation documents stay scoped to protected records",
       pass: foundationDocs.every((item) => item.id && item.category && item.status),
+    },
+    {
+      name: "Payroll runs are entity-scoped",
+      pass: payrollRuns.every((item) => entityKeys.includes(item.entityKey) && item.grossPay && item.status),
+    },
+    {
+      name: "Payroll exceptions point to payroll runs",
+      pass: payrollExceptions.every((item) => payrollRuns.some((run) => run.id === item.payRunId)),
+    },
+    {
+      name: "Funding sources are entity-scoped",
+      pass: fundingSources.every((item) => entityKeys.includes(item.entityKey) && item.maskedAccount),
     },
   ];
 }

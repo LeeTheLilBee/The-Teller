@@ -1,3 +1,5 @@
+import { checkpointManifest } from "../data/checkpointManifest.js";
+import { checkpoint041Summary } from "../data/checkpoint041Summary.js";
 import { profiles, simpleDrawerContent } from "../config/drawerProfiles.js";
 import { rooms } from "../config/rooms.js";
 import { payrollExceptions, payrollRuns, fundingSources } from "../data/payrollSeed.js";
@@ -31,6 +33,7 @@ export function runDevChecks() {
   const profileDrawerKeys = Object.values(profiles).flatMap((profile) => profile.drawers.map(([key]) => key));
 
   return [
+    { name: "Checkpoint 041 summary is present", pass: checkpoint041Summary.checkpoint === "Pack 041" && checkpointManifest.checkpoint === "Pack 041" },
     { name: "Every room has a profile", pass: roomKeys.every((key) => Boolean(profiles[key])) },
     { name: "Every profile has at least four drawers", pass: Object.values(profiles).every((profile) => profile.drawers.length >= 4) },
     { name: "Every custom drawer has content", pass: profileDrawerKeys.every((key) => BUILT_IN_DRAWERS.includes(key) || Boolean(simpleDrawerContent[key])) },

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { profiles } from "../config/drawerProfiles.js";
 import { rooms } from "../config/rooms.js";
 import {
@@ -15,6 +15,7 @@ import { buildCalmModeSummary } from "../lib/calmMode.js";
 import { getCalendarSummary } from "../lib/payCalendar.js";
 import { getCompanyScopeSummary } from "../lib/companyScopeSummary.js";
 import { runDevChecks } from "../lib/devChecks.js";
+import { getDevHealthInspector } from "../lib/devHealthInspector.js";
 import { getDocumentRequestSummary } from "../lib/documentRequests.js";
 import { getDebtDetailSummary } from "../lib/debtDetails.js";
 import { getEmptyState } from "../lib/emptyStates.js";
@@ -43,16 +44,19 @@ import { getAllRoleCards, getRoleSafetySummary } from "../lib/roleSafety.js";
 import { createStepUpMockRequest, getStepUpFlowSummary } from "../lib/stepUpFlow.js";
 import { buildMetricRows, buildPriorities, getSnapshot } from "../lib/snapshotHelpers.js";
 import { getSystemStatus } from "../lib/systemStatus.js";
-import { getDensityClass, getFocusClass } from "../lib/uiPreferences.js";
+import { defaultUiPreferences, getDensityClass, getFocusClass, loadUiPreferences, saveUiPreferences } from "../lib/uiPreferences.js";
 import { createWorkflowIntent } from "../lib/workflowIntents.js";
 import { getWorkerDetailSummary } from "../lib/workerDetails.js";
 import DrawerPanel from "./DrawerPanel.jsx";
 import FocusSnapshot from "./FocusSnapshot.jsx";
 import PriorityQueue from "./PriorityQueue.jsx";
+import ResponsiveHint from "./ResponsiveHint.jsx";
+import SettingsPanel from "./SettingsPanel.jsx";
 import SideRail from "./SideRail.jsx";
 import SystemStatusStrip from "./SystemStatusStrip.jsx";
 import TopBar from "./TopBar.jsx";
 import UiControlPanel from "./UiControlPanel.jsx";
+import UiPreferenceStatus from "./UiPreferenceStatus.jsx";
 
 export default function AppShell() {
   const visibleEntities = useMemo(() => getVisibleEntities(), []);
@@ -60,6 +64,7 @@ export default function AppShell() {
   const devChecks = useMemo(() => runDevChecks(), []);
   const allRoleCards = useMemo(() => getAllRoleCards(), []);
   const batchSummary = useMemo(() => getBatchSummary(), []);
+  const initialUiPreferences = useMemo(() => loadUiPreferences(), []);
 
   const [activeRoom, setActiveRoom] = useState("command");
   const [activeEntity, setActiveEntity] = useState("world");
@@ -70,11 +75,12 @@ export default function AppShell() {
   const [noteDraft, setNoteDraft] = useState("");
   const [stepUpReason, setStepUpReason] = useState("");
   const [stepUpMocks, setStepUpMocks] = useState([]);
-  const [density, setDensity] = useState("balanced");
-  const [focusMode, setFocusMode] = useState(false);
-  const [utilitiesOpen, setUtilitiesOpen] = useState(true);
+  const [density, setDensity] = useState(initialUiPreferences.density);
+  const [focusMode, setFocusMode] = useState(initialUiPreferences.focusMode);
+  const [utilitiesOpen, setUtilitiesOpen] = useState(initialUiPreferences.utilitiesOpen);
   const [searchQuery, setSearchQuery] = useState("");
-  const [quickFilter, setQuickFilter] = useState("all");
+  const [quickFilter, setQuickFilter] = useState(initialUiPreferences.quickFilter);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const room = rooms.find((item) => item.key === activeRoom) || rooms[0];
   const profile = profiles[activeRoom] || profiles.command;
@@ -146,6 +152,36 @@ export default function AppShell() {
   );
 
   const systemStatus = useMemo(() => getSystemStatus(devChecks, saveStatus), [devChecks, saveStatus]);
+
+  const devHealth = useMemo(
+    () =>
+      getDevHealthInspector({
+        checks: devChecks,
+        systemStatus,
+        batchSummary,
+        saveStatus,
+      }),
+    [devChecks, systemStatus, batchSummary, saveStatus]
+  );
+
+
+
+  useEffect(() => {
+    saveUiPreferences({
+      density,
+      focusMode,
+      utilitiesOpen,
+      quickFilter,
+    });
+  }, [density, focusMode, utilitiesOpen, quickFilter]);
+
+  function resetUiPreferences() {
+    setDensity(defaultUiPreferences.density);
+    setFocusMode(defaultUiPreferences.focusMode);
+    setUtilitiesOpen(defaultUiPreferences.utilitiesOpen);
+    setQuickFilter(defaultUiPreferences.quickFilter);
+    setSearchQuery("");
+  }
 
   const appModeClass = `${getDensityClass(density)} ${getFocusClass(focusMode)}`;
 
@@ -224,16 +260,24 @@ export default function AppShell() {
             activeEntity={activeEntity}
             setActiveEntity={setActiveEntity}
             saveStatus={saveStatus}
+            settingsOpen={settingsOpen}
+            setSettingsOpen={setSettingsOpen}
           />
 
-          <UiControlPanel
+          <SettingsPanel
             density={density}
             setDensity={setDensity}
             focusMode={focusMode}
             setFocusMode={setFocusMode}
+            utilitiesOpen={utilitiesOpen}
+            quickFilter={quickFilter}
+            resetUiPreferences={resetUiPreferences}
+            systemStatus={systemStatus}
+            saveStatus={saveStatus}
+            devHealth={devHealth}
+            settingsOpen={settingsOpen}
           />
-
-          <SystemStatusStrip status={systemStatus} />
+<SystemStatusStrip status={systemStatus} />
 
           <section className="hero-grid">
             <FocusSnapshot room={room} profile={profile} entity={entity} snapshot={snapshot} metricRows={metricRows} />
@@ -290,6 +334,7 @@ export default function AppShell() {
             givingDetailSummary={givingDetailSummary}
             saveStatus={saveStatus}
             autoSaveRecoveryEnabled={true}
+            devHealth={devHealth}
             calmModeSummary={calmModeSummary}
             focusMode={focusMode}
             setFocusMode={setFocusMode}

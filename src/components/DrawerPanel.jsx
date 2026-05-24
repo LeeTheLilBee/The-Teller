@@ -41,6 +41,7 @@ import FoundationLanePanel from "./FoundationLanePanel.jsx";
 import DebtDetailPanel from "./DebtDetailPanel.jsx";
 import GivingDetailPanel from "./GivingDetailPanel.jsx";
 import AutoSaveRecoveryPanel from "./AutoSaveRecoveryPanel.jsx";
+import DevHealthInspector from "./DevHealthInspector.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -92,6 +93,7 @@ export default function DrawerPanel({
   givingDetailSummary,
   saveStatus,
   autoSaveRecoveryEnabled,
+  devHealth,
   calmModeSummary,
   focusMode,
   setFocusMode,
@@ -139,7 +141,6 @@ export default function DrawerPanel({
       <SearchFilterBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} quickFilter={quickFilter} setQuickFilter={setQuickFilter} />
       {filteredPreviewCards.length === 0 && <EntityEmptyState emptyState={emptyState} />}
       <UtilityToggle utilitiesOpen={utilitiesOpen} setUtilitiesOpen={setUtilitiesOpen} />
-      {autoSaveRecoveryEnabled && utilitiesOpen && <AutoSaveRecoveryPanel saveStatus={saveStatus} />}
 
       {utilitiesOpen && (
         <div className="utility-panel-group">

@@ -302,3 +302,318 @@
     justify-content: flex-start;
   }
 }
+
+@media (max-width: 880px) {
+  .ui-preference-status {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 880px) {
+  .ui-preference-status {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   PACK 040 — RESPONSIVE POLISH ROUND 2
+   Purpose: Make The Teller cleaner in landscape, split-screen,
+   tablet, and mobile layouts.
+============================================================ */
+
+.responsive-hint {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(240px, 1.2fr);
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 20px;
+  background: rgba(255, 248, 238, 0.78);
+}
+
+.responsive-hint h2 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 18px;
+}
+
+.responsive-hint p {
+  margin: 0;
+  color: #5a2f22;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 850;
+}
+
+/* medium landscape / split screen */
+@media (max-width: 1180px) {
+  .app-frame {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .side-rail {
+    padding-inline: 10px;
+  }
+
+  .main-area {
+    padding-inline: 14px;
+  }
+
+  .hero-grid,
+  .payflow-split,
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow-header {
+    gap: 12px;
+  }
+
+  .workflow-stats {
+    justify-content: flex-start;
+  }
+
+  .drawer-tab-group > div {
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  }
+}
+
+/* tablet and narrow browser */
+@media (max-width: 900px) {
+  .app-frame {
+    grid-template-columns: 1fr;
+  }
+
+  .side-rail {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    border-radius: 0 0 22px 22px;
+  }
+
+  .side-rail nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+
+  .side-rail button {
+    min-width: max-content;
+  }
+
+  .main-area {
+    padding: 12px;
+  }
+
+  .top-bar {
+    display: grid;
+    gap: 12px;
+  }
+
+  .top-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .responsive-hint,
+  .ui-control-panel,
+  .ui-preference-status,
+  .system-status,
+  .utility-toggle-panel,
+  .search-filter-bar,
+  .calm-mode-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .calm-actions,
+  .workflow-stats,
+  .quick-filter-chips,
+  .density-buttons,
+  .ui-pref-pills {
+    justify-content: flex-start;
+  }
+
+  .drawer-action-zone {
+    grid-template-columns: 1fr;
+  }
+
+  .selected-intent-grid,
+  .company-scope-grid,
+  .role-safety-grid,
+  .batch-summary-grid,
+  .recovery-grid,
+  .dev-health-card-grid,
+  .detail-preview-grid,
+  .approval-grid,
+  .calendar-lane,
+  .command-card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* phone */
+@media (max-width: 620px) {
+  .main-area {
+    padding: 10px;
+  }
+
+  .focus-card,
+  .priority-card,
+  .drawer-card,
+  .workflow-panel,
+  .company-scope-panel,
+  .role-safety-panel,
+  .batch-summary-panel,
+  .autosave-recovery-panel,
+  .dev-health-inspector,
+  .filtered-card-preview,
+  .calm-mode-panel,
+  .responsive-hint {
+    border-radius: 18px;
+  }
+
+  .focus-card h1,
+  .selected-intent-main h2,
+  .calm-copy h2 {
+    font-size: 22px;
+  }
+
+  .workflow-header {
+    display: grid;
+  }
+
+  .workflow-stats {
+    gap: 6px;
+  }
+
+  .workflow-stats span,
+  .calm-stats span,
+  .calm-stats button,
+  .calm-actions strong,
+  .batch-pack-list span,
+  .ui-pref-pills span {
+    font-size: 11px;
+  }
+
+  .drawer-tab-group > div {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .drawer-tab {
+    min-height: 46px;
+  }
+
+  .drawer-tab i {
+    width: 28px;
+  }
+
+  .selected-intent-grid,
+  .company-scope-grid,
+  .role-safety-grid,
+  .batch-summary-grid,
+  .recovery-grid,
+  .dev-health-card-grid,
+  .detail-preview-grid,
+  .approval-grid,
+  .calendar-lane,
+  .command-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-bar div,
+  .quick-filter-chips,
+  .density-buttons,
+  .ui-pref-pills,
+  .batch-pack-list,
+  .dev-pass-details div {
+    gap: 6px;
+  }
+
+  .action-button,
+  .quick-filter-chip,
+  .density-button,
+  .focus-toggle {
+    padding: 8px 9px;
+  }
+}
+
+/* very narrow */
+@media (max-width: 430px) {
+  .drawer-tab-group > div {
+    grid-template-columns: 1fr;
+  }
+
+  .top-actions select,
+  .search-filter-bar input,
+  .note-entry input,
+  .stepup-input-row input {
+    width: 100%;
+  }
+
+  .calm-stats,
+  .note-entry,
+  .stepup-input-row,
+  .selected-intent-footer {
+    display: grid;
+  }
+}
+
+@media (max-width: 980px) {
+  .command-topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .top-context-cluster {
+    justify-content: flex-start;
+  }
+
+  .settings-panel-header {
+    display: grid;
+  }
+}
+
+@media (max-width: 520px) {
+  .top-context-cluster {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .context-pill,
+  .settings-button,
+  .context-select select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 980px) {
+  .command-topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .top-context-cluster {
+    justify-content: flex-start;
+  }
+
+  .settings-panel-header {
+    display: grid;
+  }
+}
+
+@media (max-width: 520px) {
+  .top-context-cluster {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .context-pill,
+  .settings-button,
+  .context-select select {
+    width: 100%;
+  }
+}

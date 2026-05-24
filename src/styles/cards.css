@@ -2047,3 +2047,492 @@
   font-weight: 900;
   cursor: pointer;
 }
+
+.ui-preference-status {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.8fr) minmax(240px, 1.2fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 20px;
+  background: rgba(255, 248, 238, 0.86);
+}
+
+.ui-preference-status h2 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 18px;
+}
+
+.ui-pref-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ui-pref-pills span {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(214, 161, 95, 0.26);
+  color: #2a1811;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ui-preference-status button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: #2a1811;
+  color: #fff1df;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.ui-preference-status {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.8fr) minmax(240px, 1.2fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 20px;
+  background: rgba(255, 248, 238, 0.86);
+}
+
+.ui-preference-status h2 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 18px;
+}
+
+.ui-pref-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ui-pref-pills span {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(214, 161, 95, 0.26);
+  color: #2a1811;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ui-preference-status button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: #2a1811;
+  color: #fff1df;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.dev-health-inspector {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 22px;
+  background: rgba(255, 248, 238, 0.9);
+}
+
+.dev-health-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.dev-fail-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #2a1811;
+}
+
+.dev-fail-list .eyebrow {
+  width: 100%;
+  color: #d6a15f;
+}
+
+.dev-fail-list span {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(214, 161, 95, 0.2);
+  color: #fff1df;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.dev-pass-details {
+  padding: 12px;
+  border-radius: 16px;
+  background: #fff1df;
+}
+
+.dev-pass-details summary {
+  cursor: pointer;
+  color: #1b100c;
+  font-weight: 900;
+}
+
+.dev-pass-details div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dev-pass-details span {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(214, 161, 95, 0.25);
+  color: #2a1811;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* PACK 040 — shrink-safety helpers */
+.main-area,
+.drawer-card,
+.workflow-panel,
+.focus-card,
+.priority-card,
+.detail-preview-card,
+.approval-card,
+.calendar-card,
+.command-card,
+.info-tile,
+.dark-tile {
+  min-width: 0;
+}
+
+.workflow-header,
+.top-bar,
+.hero-grid,
+drawer-content,
+.drawer-action-zone,
+.support-grid,
+.payflow-split {
+  min-width: 0;
+}
+
+.detail-preview-card,
+.approval-card,
+.calendar-card,
+.command-card,
+.info-tile,
+.dark-tile,
+.workflow-row,
+.note-list article,
+.activity-item {
+  overflow-wrap: anywhere;
+}
+
+.focus-mode-on .responsive-hint {
+  display: none;
+}
+
+/* ============================================================
+   PACK 042 — SETTINGS PANEL + TOP CONTEXT POLISH
+============================================================ */
+
+.command-topbar {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.top-title h1 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.top-title span {
+  display: block;
+  margin-top: 6px;
+  color: #5a2f22;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.top-context-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.context-pill {
+  min-height: 48px;
+  padding: 9px 12px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 16px;
+  background: rgba(255, 248, 238, 0.9);
+  color: #1b100c;
+}
+
+.context-pill span {
+  display: block;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7b4a32;
+}
+
+.context-pill strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #1b100c;
+}
+
+.context-select select {
+  min-width: 155px;
+  margin-top: 3px;
+  border: 0;
+  background: transparent;
+  color: #1b100c;
+  font-size: 13px;
+  font-weight: 950;
+  outline: none;
+}
+
+.save-pill {
+  background: #2a1811;
+  color: #fff1df;
+}
+
+.save-pill span,
+.save-pill strong {
+  color: #fff1df;
+}
+
+.settings-button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 16px;
+  padding: 10px 14px;
+  background: rgba(214, 161, 95, 0.32);
+  color: #2a1811;
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.settings-button.active {
+  background: #2a1811;
+  color: #fff1df;
+}
+
+.settings-panel {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(201, 140, 91, 0.45);
+  border-radius: 24px;
+  background: rgba(255, 248, 238, 0.96);
+  box-shadow: 0 18px 35px rgba(27, 16, 12, 0.08);
+}
+
+.settings-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-panel-header h2 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 22px;
+}
+
+.settings-panel-header > span {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(214, 161, 95, 0.26);
+  color: #2a1811;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* ============================================================
+   PACK 042 — SETTINGS PANEL + TOP CONTEXT POLISH
+============================================================ */
+
+.command-topbar {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.top-title h1 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.top-title span {
+  display: block;
+  margin-top: 6px;
+  color: #5a2f22;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.top-context-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.context-pill {
+  min-height: 48px;
+  padding: 9px 12px;
+  border: 1px solid rgba(201, 140, 91, 0.35);
+  border-radius: 16px;
+  background: rgba(255, 248, 238, 0.9);
+  color: #1b100c;
+}
+
+.context-pill span {
+  display: block;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7b4a32;
+}
+
+.context-pill strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #1b100c;
+}
+
+.context-select select {
+  min-width: 155px;
+  margin-top: 3px;
+  border: 0;
+  background: transparent;
+  color: #1b100c;
+  font-size: 13px;
+  font-weight: 950;
+  outline: none;
+}
+
+.save-pill {
+  background: #2a1811;
+  color: #fff1df;
+}
+
+.save-pill span,
+.save-pill strong {
+  color: #fff1df;
+}
+
+.settings-button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 16px;
+  padding: 10px 14px;
+  background: rgba(214, 161, 95, 0.32);
+  color: #2a1811;
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.settings-button.active {
+  background: #2a1811;
+  color: #fff1df;
+}
+
+.settings-panel {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(201, 140, 91, 0.45);
+  border-radius: 24px;
+  background: rgba(255, 248, 238, 0.96);
+  box-shadow: 0 18px 35px rgba(27, 16, 12, 0.08);
+}
+
+.settings-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-panel-header h2 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 22px;
+}
+
+.settings-panel-header > span {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(214, 161, 95, 0.26);
+  color: #2a1811;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.runtime-error-panel {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  padding: 28px;
+  background: #2a1811;
+  color: #fff1df;
+}
+
+.runtime-error-panel h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.runtime-error-panel p {
+  max-width: 720px;
+  margin: 0;
+  color: #f6d4b6;
+  line-height: 1.5;
+}
+
+.runtime-error-panel button {
+  width: fit-content;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #d6a15f;
+  color: #1b100c;
+  font-weight: 950;
+  cursor: pointer;
+}

@@ -5,7 +5,7 @@ export function getBatchSummary() {
     const match = pack.match(/Pack (\d+)/);
     if (!match) return false;
     const number = Number(match[1]);
-    return number >= 12 && number <= 21;
+    return number >= 22 && number <= 41;
   });
 
   return {

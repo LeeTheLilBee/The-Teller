@@ -1,0 +1,111 @@
+export const profiles = {
+  command: {
+    eyebrow: "Command Snapshot",
+    drawerTitle: "Command Layers",
+    drawers: [
+      ["rollup", "Business Rollup"],
+      ["debt", "Debt"],
+      ["giving", "Giving"],
+      ["calendar", "Calendar"],
+    ],
+    metrics: ["balance", "payrollDue", "reserve", "debt"],
+    priorities: ["nextAction", "nextDebtAction", "roleNote"],
+  },
+  people: {
+    eyebrow: "People Snapshot",
+    drawerTitle: "People Drawers",
+    drawers: [
+      ["workerLanes", "Worker Lanes"],
+      ["onboarding", "Onboarding"],
+      ["docs", "Documents"],
+      ["issues", "Issues"],
+    ],
+    metrics: [
+      ["Onboarding", "7 active"],
+      ["Docs", "2 missing"],
+      ["Roles", "4 assigned"],
+      ["Conflicts", "0 open"],
+    ],
+    priorities: ["Review missing worker documents.", "Confirm role assignments.", "No self-approval rule remains active."],
+  },
+  payroll: {
+    eyebrow: "Payroll Snapshot",
+    drawerTitle: "Payroll Drawers",
+    drawers: [
+      ["payRun", "Run Builder"],
+      ["exceptions", "Exceptions"],
+      ["approvals", "Approvals"],
+      ["calendar", "Calendar"],
+    ],
+    metrics: [
+      ["Payroll Due", "payrollDue"],
+      ["Ready", "11 workers"],
+      ["Exceptions", "2 open"],
+      ["Funding", "Verified"],
+    ],
+    priorities: ["Clear payroll exceptions.", "Confirm funding source.", "Seal PayRun packet after approval."],
+  },
+  money: {
+    eyebrow: "Money Flow Snapshot",
+    drawerTitle: "Money Drawers",
+    drawers: [
+      ["debt", "Debt Catalog"],
+      ["cashFlow", "Cash Flow"],
+      ["giving", "Giving"],
+      ["restricted", "Restricted Funds"],
+    ],
+    metrics: ["balance", "reserve", "debt", ["Next Due", "$1,120"]],
+    priorities: ["Check cash movement by purpose.", "Keep restricted funds separated.", "Review upcoming minimums."],
+  },
+  records: {
+    eyebrow: "Records Snapshot",
+    drawerTitle: "Records Drawers",
+    drawers: [
+      ["proof", "Proof Packets"],
+      ["docs", "Documents"],
+      ["foundationDocs", "Foundation Docs"],
+      ["giving", "Giving Proof"],
+    ],
+    metrics: [
+      ["Receipts", "43 today"],
+      ["Packets", "6 sealed"],
+      ["Exports", "1 review"],
+      ["Missing", "2 docs"],
+    ],
+    priorities: ["Seal today’s proof packet.", "Review export request.", "Attach receipts to debt and giving records."],
+  },
+  security: {
+    eyebrow: "Security Snapshot",
+    drawerTitle: "Security Drawers",
+    drawers: [
+      ["doors", "Doors"],
+      ["stepUp", "Step-Up"],
+      ["redaction", "Redaction"],
+      ["audit", "Audit"],
+    ],
+    metrics: [
+      ["Doors", "All on"],
+      ["Step-up", "1 pending"],
+      ["Denied", "0 today"],
+      ["Redaction", "Active"],
+    ],
+    priorities: ["Review one step-up request.", "Keep sensitive details masked.", "Monitor company and PayRole boundaries."],
+  },
+};
+
+export const simpleDrawerContent = {
+  workerLanes: ["Employee lane", "Contractor lane", "Vendor lane", "Program helper lane"],
+  onboarding: ["Autosaved drafts", "Role-specific forms", "Manager review"],
+  docs: ["Missing documents", "Expiring records", "Redacted sensitive files"],
+  issues: ["Missing pay", "Wrong hours", "Reimbursement issue"],
+  payRun: ["Pull eligible workers", "Check clearance", "Calculate draft", "Seal packet"],
+  exceptions: ["Missing document", "Approval needed", "Funding warning"],
+  approvals: ["Payroll release", "Creator invoice", "Export review"],
+  cashFlow: ["Payroll lane", "Vendor lane", "Reserve lane", "Aid lane"],
+  restricted: ["Restricted funds", "Aid packets", "Recipient privacy"],
+  proof: ["Payroll packet", "Debt receipt", "Giving proof"],
+  doors: ["Worker wall", "Entity wall", "Role wall"],
+  stepUp: ["Bank reveal", "Export approval", "Sensitive override"],
+  redaction: ["Bank masked", "Tax masked", "Recipient masked"],
+  audit: ["Approvals", "Exports", "Debt changes", "Denied actions"],
+};

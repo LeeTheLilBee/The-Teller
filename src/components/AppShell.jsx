@@ -8,6 +8,7 @@ import {
   worldRollup,
 } from "../data/tellerSeed.js";
 import { createLocalNote, getActivityTimeline } from "../lib/activityTimeline.js";
+import { createActionReceipt } from "../lib/actionReceipts.js";
 import { actionNeedsConfirmation, buildActionConfirmation, validateConfirmationReason } from "../lib/actionConfirmation.js";
 import { getApprovalSummary } from "../lib/approvalCenter.js";
 import { useAutoSave } from "../lib/autoSave.js";
@@ -89,6 +90,7 @@ export default function AppShell() {
   const [pendingConfirmation, setPendingConfirmation] = useState(null);
   const [confirmationReason, setConfirmationReason] = useState("");
   const [confirmationReasonError, setConfirmationReasonError] = useState("");
+  const [actionReceipts, setActionReceipts] = useState([]);
 
   const room = rooms.find((item) => item.key === activeRoom) || rooms[0];
   const profile = profiles[activeRoom] || profiles.command;
@@ -282,6 +284,7 @@ export default function AppShell() {
     });
 
     setWorkflowIntents((current) => [intent, ...current].slice(0, 8));
+    setActionReceipts((current) => [createActionReceipt(intent), ...current].slice(0, 20));
   }
 
   function handleWorkflowAction(action) {
@@ -360,6 +363,7 @@ export default function AppShell() {
             systemStatus={systemStatus}
             saveStatus={saveStatus}
             devHealth={devHealth}
+            actionReceipts={actionReceipts}
             settingsOpen={settingsOpen}
           />
 
@@ -422,6 +426,7 @@ export default function AppShell() {
             saveStatus={saveStatus}
             autoSaveRecoveryEnabled={true}
             devHealth={devHealth}
+            actionReceipts={actionReceipts}
             calmModeSummary={calmModeSummary}
             focusMode={focusMode}
             setFocusMode={setFocusMode}

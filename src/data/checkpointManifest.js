@@ -1,7 +1,7 @@
 export const checkpointManifest = {
   product: "The Teller",
   company: "SimpleePay",
-  checkpoint: "Pack 045",
+  checkpoint: "Pack 046",
   savedThrough: "Pack 041",
   pendingSaveBatch: "Packs 042+",
   completedPacks: [
@@ -81,5 +81,5 @@ export const checkpointManifest = {
     "Top-right company, PayRole, and saved context",
     "Autosave and system health strip",
   ],
-  nextLikelyPack: "Pack 046 — Action Receipt Trail",
+  nextLikelyPack: "Pack 047 — Action History Filters",
 };

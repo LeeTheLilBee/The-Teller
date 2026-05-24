@@ -644,3 +644,9 @@
     width: 100%;
   }
 }
+
+@media (max-width: 560px) {
+  .receipt-card div {
+    display: grid;
+  }
+}

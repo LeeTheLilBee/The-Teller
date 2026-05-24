@@ -14,6 +14,7 @@ import PayGuardDetailGrid from "./PayGuardDetailGrid.jsx";
 import PaySkyPanel from "./PaySkyPanel.jsx";
 import PayCalendarPanel from "./PayCalendarPanel.jsx";
 import ActionBar from "./ActionBar.jsx";
+import ActionReceiptTrail from "./ActionReceiptTrail.jsx";
 import IntentStatus from "./IntentStatus.jsx";
 import SelectedIntentPanel from "./SelectedIntentPanel.jsx";
 import RecentIntents from "./RecentIntents.jsx";
@@ -94,6 +95,7 @@ export default function DrawerPanel({
   saveStatus,
   autoSaveRecoveryEnabled,
   devHealth,
+  actionReceipts,
   calmModeSummary,
   focusMode,
   setFocusMode,
@@ -147,7 +149,8 @@ export default function DrawerPanel({
           <CompanyScopePanel summary={companyScopeSummary} activeEntity={entity.key} setActiveEntity={setActiveEntity} />
           <RoleSafetyPanel summary={roleSafetySummary} allRoleCards={allRoleCards} />
           <BatchSummaryPanel summary={batchSummary} />
-          <SelectedIntentPanel latestIntent={latestIntent} intentCount={workflowIntents?.length || 0} />
+          <ActionReceiptTrail receipts={actionReceipts || []} />
+      <SelectedIntentPanel latestIntent={latestIntent} intentCount={workflowIntents?.length || 0} />
           <RecentIntents intents={workflowIntents} />
           <div className="support-grid">
             <NotesPanel notes={localNotes} noteDraft={noteDraft} setNoteDraft={setNoteDraft} onAddNote={onAddNote} entity={entity} />

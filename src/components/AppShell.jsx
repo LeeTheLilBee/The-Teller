@@ -8,6 +8,7 @@ import {
   worldRollup,
 } from "../data/tellerSeed.js";
 import { createLocalNote, getActivityTimeline } from "../lib/activityTimeline.js";
+import { actionNeedsConfirmation, buildActionConfirmation, validateConfirmationReason } from "../lib/actionConfirmation.js";
 import { getApprovalSummary } from "../lib/approvalCenter.js";
 import { useAutoSave } from "../lib/autoSave.js";
 import { getBatchSummary } from "../lib/batchSummary.js";
@@ -17,6 +18,7 @@ import { getCompanyScopeSummary } from "../lib/companyScopeSummary.js";
 import { runDevChecks } from "../lib/devChecks.js";
 import { getDevHealthInspector } from "../lib/devHealthInspector.js";
 import { getDocumentRequestSummary } from "../lib/documentRequests.js";
+import { getDrawerContext } from "../lib/drawerOrganization.js";
 import { getDebtDetailSummary } from "../lib/debtDetails.js";
 import { getEmptyState } from "../lib/emptyStates.js";
 import { getFoundationLaneSummary } from "../lib/foundationLane.js";
@@ -44,9 +46,11 @@ import { getAllRoleCards, getRoleSafetySummary } from "../lib/roleSafety.js";
 import { createStepUpMockRequest, getStepUpFlowSummary } from "../lib/stepUpFlow.js";
 import { buildMetricRows, buildPriorities, getSnapshot } from "../lib/snapshotHelpers.js";
 import { getSystemStatus } from "../lib/systemStatus.js";
+import { buildUrgentSnapshot } from "../lib/urgentSnapshot.js";
 import { defaultUiPreferences, getDensityClass, getFocusClass, loadUiPreferences, saveUiPreferences } from "../lib/uiPreferences.js";
 import { createWorkflowIntent } from "../lib/workflowIntents.js";
 import { getWorkerDetailSummary } from "../lib/workerDetails.js";
+import ActionConfirmationModal from "./ActionConfirmationModal.jsx";
 import DrawerPanel from "./DrawerPanel.jsx";
 import FocusSnapshot from "./FocusSnapshot.jsx";
 import PriorityQueue from "./PriorityQueue.jsx";
@@ -57,6 +61,7 @@ import SystemStatusStrip from "./SystemStatusStrip.jsx";
 import TopBar from "./TopBar.jsx";
 import UiControlPanel from "./UiControlPanel.jsx";
 import UiPreferenceStatus from "./UiPreferenceStatus.jsx";
+import UrgentSnapshotHeader from "./UrgentSnapshotHeader.jsx";
 
 export default function AppShell() {
   const visibleEntities = useMemo(() => getVisibleEntities(), []);
@@ -81,6 +86,9 @@ export default function AppShell() {
   const [searchQuery, setSearchQuery] = useState("");
   const [quickFilter, setQuickFilter] = useState(initialUiPreferences.quickFilter);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [pendingConfirmation, setPendingConfirmation] = useState(null);
+  const [confirmationReason, setConfirmationReason] = useState("");
+  const [confirmationReasonError, setConfirmationReasonError] = useState("");
 
   const room = rooms.find((item) => item.key === activeRoom) || rooms[0];
   const profile = profiles[activeRoom] || profiles.command;
@@ -183,6 +191,41 @@ export default function AppShell() {
     setSearchQuery("");
   }
 
+
+  const urgentSnapshotSummary = useMemo(
+    () =>
+      buildUrgentSnapshot({
+        entity,
+        role,
+        paySkySummary,
+        approvalSummary,
+        documentRequestSummary,
+        sealWorkflowSummary,
+        stepUpFlowSummary,
+        payrollDetailSummary,
+        moneyMovementDetailSummary,
+        debtDetailSummary,
+        givingDetailSummary,
+        foundationLaneSummary,
+        securityDetailSummary,
+      }),
+    [
+      entity,
+      role,
+      paySkySummary,
+      approvalSummary,
+      documentRequestSummary,
+      sealWorkflowSummary,
+      stepUpFlowSummary,
+      payrollDetailSummary,
+      moneyMovementDetailSummary,
+      debtDetailSummary,
+      givingDetailSummary,
+      foundationLaneSummary,
+      securityDetailSummary,
+    ]
+  );
+
   const appModeClass = `${getDensityClass(density)} ${getFocusClass(focusMode)}`;
 
   const filteredDebt = entity.key === "world" ? debtCatalog : debtCatalog.filter((item) => item.entityKey === entity.key);
@@ -229,15 +272,49 @@ export default function AppShell() {
     setNoteDraft("");
   }
 
-  function handleWorkflowAction(action) {
+  function captureWorkflowIntent(action, reason = "") {
     const intent = createWorkflowIntent({
       action,
       entity,
       drawer: activeDrawer,
       recordTitle: `${room.label} / ${profile.drawerTitle}`,
+      reason,
     });
 
     setWorkflowIntents((current) => [intent, ...current].slice(0, 8));
+  }
+
+  function handleWorkflowAction(action) {
+    if (actionNeedsConfirmation(action?.key)) {
+      const drawerContext = getDrawerContext(activeDrawer, profile);
+      setPendingConfirmation(buildActionConfirmation(action, entity, drawerContext));
+      setConfirmationReason("");
+      setConfirmationReasonError("");
+      return;
+    }
+
+    captureWorkflowIntent(action);
+  }
+
+  function confirmWorkflowAction() {
+    if (!pendingConfirmation?.action) return;
+
+    const validation = validateConfirmationReason(pendingConfirmation, confirmationReason);
+    if (!validation.ok) {
+      setConfirmationReasonError(validation.message);
+      return;
+    }
+
+    captureWorkflowIntent(pendingConfirmation.action, validation.reason);
+    setPendingConfirmation(null);
+    setConfirmationReason("");
+    setConfirmationReasonError("");
+  }
+
+  function cancelWorkflowAction() {
+    setPendingConfirmation(null);
+    setConfirmationReason("");
+    setConfirmationReasonError("");
   }
 
   return (
@@ -253,6 +330,14 @@ export default function AppShell() {
         />
 
         <main className="main-area">
+          <ActionConfirmationModal
+            confirmation={pendingConfirmation}
+            reason={confirmationReason}
+            setReason={setConfirmationReason}
+            reasonError={confirmationReasonError}
+            onConfirm={confirmWorkflowAction}
+            onCancel={cancelWorkflowAction}
+          />
           <TopBar
             room={room}
             role={role}
@@ -277,6 +362,8 @@ export default function AppShell() {
             devHealth={devHealth}
             settingsOpen={settingsOpen}
           />
+
+          <UrgentSnapshotHeader summary={urgentSnapshotSummary} />
 <SystemStatusStrip status={systemStatus} />
 
           <section className="hero-grid">

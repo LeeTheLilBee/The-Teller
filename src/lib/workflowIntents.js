@@ -1,8 +1,9 @@
 import { describeIntentType } from "./intentTypes.js";
 
-export function createWorkflowIntent({ action, entity, drawer, recordTitle }) {
+export function createWorkflowIntent({ action, entity, drawer, recordTitle, reason = "" }) {
   const now = new Date().toISOString();
   const intentType = describeIntentType(action.key);
+  const cleanReason = String(reason || "").trim();
 
   return {
     id: `intent-${Date.now()}`,
@@ -12,12 +13,13 @@ export function createWorkflowIntent({ action, entity, drawer, recordTitle }) {
     severity: intentType.severity,
     tone: intentType.tone,
     requiresReason: intentType.requiresReason,
+    reason: cleanReason,
     backendReady: intentType.backendReady,
     entityKey: entity.key,
     entityLabel: entity.label,
     drawer,
     recordTitle: recordTitle || "Current drawer",
-    status: "Mock intent captured",
+    status: cleanReason ? "Mock intent captured with reason" : "Mock intent captured",
     createdAt: now,
     detail: action.description,
   };

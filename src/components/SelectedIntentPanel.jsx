@@ -32,7 +32,11 @@ export default function SelectedIntentPanel({ latestIntent, intentCount }) {
         </div>
         <div>
           <span>Reason</span>
-          <strong>{latestIntent.requiresReason ? "Required later" : "Not required"}</strong>
+          <strong>{latestIntent.requiresReason ? "Required" : "Not required"}</strong>
+        </div>
+        <div>
+          <span>Reason Captured</span>
+          <strong>{latestIntent.reason ? "Yes" : "No"}</strong>
         </div>
         <div>
           <span>Backend</span>
@@ -55,6 +59,13 @@ export default function SelectedIntentPanel({ latestIntent, intentCount }) {
           <strong>{formatIntentTime(latestIntent.createdAt)}</strong>
         </div>
       </div>
+
+      {latestIntent.reason && (
+        <div className="intent-reason-preview">
+          <span>Captured Reason</span>
+          <p>{latestIntent.reason}</p>
+        </div>
+      )}
 
       <div className="selected-intent-footer">
         <span>{intentCount} recent mock intent(s) held in local UI state</span>

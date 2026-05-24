@@ -617,3 +617,30 @@
     width: 100%;
   }
 }
+
+@media (max-width: 900px) {
+  .urgent-snapshot-header {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .urgent-pill-row,
+  .urgent-action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .urgent-copy h2 {
+    font-size: 21px;
+  }
+}
+
+@media (max-width: 520px) {
+  .confirmation-actions {
+    display: grid;
+  }
+
+  .confirmation-actions button {
+    width: 100%;
+  }
+}

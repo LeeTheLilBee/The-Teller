@@ -2536,3 +2536,307 @@ drawer-content,
   font-weight: 950;
   cursor: pointer;
 }
+
+/* ============================================================
+   PACK 043 — URGENT SNAPSHOT HEADER INTELLIGENCE
+============================================================ */
+
+.urgent-snapshot-header {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.95fr) minmax(260px, 1.1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 16px;
+  border: 1px solid rgba(201, 140, 91, 0.4);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(255, 248, 238, 0.96), rgba(246, 212, 182, 0.78));
+  box-shadow: 0 18px 34px rgba(27, 16, 12, 0.07);
+}
+
+.urgent-snapshot-header.active {
+  border-color: rgba(214, 161, 95, 0.6);
+}
+
+.urgent-snapshot-header.calm {
+  background: rgba(255, 248, 238, 0.88);
+}
+
+.urgent-copy h2 {
+  margin: 4px 0 0;
+  color: #1b100c;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.urgent-copy span {
+  display: block;
+  margin-top: 8px;
+  color: #5a2f22;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.urgent-pill-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 8px;
+}
+
+.urgent-pill {
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(214, 161, 95, 0.22);
+  color: #1b100c;
+}
+
+.urgent-pill span,
+.urgent-pill strong {
+  display: block;
+}
+
+.urgent-pill span {
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7b4a32;
+}
+
+.urgent-pill strong {
+  margin-top: 5px;
+  font-size: 20px;
+}
+
+.urgent-pill.watch {
+  background: #fff1df;
+}
+
+.urgent-pill.guarded {
+  background: #2a1811;
+}
+
+.urgent-pill.guarded span,
+.urgent-pill.guarded strong {
+  color: #fff1df;
+}
+
+.urgent-action-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.urgent-action {
+  padding: 11px;
+  border-radius: 16px;
+  background: #fff8ee;
+}
+
+.urgent-action strong,
+.urgent-action span {
+  display: block;
+}
+
+.urgent-action strong {
+  color: #1b100c;
+}
+
+.urgent-action span {
+  margin-top: 5px;
+  color: #5a2f22;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.urgent-action.watch {
+  background: #fff1df;
+}
+
+.urgent-action.guarded {
+  background: #2a1811;
+}
+
+.urgent-action.guarded strong,
+.urgent-action.guarded span {
+  color: #fff1df;
+}
+
+/* ============================================================
+   PACK 044 — ACTION CONFIRMATION MODALS
+============================================================ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(27, 16, 12, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+.action-confirmation-modal {
+  width: min(720px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(214, 161, 95, 0.55);
+  border-radius: 26px;
+  background: #fff8ee;
+  color: #1b100c;
+  box-shadow: 0 24px 70px rgba(27, 16, 12, 0.35);
+}
+
+.action-confirmation-modal h2 {
+  margin: 4px 0 0;
+  font-size: 26px;
+}
+
+.action-confirmation-modal p {
+  margin: 8px 0 0;
+  color: #5a2f22;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.confirmation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 9px;
+}
+
+.confirmation-grid div {
+  padding: 11px;
+  border-radius: 16px;
+  background: #fff1df;
+}
+
+.confirmation-grid span,
+.confirmation-grid strong {
+  display: block;
+}
+
+.confirmation-grid span {
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7b4a32;
+}
+
+.confirmation-grid strong {
+  margin-top: 5px;
+}
+
+.confirmation-warning {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(214, 161, 95, 0.22);
+}
+
+.confirmation-warning.guarded,
+.confirmation-warning.blocked {
+  background: #2a1811;
+  color: #fff1df;
+}
+
+.confirmation-warning span {
+  color: inherit;
+  opacity: 0.82;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.confirmation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.confirmation-actions button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.confirmation-actions .secondary {
+  background: rgba(214, 161, 95, 0.25);
+  color: #2a1811;
+}
+
+.confirmation-actions .primary {
+  background: #2a1811;
+  color: #fff1df;
+}
+
+/* ============================================================
+   PACK 045 — CONFIRMATION REASON CAPTURE
+============================================================ */
+
+.confirmation-reason-box {
+  display: grid;
+  gap: 8px;
+}
+
+.confirmation-reason-box label {
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7b4a32;
+}
+
+.confirmation-reason-box textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid rgba(201, 140, 91, 0.42);
+  border-radius: 16px;
+  background: #fff1df;
+  color: #1b100c;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  outline: none;
+}
+
+.reason-error {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #2a1811;
+  color: #fff1df;
+  font-size: 12px;
+}
+
+.intent-reason-preview {
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(214, 161, 95, 0.16);
+}
+
+.intent-reason-preview span {
+  display: block;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d6a15f;
+}
+
+.intent-reason-preview p {
+  margin: 7px 0 0;
+  color: inherit;
+  line-height: 1.4;
+  font-size: 13px;
+  font-weight: 850;
+}

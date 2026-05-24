@@ -14,7 +14,7 @@ export default function SelectedIntentPanel({ latestIntent, intentCount }) {
   }
 
   return (
-    <section className="selected-intent-panel">
+    <section className={`selected-intent-panel ${latestIntent.tone || ""}`}>
       <div className="selected-intent-main">
         <p className="eyebrow">Selected Workflow Intent</p>
         <h2>{latestIntent.actionLabel}</h2>
@@ -22,6 +22,22 @@ export default function SelectedIntentPanel({ latestIntent, intentCount }) {
       </div>
 
       <div className="selected-intent-grid">
+        <div>
+          <span>Intent Type</span>
+          <strong>{latestIntent.intentTypeLabel}</strong>
+        </div>
+        <div>
+          <span>Severity</span>
+          <strong>{latestIntent.severity}</strong>
+        </div>
+        <div>
+          <span>Reason</span>
+          <strong>{latestIntent.requiresReason ? "Required later" : "Not required"}</strong>
+        </div>
+        <div>
+          <span>Backend</span>
+          <strong>{latestIntent.backendReady ? "Ready" : "Mock only"}</strong>
+        </div>
         <div>
           <span>Company</span>
           <strong>{latestIntent.entityLabel}</strong>

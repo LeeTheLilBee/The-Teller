@@ -5,6 +5,9 @@ import { reserveBuckets, restrictedFunds, cashMovementRules, moneyMovements } fr
 import { exportRequests, proofRequirements, sealedPacketRules } from "../data/payProofSeed.js";
 import { securityDoors, stepUpRequests, redactionRules, deniedActions, revealRequests } from "../data/payGuardSeed.js";
 import { documentRequests } from "../data/documentRequestsSeed.js";
+import { foundationAidPackets, foundationGovernanceItems, businessGivingBridge } from "../data/foundationLaneSeed.js";
+import { debtDetailRecords, debtPaymentHistory } from "../data/debtDetailSeed.js";
+import { givingDetailRecords, givingProofChecklist } from "../data/givingDetailSeed.js";
 import { proofPackets } from "../data/proofSeed.js";
 import { calendarItems } from "../data/tellerSeed.js";
 import {
@@ -58,6 +61,13 @@ export function runDevChecks() {
     { name: "Calendar items have labels and dates", pass: calendarItems.every((item) => item.label && item.date && item.scope) },
     { name: "Document requests are entity-scoped", pass: documentRequests.every((item) => entityKeys.includes(item.entityKey) && item.requestType && item.status) },
     { name: "Proof packets have receipt counts", pass: proofPackets.every((item) => entityKeys.includes(item.entityKey) && typeof item.receiptCount === "number") },
+    { name: "Foundation aid packets stay in SafeHaven lane", pass: foundationAidPackets.every((item) => item.entityKey === "safehaven" && item.sensitivity) },
+    { name: "Foundation governance items stay in SafeHaven lane", pass: foundationGovernanceItems.every((item) => item.entityKey === "safehaven" && item.sensitivity) },
+    { name: "Business giving bridges are entity-scoped", pass: businessGivingBridge.every((item) => entityKeys.includes(item.entityKey) && item.connectsTo) },
+    { name: "Debt detail records are entity-scoped", pass: debtDetailRecords.every((item) => entityKeys.includes(item.entityKey) && item.priorityScore >= 0) },
+    { name: "Debt payment history is entity-scoped", pass: debtPaymentHistory.every((item) => entityKeys.includes(item.entityKey) && item.amount && item.proofStatus) },
+    { name: "Giving detail records are entity-scoped", pass: givingDetailRecords.every((item) => entityKeys.includes(item.entityKey) && item.proofNeed) },
+    { name: "Giving proof checklist is entity-scoped", pass: givingProofChecklist.every((item) => entityKeys.includes(item.entityKey) && item.proofType && item.status) },
     { name: "Step-up requests requiring reasons declare reasonRequired", pass: stepUpRequests.every((item) => typeof item.reasonRequired === "boolean") },
   ];
 }

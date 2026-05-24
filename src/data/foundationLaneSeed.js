@@ -1,0 +1,92 @@
+export const foundationAidPackets = [
+  {
+    id: "aid-001",
+    entityKey: "safehaven",
+    title: "Emergency utility support review",
+    aidType: "Utility assistance",
+    status: "Protected review",
+    sensitivity: "Recipient-sensitive",
+    restrictedFund: "Foundation Aid Fund",
+    nextAction: "Review eligibility with recipient details redacted.",
+  },
+  {
+    id: "aid-002",
+    entityKey: "safehaven",
+    title: "Housing stability support review",
+    aidType: "Housing support",
+    status: "Draft",
+    sensitivity: "Recipient-sensitive",
+    restrictedFund: "Program Support Fund",
+    nextAction: "Attach support documentation before board/owner review.",
+  },
+  {
+    id: "aid-003",
+    entityKey: "safehaven",
+    title: "Community relief proof packet",
+    aidType: "Community relief",
+    status: "Proof needed",
+    sensitivity: "Protected",
+    restrictedFund: "Donation Proof Holding",
+    nextAction: "Attach donation acknowledgment and proof receipts.",
+  },
+];
+
+export const foundationGovernanceItems = [
+  {
+    id: "gov-001",
+    entityKey: "safehaven",
+    title: "Foundation governance packet",
+    itemType: "Governance",
+    status: "Protected",
+    sensitivity: "Foundation-sensitive",
+    nextAction: "Keep bylaws, resolutions, and board notes in protected foundation lane.",
+  },
+  {
+    id: "gov-002",
+    entityKey: "safehaven",
+    title: "Restricted fund decision log",
+    itemType: "Restricted funds",
+    status: "Active",
+    sensitivity: "Foundation-sensitive",
+    nextAction: "Tie every restricted fund movement to proof and decision notes.",
+  },
+  {
+    id: "gov-003",
+    entityKey: "safehaven",
+    title: "Aid decision receipt rules",
+    itemType: "Aid review",
+    status: "Active",
+    sensitivity: "Recipient-sensitive",
+    nextAction: "Every aid decision should generate a redacted proof receipt.",
+  },
+];
+
+export const businessGivingBridge = [
+  {
+    id: "bridge-001",
+    entityKey: "skincare",
+    title: "Skin Relief Butter Drops bridge",
+    bridgeType: "Business giving",
+    connectsTo: "SimpleeSafeHaven",
+    status: "Proof needed",
+    nextAction: "Connect product giving proof to foundation/community impact records when applicable.",
+  },
+  {
+    id: "bridge-002",
+    entityKey: "pay",
+    title: "Pay Relief Credits bridge",
+    bridgeType: "Business giving",
+    connectsTo: "SimpleeSafeHaven",
+    status: "Planning",
+    nextAction: "Separate business discount/relief proof from foundation aid decisions.",
+  },
+  {
+    id: "bridge-003",
+    entityKey: "observatory",
+    title: "Education Access Seat bridge",
+    bridgeType: "Business giving",
+    connectsTo: "SimpleeSafeHaven",
+    status: "Planning",
+    nextAction: "Track scholarship/access proof without exposing private user records.",
+  },
+];

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { calendarItems } from "../data/tellerSeed.js";
 import { simpleDrawerContent } from "../config/drawerProfiles.js";
+import { getDrawerContext } from "../lib/drawerOrganization.js";
 import DevChecks from "./DevChecks.jsx";
 import PayOnboardPanel from "./PayOnboardPanel.jsx";
 import PayRunPanel from "./PayRunPanel.jsx";
@@ -25,6 +26,21 @@ import StepUpFlowPanel from "./StepUpFlowPanel.jsx";
 import CompanyScopePanel from "./CompanyScopePanel.jsx";
 import RoleSafetyPanel from "./RoleSafetyPanel.jsx";
 import BatchSummaryPanel from "./BatchSummaryPanel.jsx";
+import UtilityToggle from "./UtilityToggle.jsx";
+import DrawerTabGroups from "./DrawerTabGroups.jsx";
+import CalmModePanel from "./CalmModePanel.jsx";
+import WorkerDetailPreview from "./WorkerDetailPreview.jsx";
+import PayrollDetailPreview from "./PayrollDetailPreview.jsx";
+import MoneyMovementDetailPreview from "./MoneyMovementDetailPreview.jsx";
+import ProofPacketDetailPreview from "./ProofPacketDetailPreview.jsx";
+import SecurityDetailPreview from "./SecurityDetailPreview.jsx";
+import SearchFilterBar from "./SearchFilterBar.jsx";
+import FilteredCardPreview from "./FilteredCardPreview.jsx";
+import EntityEmptyState from "./EntityEmptyState.jsx";
+import FoundationLanePanel from "./FoundationLanePanel.jsx";
+import DebtDetailPanel from "./DebtDetailPanel.jsx";
+import GivingDetailPanel from "./GivingDetailPanel.jsx";
+import AutoSaveRecoveryPanel from "./AutoSaveRecoveryPanel.jsx";
 
 export default function DrawerPanel({
   profile,
@@ -66,26 +82,52 @@ export default function DrawerPanel({
   roleSafetySummary,
   allRoleCards,
   batchSummary,
+  workerDetailSummary,
+  payrollDetailSummary,
+  moneyMovementDetailSummary,
+  proofPacketDetailSummary,
+  securityDetailSummary,
+  foundationLaneSummary,
+  debtDetailSummary,
+  givingDetailSummary,
+  saveStatus,
+  autoSaveRecoveryEnabled,
+  calmModeSummary,
+  focusMode,
+  setFocusMode,
+  utilitiesOpen,
+  setUtilitiesOpen,
+  emptyState,
+  searchQuery,
+  setSearchQuery,
+  quickFilter,
+  setQuickFilter,
 }) {
   const modelCards = modelSummaries?.[activeDrawer] || [];
   const latestIntent = workflowIntents?.[0] || null;
+  const drawerContext = getDrawerContext(activeDrawer, profile);
+  const filteredPreviewCards = [
+    ...modelCards,
+    ...(workerDetailSummary?.cards || []),
+    ...(payrollDetailSummary?.cards || []),
+    ...(moneyMovementDetailSummary?.movementCards || []),
+    ...(moneyMovementDetailSummary?.reserveCards || []),
+    ...(proofPacketDetailSummary?.packetCards || []),
+    ...(proofPacketDetailSummary?.requirementCards || []),
+    ...(securityDetailSummary?.doorCards || []),
+    ...(approvalSummary?.cards || []),
+    ...(documentRequestSummary?.cards || []),
+  ];
 
   return (
     <section className="drawer-card">
       <div className="drawer-header">
         <div>
           <p className="eyebrow">{profile.drawerTitle}</p>
-          <h2>Open one layer at a time.</h2>
+          <h2>{drawerContext.headline}</h2>
         </div>
 
-        <div className="drawer-tabs">
-          {profile.drawers.map(([key, label]) => (
-            <button key={key} className={activeDrawer === key ? "drawer-tab active" : "drawer-tab"} onClick={() => setActiveDrawer(key)}>
-              {label}
-              <span />
-            </button>
-          ))}
-        </div>
+        <DrawerTabGroups drawers={profile.drawers} activeDrawer={activeDrawer} setActiveDrawer={setActiveDrawer} />
       </div>
 
       <div className="drawer-action-zone">
@@ -93,20 +135,37 @@ export default function DrawerPanel({
         <IntentStatus latestIntent={latestIntent} />
       </div>
 
-      <CompanyScopePanel summary={companyScopeSummary} activeEntity={entity.key} setActiveEntity={setActiveEntity} />
-      <RoleSafetyPanel summary={roleSafetySummary} allRoleCards={allRoleCards} />
-      <BatchSummaryPanel summary={batchSummary} />
-      <SelectedIntentPanel latestIntent={latestIntent} intentCount={workflowIntents?.length || 0} />
-      <RecentIntents intents={workflowIntents} />
-      <div className="support-grid">
-        <NotesPanel notes={localNotes} noteDraft={noteDraft} setNoteDraft={setNoteDraft} onAddNote={onAddNote} entity={entity} />
-        <ActivityTimeline items={activityTimeline} />
-      </div>
+      <CalmModePanel summary={calmModeSummary} focusMode={focusMode} setFocusMode={setFocusMode} />
+      <SearchFilterBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} quickFilter={quickFilter} setQuickFilter={setQuickFilter} />
+      {filteredPreviewCards.length === 0 && <EntityEmptyState emptyState={emptyState} />}
+      <UtilityToggle utilitiesOpen={utilitiesOpen} setUtilitiesOpen={setUtilitiesOpen} />
+      {autoSaveRecoveryEnabled && utilitiesOpen && <AutoSaveRecoveryPanel saveStatus={saveStatus} />}
+
+      {utilitiesOpen && (
+        <div className="utility-panel-group">
+          <CompanyScopePanel summary={companyScopeSummary} activeEntity={entity.key} setActiveEntity={setActiveEntity} />
+          <RoleSafetyPanel summary={roleSafetySummary} allRoleCards={allRoleCards} />
+          <BatchSummaryPanel summary={batchSummary} />
+          <SelectedIntentPanel latestIntent={latestIntent} intentCount={workflowIntents?.length || 0} />
+          <RecentIntents intents={workflowIntents} />
+          <div className="support-grid">
+            <NotesPanel notes={localNotes} noteDraft={noteDraft} setNoteDraft={setNoteDraft} onAddNote={onAddNote} entity={entity} />
+            <ActivityTimeline items={activityTimeline} />
+          </div>
+        </div>
+      )}
+
+      {(searchQuery || quickFilter !== "all") && (
+        <FilteredCardPreview title={`${drawerContext.label} search results`} cards={filteredPreviewCards} searchQuery={searchQuery} quickFilter={quickFilter} />
+      )}
 
       <motion.div key={activeDrawer} className="drawer-content" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
 
         {activeDrawer === "workerLanes" && (
-          <PayOnboardPanel summary={payOnboardSummary} entity={entity} />
+          <>
+            <PayOnboardPanel summary={payOnboardSummary} entity={entity} />
+            <WorkerDetailPreview summary={workerDetailSummary} entity={entity} />
+          </>
         )}
 
 
@@ -120,7 +179,10 @@ export default function DrawerPanel({
         )}
 
         {activeDrawer === "payRun" && (
-          <PayRunPanel summary={payRunSummary} entity={entity} />
+          <>
+            <PayRunPanel summary={payRunSummary} entity={entity} />
+            <PayrollDetailPreview summary={payrollDetailSummary} entity={entity} />
+          </>
         )}
 
 
@@ -131,7 +193,10 @@ export default function DrawerPanel({
         )}
 
         {activeDrawer === "doors" && (
-          <PayGuardPanel summary={payGuardSummary} entity={entity} />
+          <>
+            <PayGuardPanel summary={payGuardSummary} entity={entity} />
+            <SecurityDetailPreview summary={securityDetailSummary} entity={entity} />
+          </>
         )}
 
         {activeDrawer === "stepUp" && (
@@ -160,6 +225,7 @@ export default function DrawerPanel({
           <>
             <PayProofPanel summary={payProofSummary} entity={entity} />
             <ProofSealPanel summary={sealWorkflowSummary} entity={entity} />
+            <ProofPacketDetailPreview summary={proofPacketDetailSummary} entity={entity} />
           </>
         )}
 
@@ -168,11 +234,17 @@ export default function DrawerPanel({
         )}
 
         {activeDrawer === "foundationDocs" && (
-          <PayProofDetailGrid title={`${entity.label} foundation documents`} cards={payProofSummary.foundationCards} dark />
+          <>
+            <PayProofDetailGrid title={`${entity.label} foundation documents`} cards={payProofSummary.foundationCards} dark />
+            <FoundationLanePanel summary={foundationLaneSummary} entity={entity} />
+          </>
         )}
 
         {activeDrawer === "cashFlow" && (
-          <PayFlowPanel summary={payFlowSummary} entity={entity} />
+          <>
+            <PayFlowPanel summary={payFlowSummary} entity={entity} />
+            <MoneyMovementDetailPreview summary={moneyMovementDetailSummary} entity={entity} />
+          </>
         )}
 
         {activeDrawer === "restricted" && (
@@ -211,7 +283,11 @@ export default function DrawerPanel({
             </div>
           ))}
 
-        {activeDrawer === "debt" &&
+        {activeDrawer === "debt" && (
+          <DebtDetailPanel summary={debtDetailSummary} entity={entity} />
+        )}
+
+        {false && activeDrawer === "debt" &&
           (filteredDebt.length ? filteredDebt : [{ id: "none", entity: entity.label, type: "No catalogued debt", balance: "$0", due: "—", status: "Clear" }]).map((item) => (
             <div className="dark-tile" key={item.id}>
               <strong>{item.entity}</strong>

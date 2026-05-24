@@ -1,10 +1,18 @@
+import { describeIntentType } from "./intentTypes.js";
+
 export function createWorkflowIntent({ action, entity, drawer, recordTitle }) {
   const now = new Date().toISOString();
+  const intentType = describeIntentType(action.key);
 
   return {
     id: `intent-${Date.now()}`,
     actionKey: action.key,
     actionLabel: action.label,
+    intentTypeLabel: intentType.label,
+    severity: intentType.severity,
+    tone: intentType.tone,
+    requiresReason: intentType.requiresReason,
+    backendReady: intentType.backendReady,
     entityKey: entity.key,
     entityLabel: entity.label,
     drawer,

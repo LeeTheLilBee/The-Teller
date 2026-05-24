@@ -1,9 +1,9 @@
 export const checkpointManifest = {
   product: "The Teller",
   company: "SimpleePay",
-  checkpoint: "Pack 021",
+  checkpoint: "Pack 037",
   savedThrough: "Pack 011",
-  pendingSaveBatch: "Packs 012-021",
+  pendingSaveBatch: "Packs 012-041",
   completedPacks: [
     "Pack 001A — Organized scaffold",
     "Pack 002 — Autosave and Dev Checks",
@@ -26,6 +26,7 @@ export const checkpointManifest = {
     "Pack 019 — Company Switcher Scoping Polish",
     "Pack 020 — Role View Polish + Role Safety Checks",
     "Pack 021 — Stability Checkpoint + Manifest Update",
+    "Pack 022 — UI Density Controls + Focus Mode",
   ],
   currentCapabilities: [
     "Assigned company scoping",
@@ -43,5 +44,5 @@ export const checkpointManifest = {
     "Local notes and activity timeline",
     "Autosave and system health strip",
   ],
-  nextLikelyPack: "Pack 022 — Cleaner UI Density Controls + Focus Mode",
+  nextLikelyPack: "Pack 038 — Local UI Preferences Persistence",
 };

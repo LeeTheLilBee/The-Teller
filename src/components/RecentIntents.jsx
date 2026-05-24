@@ -8,10 +8,10 @@ export default function RecentIntents({ intents }) {
       <p className="eyebrow">Recent Actions</p>
       <div>
         {intents.slice(0, 4).map((intent) => (
-          <article key={intent.id}>
+          <article className={intent.tone || ""} key={intent.id}>
             <strong>{intent.actionLabel}</strong>
-            <span>{intent.entityLabel} • {intent.drawer}</span>
-            <small>{formatIntentTime(intent.createdAt)}</small>
+            <span>{intent.intentTypeLabel} • {intent.severity}</span>
+            <small>{intent.entityLabel} • {intent.drawer} • {formatIntentTime(intent.createdAt)}</small>
           </article>
         ))}
       </div>

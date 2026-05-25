@@ -934,8 +934,10 @@ function buildManagerContext(card, ownerDecision) {
   };
 }
 
-
 function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
+  const [decisionReason, setDecisionReason] = useState(decisionReasonOptions[0]);
+  const [decisionNote, setDecisionNote] = useState("");
+
   if (!selectedReview?.card) return null;
 
   const card = selectedReview.card;
@@ -951,6 +953,10 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
       money: true,
       proof: decision === "proof_requested" || decision === "approved",
       tower: tower || decision === "tower_sent",
+      decision,
+      decisionReason,
+      decisionNote,
+      proofReviewed: details.checklist,
       autoCreated: true,
     };
 
@@ -1007,6 +1013,28 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
                   <strong>{value}</strong>
                 </div>
               ))}
+            </div>
+
+            <div className="fb-decision-reason-box">
+              <p className="fb-kicker">Decision reason</p>
+              <label>
+                <span>Reason</span>
+                <select value={decisionReason} onChange={(event) => setDecisionReason(event.target.value)}>
+                  {decisionReasonOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                <span>Optional note</span>
+                <textarea
+                  value={decisionNote}
+                  onChange={(event) => setDecisionNote(event.target.value)}
+                  placeholder="Add a short owner note for the receipt and Tower copy..."
+                  rows={4}
+                />
+              </label>
             </div>
           </article>
 

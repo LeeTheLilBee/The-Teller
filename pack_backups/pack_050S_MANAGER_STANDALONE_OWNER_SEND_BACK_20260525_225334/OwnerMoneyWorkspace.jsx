@@ -42,7 +42,6 @@ function confidenceLabel(confidence = "") {
 
 
 
-
 function makeOwnerReceipt(action) {
   const stamp = new Date().toISOString();
   const random = Math.floor(100000 + Math.random() * 900000);
@@ -62,6 +61,7 @@ function makeOwnerReceipt(action) {
     decisionReason: action?.decisionReason || "Owner reviewed and recorded this money action.",
     decisionNote: action?.decisionNote || "",
     proofReviewed: Array.isArray(action?.proofReviewed) ? action.proofReviewed : [],
+    managerContext: action?.managerContext || null,
     towerCopyRequired: true,
     towerReceiptId: `TOWER-COPY-${random}`,
     towerReceiptStatus: "Queued for Tower",
@@ -84,6 +84,7 @@ function makeTowerReceiptCopy(ownerReceipt) {
     decisionReason: ownerReceipt.decisionReason,
     decisionNote: ownerReceipt.decisionNote,
     proofReviewed: ownerReceipt.proofReviewed,
+    managerContext: ownerReceipt.managerContext,
     deliveryMode: "local_handoff_until_tower_api",
   };
 }
@@ -934,15 +935,21 @@ function buildManagerContext(card, ownerDecision) {
   };
 }
 
+function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision, onArchiveHandoff, reviewDecisions }) {
+  const [decisionReason, setDecisionReason] = useState(decisionReasonOptions[0]);
+  const [decisionNote, setDecisionNote] = useState("");
 
-function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
   if (!selectedReview?.card) return null;
 
   const card = selectedReview.card;
   const details = getReviewCardDetails(card);
+  const evidenceSlots = getEvidenceSlots(card);
   const tower = Boolean(card.tower);
+  const currentDecision = reviewDecisions?.[card.key] || "open";
 
   function detailAction(decision, label, description) {
+    const managerContext = buildManagerContext(card, decision);
+
     const action = {
       label,
       business: selectedReview.deskTitle || "Review Desk",
@@ -950,7 +957,12 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
       description,
       money: true,
       proof: decision === "proof_requested" || decision === "approved",
-      tower: tower || decision === "tower_sent",
+      tower: tower || decision === "tower_sent" || managerContext.possibleConflict || managerContext.towerSensitive,
+      decision,
+      decisionReason,
+      decisionNote,
+      proofReviewed: evidenceSlots.map((slot) => `${slot.label}: ${evidenceStatusLabel(slot.status)}`),
+      managerContext,
       autoCreated: true,
     };
 
@@ -960,6 +972,31 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
 
     if (onAutoReceipt) {
       onAutoReceipt(action);
+    }
+
+    onClose();
+  }
+
+  function archiveAction() {
+    const packet = makeArchiveHandoffPacket({ card, selectedReview, evidenceSlots });
+    const managerContext = buildManagerContext(card, "archive_prepared");
+
+    if (onArchiveHandoff) {
+      onArchiveHandoff(packet, {
+        label: `Prepare Archive packet · ${card.title}`,
+        business: selectedReview.deskTitle || "Review Desk",
+        target: card.title,
+        description: `Prepared Archive Vault handoff packet for ${card.title}.`,
+        money: false,
+        proof: true,
+        tower: true,
+        decision: "archive_prepared",
+        decisionReason: "Evidence packet prepared for Archive Vault handoff.",
+        decisionNote,
+        proofReviewed: packet.evidence.map((slot) => `${slot.label}: ${slot.status}`),
+        managerContext,
+        autoCreated: true,
+      });
     }
 
     onClose();
@@ -976,6 +1013,8 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
           </div>
           <button type="button" className="fb-ghost" onClick={onClose}>Close</button>
         </div>
+
+        <ManagerOwnerBridge card={card} ownerDecision={currentDecision} />
 
         <div className="fb-review-detail-layout">
           <article className="fb-review-detail-main">
@@ -1007,6 +1046,30 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
                   <strong>{value}</strong>
                 </div>
               ))}
+            </div>
+
+            <EvidenceSlots card={card} />
+
+            <div className="fb-decision-reason-box">
+              <p className="fb-kicker">Decision reason</p>
+              <label>
+                <span>Reason</span>
+                <select value={decisionReason} onChange={(event) => setDecisionReason(event.target.value)}>
+                  {decisionReasonOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                <span>Optional note</span>
+                <textarea
+                  value={decisionNote}
+                  onChange={(event) => setDecisionNote(event.target.value)}
+                  placeholder="Add a short owner note for the receipt and Tower copy..."
+                  rows={4}
+                />
+              </label>
             </div>
           </article>
 
@@ -1046,6 +1109,12 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
             onClick={() => detailAction(tower ? "tower_sent" : "proof_requested", tower ? `Send detail to Tower · ${card.title}` : `Request proof from detail · ${card.title}`, tower ? "Protected detail item sent to The Tower handoff queue." : `Proof requested from detail review: ${card.proof}`)}
           >
             {tower ? "Send to Tower" : "Request Proof"}
+          </button>
+          <button
+            type="button"
+            onClick={archiveAction}
+          >
+            Prepare Archive Packet
           </button>
         </div>
       </section>
@@ -1115,6 +1184,27 @@ function TowerReceiptDock({ towerReceipts }) {
             <p>{receipt.reason}</p>
             {receipt.decisionReason ? <p className="fb-receipt-reason">Reason: {receipt.decisionReason}</p> : null}
             {receipt.decisionNote ? <p className="fb-receipt-reason">Note: {receipt.decisionNote}</p> : null}
+            {receipt.managerContext ? (
+              <div className="fb-receipt-manager-context">
+                <small>Manager: {receipt.managerContext.managerDecision}</small>
+                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
+                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
+              </div>
+            ) : null}
+            {receipt.managerContext ? (
+              <div className="fb-receipt-manager-context">
+                <small>Manager: {receipt.managerContext.managerDecision}</small>
+                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
+                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
+              </div>
+            ) : null}
+            {receipt.proofReviewed?.length ? (
+              <div className="fb-receipt-proof-list">
+                {receipt.proofReviewed.slice(0, 3).map((proof) => (
+                  <small key={proof}>{proof}</small>
+                ))}
+              </div>
+            ) : null}
             <small>Owner receipt: {receipt.ownerReceiptId}</small>
           </article>
         ))}
@@ -1145,6 +1235,20 @@ function ReceiptDock({ receipts }) {
             <p>{receipt.target}</p>
             {receipt.decisionReason ? <p className="fb-receipt-reason">Reason: {receipt.decisionReason}</p> : null}
             {receipt.decisionNote ? <p className="fb-receipt-reason">Note: {receipt.decisionNote}</p> : null}
+            {receipt.managerContext ? (
+              <div className="fb-receipt-manager-context">
+                <small>Manager: {receipt.managerContext.managerDecision}</small>
+                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
+                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
+              </div>
+            ) : null}
+            {receipt.proofReviewed?.length ? (
+              <div className="fb-receipt-proof-list">
+                {receipt.proofReviewed.slice(0, 3).map((proof) => (
+                  <small key={proof}>{proof}</small>
+                ))}
+              </div>
+            ) : null}
             <small>{receipt.status} · {new Date(receipt.createdAt).toLocaleString()}</small>
           </article>
         ))}
@@ -1863,7 +1967,7 @@ function ManagerSubmissionBridge({ activeBusiness, lane, submissions, onSubmit }
 }
 
 
-function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions, onOpenReviewCard, managerSubmissions = [] }) {
+function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions, onOpenReviewCard, managerSubmissions = [], onSendBackToManager }) {
   const [reviewFilter, setReviewFilter] = useState("all");
   const desk = getReviewDeskData(activeBusiness);
   const submittedCards = managerSubmissions.filter((card) => card.businessKey === activeBusiness);
@@ -2226,7 +2330,6 @@ export default function OwnerMoneyWorkspace() {
 
     saveManagerSubmission(card);
     saveManagerSubmission(card);
-    saveManagerSubmission(card);
     setManagerSubmissions((current) => [card, ...current].slice(0, 12));
 
     pushNotification(makeOwnerNotification({
@@ -2508,7 +2611,6 @@ export default function OwnerMoneyWorkspace() {
         </>
       )}
 
-      <ArchiveHandoffDock archivePackets={archivePackets} />
       <ArchiveHandoffDock archivePackets={archivePackets} />
       <ReceiptDock receipts={receipts} />
       <TowerReceiptDock towerReceipts={towerReceiptQueue} />

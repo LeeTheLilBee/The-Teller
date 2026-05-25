@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import EmployeeDocumentVaultPanel from "./teller/EmployeeDocumentVaultPanel.jsx";
 import ManagerMeldPanel from "./teller/ManagerMeldPanel.jsx";
 import OwnerMoneyWorkspace from "./teller/OwnerMoneyWorkspace.jsx";
-import ManagerStandaloneWorkspace from "./teller/ManagerStandaloneWorkspace.jsx";
 import "./teller/tellerShell.css";
 
 function readTowerClearance() {
   const params = new URLSearchParams(window.location.search);
-const tellerView = params.get("teller_view") || "";
   const clearance = String(params.get("tower_clearance") || "").toLowerCase().trim();
 
   if (["employee", "manager", "owner"].includes(clearance)) {
@@ -123,7 +121,7 @@ export default function App() {
         <main className="teller-main">
           <section className="teller-screen-card">
             {clearance === "employee" ? <EmployeeDocumentVaultPanel /> : null}
-            {clearance === "manager" || tellerView === "manager" ? <ManagerStandaloneWorkspace /> : null}
+            {clearance === "manager" ? <ManagerMeldPanel /> : null}
             {clearance === "owner" ? <OwnerMoneyWorkspace /> : null}
           </section>
         </main>

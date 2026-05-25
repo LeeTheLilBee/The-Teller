@@ -249,57 +249,107 @@
     "050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3": {
       "name": "Review Detail Popup and Auto Receipt Repair V3",
       "status": "complete",
-      "timestamp": "2026-05-25T19:26:14.853984",
+      "timestamp": "2026-05-25T22:53:48.009115",
       "files_patched": [
         "src/teller/OwnerMoneyWorkspace.jsx",
         "src/teller/ownerMoneyWorkspace.css"
       ],
-      "backup": "pack_backups/pack_050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3_20260525_192613",
+      "backup": "pack_backups/pack_050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3_20260525_225346",
       "purpose": "Replace ReviewDetailPanel by function boundary so details open as a popup and detail-level decisions auto-create receipts and Tower copies."
     },
     "050L_DECISION_REASONS_NOTES": {
       "name": "Decision Reasons and Notes",
       "status": "complete",
-      "timestamp": "2026-05-25T19:49:03.239405",
+      "timestamp": "2026-05-25T22:53:46.872484",
       "files_patched": [
         "src/teller/OwnerMoneyWorkspace.jsx",
         "src/teller/ownerMoneyWorkspace.css"
       ],
-      "backup": "pack_backups/pack_050L_DECISION_REASONS_NOTES_20260525_194902",
+      "backup": "pack_backups/pack_050L_DECISION_REASONS_NOTES_20260525_225345",
       "purpose": "Add decision reason picker, optional owner note, receipt reason capture, Tower copy reason capture, and notification reason display."
     },
     "050M_PROOF_EVIDENCE_SLOTS": {
       "name": "Proof Evidence Slots",
       "status": "complete",
-      "timestamp": "2026-05-25T20:00:45.360601",
+      "timestamp": "2026-05-25T22:53:45.713979",
       "files_patched": [
         "src/teller/OwnerMoneyWorkspace.jsx",
         "src/teller/ownerMoneyWorkspace.css"
       ],
-      "backup": "pack_backups/pack_050M_PROOF_EVIDENCE_SLOTS_20260525_200044",
+      "backup": "pack_backups/pack_050M_PROOF_EVIDENCE_SLOTS_20260525_225344",
       "purpose": "Add proof/evidence slots, missing proof warnings, Archive Vault placeholders, and proof-reviewed data copied into owner/Tower receipts."
     },
     "050N_ARCHIVE_VAULT_HANDOFF_PREVIEW": {
       "name": "Archive Vault Handoff Preview",
       "status": "complete",
-      "timestamp": "2026-05-25T20:31:06.677677",
+      "timestamp": "2026-05-25T22:53:43.977189",
       "files_patched": [
         "src/teller/OwnerMoneyWorkspace.jsx",
         "src/teller/ownerMoneyWorkspace.css"
       ],
-      "backup": "pack_backups/pack_050N_ARCHIVE_VAULT_HANDOFF_PREVIEW_20260525_203105",
+      "backup": "pack_backups/pack_050N_ARCHIVE_VAULT_HANDOFF_PREVIEW_20260525_225342",
       "purpose": "Add local Archive Vault evidence packet handoff preview from Review Detail evidence slots, with receipts and notifications."
     },
     "050O_MANAGER_OWNER_REVIEW_BRIDGE": {
       "name": "Manager Owner Review Bridge",
       "status": "complete",
-      "timestamp": "2026-05-25T20:58:08.710462",
+      "timestamp": "2026-05-25T22:53:42.030582",
       "files_patched": [
         "src/teller/OwnerMoneyWorkspace.jsx",
         "src/teller/ownerMoneyWorkspace.css"
       ],
-      "backup": "pack_backups/pack_050O_MANAGER_OWNER_REVIEW_BRIDGE_20260525_205807",
+      "backup": "pack_backups/pack_050O_MANAGER_OWNER_REVIEW_BRIDGE_20260525_225340",
       "purpose": "Add manager-submitted context, manager recommendations, owner decision lane, conflict/Tower escalation indicators, and manager context in receipts."
+    },
+    "050P_MANAGER_SUBMISSION_FLOW": {
+      "name": "Manager Submission Flow Into Owner Review Desk",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:40.567992",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050P_MANAGER_SUBMISSION_FLOW_20260525_225339",
+      "purpose": "Add local manager submission bridge that creates owner Review Desk cards with manager context, notifications, detail popup support, receipts, and Tower copies."
+    },
+    "050Q_MANAGER_SUBMISSION_FORM_REFINEMENT": {
+      "name": "Manager Submission Form Refinement",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:39.392579",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050Q_MANAGER_SUBMISSION_FORM_REFINEMENT_20260525_225338",
+      "purpose": "Replace sample-only manager submission bridge with a usable form for issue type, person, money impact, proof status, risk, manager note, Tower-sensitive flag, and owner Review Desk submission."
+    },
+    "050R_BUSINESS_SPECIFIC_MANAGER_SUBMISSION_TEMPLATES": {
+      "name": "Business Specific Manager Submission Templates",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:38.002089",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050R_BUSINESS_SPECIFIC_MANAGER_SUBMISSION_TEMPLATES_20260525_225336",
+      "purpose": "Make manager submission templates, issue types, placeholders, quick-fill buttons, and submitted card details change based on selected business."
+    },
+    "050S_MANAGER_STANDALONE_OWNER_SEND_BACK": {
+      "name": "Manager Standalone Board and Owner Send Back Bridge",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:35.714088",
+      "files_written": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css",
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050S_MANAGER_STANDALONE_OWNER_SEND_BACK_20260525_225334",
+      "purpose": "Create standalone manager workspace, local manager-owner bridge, owner send-back action, and manager return queue."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

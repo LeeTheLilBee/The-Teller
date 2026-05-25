@@ -9,7 +9,6 @@ import {
   getOwnerTheme,
   getTodayOwnerFocus,
 } from "./ownerMoneyData";
-import { readManagerSubmissions, saveManagerReturnItem, saveManagerSubmission, createBridgeId } from "./managerOwnerBridge";
 import "./ownerMoneyWorkspace.css";
 
 function statusLabel(status = "") {
@@ -42,7 +41,6 @@ function confidenceLabel(confidence = "") {
 
 
 
-
 function makeOwnerReceipt(action) {
   const stamp = new Date().toISOString();
   const random = Math.floor(100000 + Math.random() * 900000);
@@ -62,6 +60,7 @@ function makeOwnerReceipt(action) {
     decisionReason: action?.decisionReason || "Owner reviewed and recorded this money action.",
     decisionNote: action?.decisionNote || "",
     proofReviewed: Array.isArray(action?.proofReviewed) ? action.proofReviewed : [],
+    managerContext: action?.managerContext || null,
     towerCopyRequired: true,
     towerReceiptId: `TOWER-COPY-${random}`,
     towerReceiptStatus: "Queued for Tower",
@@ -84,6 +83,7 @@ function makeTowerReceiptCopy(ownerReceipt) {
     decisionReason: ownerReceipt.decisionReason,
     decisionNote: ownerReceipt.decisionNote,
     proofReviewed: ownerReceipt.proofReviewed,
+    managerContext: ownerReceipt.managerContext,
     deliveryMode: "local_handoff_until_tower_api",
   };
 }
@@ -934,15 +934,21 @@ function buildManagerContext(card, ownerDecision) {
   };
 }
 
+function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision, onArchiveHandoff, reviewDecisions }) {
+  const [decisionReason, setDecisionReason] = useState(decisionReasonOptions[0]);
+  const [decisionNote, setDecisionNote] = useState("");
 
-function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
   if (!selectedReview?.card) return null;
 
   const card = selectedReview.card;
   const details = getReviewCardDetails(card);
+  const evidenceSlots = getEvidenceSlots(card);
   const tower = Boolean(card.tower);
+  const currentDecision = reviewDecisions?.[card.key] || "open";
 
   function detailAction(decision, label, description) {
+    const managerContext = buildManagerContext(card, decision);
+
     const action = {
       label,
       business: selectedReview.deskTitle || "Review Desk",
@@ -950,7 +956,12 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
       description,
       money: true,
       proof: decision === "proof_requested" || decision === "approved",
-      tower: tower || decision === "tower_sent",
+      tower: tower || decision === "tower_sent" || managerContext.possibleConflict || managerContext.towerSensitive,
+      decision,
+      decisionReason,
+      decisionNote,
+      proofReviewed: evidenceSlots.map((slot) => `${slot.label}: ${evidenceStatusLabel(slot.status)}`),
+      managerContext,
       autoCreated: true,
     };
 
@@ -960,6 +971,31 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
 
     if (onAutoReceipt) {
       onAutoReceipt(action);
+    }
+
+    onClose();
+  }
+
+  function archiveAction() {
+    const packet = makeArchiveHandoffPacket({ card, selectedReview, evidenceSlots });
+    const managerContext = buildManagerContext(card, "archive_prepared");
+
+    if (onArchiveHandoff) {
+      onArchiveHandoff(packet, {
+        label: `Prepare Archive packet · ${card.title}`,
+        business: selectedReview.deskTitle || "Review Desk",
+        target: card.title,
+        description: `Prepared Archive Vault handoff packet for ${card.title}.`,
+        money: false,
+        proof: true,
+        tower: true,
+        decision: "archive_prepared",
+        decisionReason: "Evidence packet prepared for Archive Vault handoff.",
+        decisionNote,
+        proofReviewed: packet.evidence.map((slot) => `${slot.label}: ${slot.status}`),
+        managerContext,
+        autoCreated: true,
+      });
     }
 
     onClose();
@@ -976,6 +1012,8 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
           </div>
           <button type="button" className="fb-ghost" onClick={onClose}>Close</button>
         </div>
+
+        <ManagerOwnerBridge card={card} ownerDecision={currentDecision} />
 
         <div className="fb-review-detail-layout">
           <article className="fb-review-detail-main">
@@ -1007,6 +1045,30 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
                   <strong>{value}</strong>
                 </div>
               ))}
+            </div>
+
+            <EvidenceSlots card={card} />
+
+            <div className="fb-decision-reason-box">
+              <p className="fb-kicker">Decision reason</p>
+              <label>
+                <span>Reason</span>
+                <select value={decisionReason} onChange={(event) => setDecisionReason(event.target.value)}>
+                  {decisionReasonOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                <span>Optional note</span>
+                <textarea
+                  value={decisionNote}
+                  onChange={(event) => setDecisionNote(event.target.value)}
+                  placeholder="Add a short owner note for the receipt and Tower copy..."
+                  rows={4}
+                />
+              </label>
             </div>
           </article>
 
@@ -1046,6 +1108,12 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
             onClick={() => detailAction(tower ? "tower_sent" : "proof_requested", tower ? `Send detail to Tower · ${card.title}` : `Request proof from detail · ${card.title}`, tower ? "Protected detail item sent to The Tower handoff queue." : `Proof requested from detail review: ${card.proof}`)}
           >
             {tower ? "Send to Tower" : "Request Proof"}
+          </button>
+          <button
+            type="button"
+            onClick={archiveAction}
+          >
+            Prepare Archive Packet
           </button>
         </div>
       </section>
@@ -1115,6 +1183,27 @@ function TowerReceiptDock({ towerReceipts }) {
             <p>{receipt.reason}</p>
             {receipt.decisionReason ? <p className="fb-receipt-reason">Reason: {receipt.decisionReason}</p> : null}
             {receipt.decisionNote ? <p className="fb-receipt-reason">Note: {receipt.decisionNote}</p> : null}
+            {receipt.managerContext ? (
+              <div className="fb-receipt-manager-context">
+                <small>Manager: {receipt.managerContext.managerDecision}</small>
+                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
+                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
+              </div>
+            ) : null}
+            {receipt.managerContext ? (
+              <div className="fb-receipt-manager-context">
+                <small>Manager: {receipt.managerContext.managerDecision}</small>
+                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
+                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
+              </div>
+            ) : null}
+            {receipt.proofReviewed?.length ? (
+              <div className="fb-receipt-proof-list">
+                {receipt.proofReviewed.slice(0, 3).map((proof) => (
+                  <small key={proof}>{proof}</small>
+                ))}
+              </div>
+            ) : null}
             <small>Owner receipt: {receipt.ownerReceiptId}</small>
           </article>
         ))}
@@ -1145,6 +1234,20 @@ function ReceiptDock({ receipts }) {
             <p>{receipt.target}</p>
             {receipt.decisionReason ? <p className="fb-receipt-reason">Reason: {receipt.decisionReason}</p> : null}
             {receipt.decisionNote ? <p className="fb-receipt-reason">Note: {receipt.decisionNote}</p> : null}
+            {receipt.managerContext ? (
+              <div className="fb-receipt-manager-context">
+                <small>Manager: {receipt.managerContext.managerDecision}</small>
+                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
+                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
+              </div>
+            ) : null}
+            {receipt.proofReviewed?.length ? (
+              <div className="fb-receipt-proof-list">
+                {receipt.proofReviewed.slice(0, 3).map((proof) => (
+                  <small key={proof}>{proof}</small>
+                ))}
+              </div>
+            ) : null}
             <small>{receipt.status} · {new Date(receipt.createdAt).toLocaleString()}</small>
           </article>
         ))}
@@ -1577,14 +1680,14 @@ function getReviewDeskData(activeBusiness) {
 }
 
 
-function createManagerSubmissionCard({ activeBusiness, lane, kind, payload = {} }) {
+function createManagerSubmissionCard({ activeBusiness, lane, kind }) {
   const random = Math.floor(100000 + Math.random() * 900000);
   const createdAt = new Date().toISOString();
   const businessTitle = lane?.title || activeBusiness || "Business";
 
   const templates = {
     clock: {
-      label: "Clock-in issue",
+      label: "Manager clock-in issue",
       title: `${businessTitle} clock-in needs owner eyes`,
       detail: "Manager surfaced a clock-in or shift timing item for owner review before money moves.",
       money: "$46.25",
@@ -1616,7 +1719,7 @@ function createManagerSubmissionCard({ activeBusiness, lane, kind, payload = {} 
       disagreementRisk: true,
     },
     proof: {
-      label: "Proof request",
+      label: "Manager proof request",
       title: `${businessTitle} proof is missing`,
       detail: "Manager could not find proof for this money item. Owner should request proof or hold.",
       money: "Proof needed",
@@ -1632,7 +1735,7 @@ function createManagerSubmissionCard({ activeBusiness, lane, kind, payload = {} 
       disagreementRisk: true,
     },
     tower: {
-      label: "Tower-sensitive item",
+      label: "Manager Tower item",
       title: `${businessTitle} sensitive change needs Tower`,
       detail: "Manager surfaced a sensitive change that should not be handled only inside The Teller.",
       money: "Protected",
@@ -1651,85 +1754,36 @@ function createManagerSubmissionCard({ activeBusiness, lane, kind, payload = {} 
   };
 
   const template = templates[kind] || templates.proof;
-  const person = String(payload.person || "").trim();
-  const issueTitle = String(payload.title || "").trim();
-  const managerNote = String(payload.managerNote || "").trim();
-  const moneyImpact = String(payload.moneyImpact || "").trim();
-  const proofStatus = String(payload.proofStatus || "").trim();
-  const risk = String(payload.risk || "").trim();
-  const towerSensitive = Boolean(payload.towerSensitive);
-  const managerDecision = String(payload.managerDecision || "").trim();
-
-  const title = issueTitle || (person ? `${person} · ${template.title}` : template.title);
-  const detail = managerNote || template.detail;
-  const status = proofStatus || template.status;
-  const finalRisk = risk || template.risk;
-  const finalProof = status.toLowerCase().includes("missing") || status.toLowerCase().includes("proof")
-    ? "Manager proof needed"
-    : template.proof;
 
   return {
     key: `manager-${activeBusiness}-${kind}-${random}`,
     businessKey: activeBusiness,
     label: template.label,
-    title,
-    detail,
-    money: moneyImpact || template.money,
-    status,
-    risk: finalRisk,
-    proof: finalProof,
-    tower: towerSensitive || template.tower,
+    title: template.title,
+    detail: template.detail,
+    money: template.money,
+    status: template.status,
+    risk: template.risk,
+    proof: template.proof,
+    tower: template.tower,
     submittedAt: createdAt,
     source: "manager_submission",
-    person: person || "Unassigned person",
     managerBridge: {
-      submittedBy: payload.submittedBy || "Manager Portal",
+      submittedBy: "Manager Portal",
       submittedAt: new Date(createdAt).toLocaleString(),
-      managerDecision: managerDecision || template.managerDecision,
-      managerRiskFlag: finalRisk,
-      managerNote: detail,
-      recommendation: payload.recommendation || template.recommendation,
+      managerDecision: template.managerDecision,
+      managerRiskFlag: template.managerRiskFlag,
+      managerNote: template.managerNote,
+      recommendation: template.recommendation,
       ownerDefault: template.ownerDefault,
-      disagreementRisk: Boolean(template.disagreementRisk || towerSensitive || finalRisk.toLowerCase() === "high"),
-      towerRequired: Boolean(towerSensitive || template.towerRequired || template.tower),
+      disagreementRisk: template.disagreementRisk,
+      towerRequired: template.towerRequired || template.tower,
     },
   };
 }
 
 function ManagerSubmissionBridge({ activeBusiness, lane, submissions, onSubmit }) {
-  const [form, setForm] = useState({
-    kind: "clock",
-    person: "",
-    title: "",
-    moneyImpact: "",
-    proofStatus: "Needs review",
-    risk: "Medium",
-    managerDecision: "",
-    managerNote: "",
-    towerSensitive: false,
-  });
-
   const businessSubmissions = submissions.filter((item) => item.businessKey === activeBusiness);
-
-  function updateForm(key, value) {
-    setForm((current) => ({
-      ...current,
-      [key]: value,
-    }));
-  }
-
-  function submitForm() {
-    onSubmit(form.kind, form);
-    setForm((current) => ({
-      ...current,
-      person: "",
-      title: "",
-      moneyImpact: "",
-      managerDecision: "",
-      managerNote: "",
-      towerSensitive: false,
-    }));
-  }
 
   return (
     <section className="fb-manager-submission-bridge" style={{ "--manager-color": lane.color }}>
@@ -1745,101 +1799,11 @@ function ManagerSubmissionBridge({ activeBusiness, lane, submissions, onSubmit }
         <Badge tone="strong">{businessSubmissions.length} submitted</Badge>
       </div>
 
-      <div className="fb-manager-submit-form">
-        <label>
-          <span>Issue type</span>
-          <select value={form.kind} onChange={(event) => updateForm("kind", event.target.value)}>
-            <option value="clock">Clock-in issue</option>
-            <option value="edit">Manager time edit</option>
-            <option value="proof">Proof request</option>
-            <option value="tower">Tower-sensitive item</option>
-          </select>
-        </label>
-
-        <label>
-          <span>Employee / person</span>
-          <input
-            value={form.person}
-            onChange={(event) => updateForm("person", event.target.value)}
-            placeholder="Example: Maya J."
-          />
-        </label>
-
-        <label>
-          <span>Money impact</span>
-          <input
-            value={form.moneyImpact}
-            onChange={(event) => updateForm("moneyImpact", event.target.value)}
-            placeholder="Example: $118.40"
-          />
-        </label>
-
-        <label>
-          <span>Proof status</span>
-          <select value={form.proofStatus} onChange={(event) => updateForm("proofStatus", event.target.value)}>
-            <option value="Needs review">Needs review</option>
-            <option value="Needs proof">Needs proof</option>
-            <option value="Proof attached">Proof attached</option>
-            <option value="Tower required">Tower required</option>
-          </select>
-        </label>
-
-        <label>
-          <span>Risk</span>
-          <select value={form.risk} onChange={(event) => updateForm("risk", event.target.value)}>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-          </select>
-        </label>
-
-        <label className="fb-manager-form-wide">
-          <span>Title / short summary</span>
-          <input
-            value={form.title}
-            onChange={(event) => updateForm("title", event.target.value)}
-            placeholder="Example: Two time entries were edited"
-          />
-        </label>
-
-        <label className="fb-manager-form-wide">
-          <span>Manager decision</span>
-          <input
-            value={form.managerDecision}
-            onChange={(event) => updateForm("managerDecision", event.target.value)}
-            placeholder="Example: Needs explanation before payroll closes"
-          />
-        </label>
-
-        <label className="fb-manager-form-wide">
-          <span>Manager note</span>
-          <textarea
-            value={form.managerNote}
-            onChange={(event) => updateForm("managerNote", event.target.value)}
-            placeholder="Write what the manager is seeing..."
-            rows={4}
-          />
-        </label>
-
-        <label className="fb-manager-check">
-          <input
-            type="checkbox"
-            checked={form.towerSensitive}
-            onChange={(event) => updateForm("towerSensitive", event.target.checked)}
-          />
-          <span>Tower-sensitive / protected change</span>
-        </label>
-
-        <div className="fb-manager-form-actions">
-          <button type="button" onClick={submitForm}>Submit to Owner Review Desk</button>
-        </div>
-      </div>
-
       <div className="fb-manager-submit-actions">
-        <button type="button" onClick={() => onSubmit("clock")}>Quick clock-in</button>
-        <button type="button" onClick={() => onSubmit("edit")}>Quick manager edit</button>
-        <button type="button" onClick={() => onSubmit("proof")}>Quick proof request</button>
-        <button type="button" onClick={() => onSubmit("tower")}>Quick Tower item</button>
+        <button type="button" onClick={() => onSubmit("clock")}>Submit clock-in issue</button>
+        <button type="button" onClick={() => onSubmit("edit")}>Submit manager edit</button>
+        <button type="button" onClick={() => onSubmit("proof")}>Submit proof request</button>
+        <button type="button" onClick={() => onSubmit("tower")}>Submit Tower item</button>
       </div>
 
       <div className="fb-manager-submission-strip">
@@ -1853,7 +1817,7 @@ function ManagerSubmissionBridge({ activeBusiness, lane, submissions, onSubmit }
         )) : (
           <article className="is-empty">
             <span>No manager submissions yet</span>
-            <strong>Use the form above to simulate manager-to-owner flow.</strong>
+            <strong>Use the buttons above to simulate manager-to-owner flow.</strong>
             <p>Submitted items will appear in the Review Desk for the selected business.</p>
           </article>
         )}
@@ -1861,7 +1825,6 @@ function ManagerSubmissionBridge({ activeBusiness, lane, submissions, onSubmit }
     </section>
   );
 }
-
 
 function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions, onOpenReviewCard, managerSubmissions = [] }) {
   const [reviewFilter, setReviewFilter] = useState("all");
@@ -2178,31 +2141,6 @@ export default function OwnerMoneyWorkspace() {
   const focus = useMemo(() => getTodayOwnerFocus(ownerMoneyQueue), []);
   const activeLane = ownerBusinessLanes.find((lane) => lane.key === activeBusiness) || ownerBusinessLanes[0];
 
-  function refreshManagerBridgeSubmissions() {
-    const bridgeSubmissions = readManagerSubmissions();
-    setManagerSubmissions((current) => {
-      const existingKeys = new Set(current.map((item) => item.key));
-      const merged = [...bridgeSubmissions.filter((item) => !existingKeys.has(item.key)), ...current];
-      return merged.slice(0, 24);
-    });
-  }
-
-  React.useEffect(() => {
-    refreshManagerBridgeSubmissions();
-
-    function handleBridgeUpdate() {
-      refreshManagerBridgeSubmissions();
-    }
-
-    window.addEventListener("the-teller-bridge-updated", handleBridgeUpdate);
-    window.addEventListener("storage", handleBridgeUpdate);
-
-    return () => {
-      window.removeEventListener("the-teller-bridge-updated", handleBridgeUpdate);
-      window.removeEventListener("storage", handleBridgeUpdate);
-    };
-  }, []);
-
   function openAction(action) {
     setPendingAction(action);
   }
@@ -2216,17 +2154,13 @@ export default function OwnerMoneyWorkspace() {
     setNotificationsOpen(false);
   }
 
-  function createManagerReviewSubmission(kind, payload = {}) {
+  function createManagerReviewSubmission(kind) {
     const card = createManagerSubmissionCard({
       activeBusiness,
       lane: activeLane,
       kind,
-      payload,
     });
 
-    saveManagerSubmission(card);
-    saveManagerSubmission(card);
-    saveManagerSubmission(card);
     setManagerSubmissions((current) => [card, ...current].slice(0, 12));
 
     pushNotification(makeOwnerNotification({
@@ -2313,50 +2247,6 @@ export default function OwnerMoneyWorkspace() {
       description: `A receipt was automatically created here and copied into the Tower handoff queue. ${action.description || ""}`,
       alreadyReceipted: true,
     });
-  }
-
-  function sendBackToManager(card, deskTitle) {
-    const managerContext = buildManagerContext(card, "sent_back_to_manager");
-
-    const returnItem = {
-      id: createBridgeId("OWNER-RETURN"),
-      cardKey: card.key,
-      business: deskTitle || activeLane.title,
-      title: card.title,
-      reason: `Owner sent this back to manager: ${card.detail}`,
-      ownerNote: managerContext.managerRecommendation || "Manager should review, correct, or attach proof.",
-      managerStatus: "Needs manager action",
-      createdAt: new Date().toISOString(),
-      managerContext,
-    };
-
-    saveManagerReturnItem(returnItem);
-
-    autoCreateReceipt({
-      label: `Send back to manager · ${card.title}`,
-      business: deskTitle || activeLane.title,
-      target: card.title,
-      description: returnItem.reason,
-      money: true,
-      proof: true,
-      tower: Boolean(card.tower || managerContext.towerSensitive || managerContext.possibleConflict),
-      decision: "sent_back_to_manager",
-      decisionReason: "Owner sent the item back to manager for correction, proof, or explanation.",
-      decisionNote: returnItem.ownerNote,
-      proofReviewed: [card.proof, card.status, card.risk].filter(Boolean),
-      managerContext,
-      autoCreated: true,
-    });
-
-    pushNotification(makeOwnerNotification({
-      type: "proof_requested",
-      title: "Sent back to manager",
-      body: `${card.title} was sent back to the manager board.`,
-      decisionReason: "Manager action requested before owner closes this item.",
-      decisionNote: returnItem.ownerNote,
-    }));
-
-    setNotificationsOpen(true);
   }
 
   function createArchiveHandoff(packet, action) {
@@ -2501,14 +2391,12 @@ export default function OwnerMoneyWorkspace() {
             setReviewDecisions={setReviewDecisions}
             onOpenReviewCard={setSelectedReview}
             managerSubmissions={managerSubmissions}
-            onSendBackToManager={sendBackToManager}
           />
           <MoneyConstellations queue={getBusinessSpecificItems(activeBusiness)} onAction={openAction} />
           <SnapshotRibbon cards={[getBusinessSnapshot(activeBusiness), ...ownerSnapshotCards.filter((card) => card.key !== activeBusiness).slice(0, 3)]} />
         </>
       )}
 
-      <ArchiveHandoffDock archivePackets={archivePackets} />
       <ArchiveHandoffDock archivePackets={archivePackets} />
       <ReceiptDock receipts={receipts} />
       <TowerReceiptDock towerReceipts={towerReceiptQueue} />

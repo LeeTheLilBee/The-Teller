@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import EmployeeDocumentVaultPanel from "./teller/EmployeeDocumentVaultPanel.jsx";
 import ManagerMeldPanel from "./teller/ManagerMeldPanel.jsx";
-import OwnerMoneyWorkspace from "./teller/OwnerMoneyWorkspace.jsx";
 import "./teller/tellerShell.css";
 
 function readTowerClearance() {
@@ -122,7 +121,7 @@ export default function App() {
           <section className="teller-screen-card">
             {clearance === "employee" ? <EmployeeDocumentVaultPanel /> : null}
             {clearance === "manager" ? <ManagerMeldPanel /> : null}
-            {clearance === "owner" ? <OwnerMoneyWorkspace /> : null}
+            {clearance === "owner" ? <OwnerComingSoon /> : null}
           </section>
         </main>
       </div>

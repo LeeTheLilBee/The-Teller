@@ -80,6 +80,127 @@
       ],
       "backup": "pack_backups/pack_050C_REPAIR_STYLE_INNER_PANELS_20260525_040043",
       "purpose": "Style the inner Employee and Manager panels so they render as designed cards, grids, buttons, chips, document vaults, and receipt sections instead of plain text."
+    },
+    "050D_A": {
+      "name": "Owner Money Foundation",
+      "status": "complete",
+      "timestamp": "2026-05-25T14:16:05.282924",
+      "files_written": [
+        "src/teller/ownerMoneyData.js"
+      ],
+      "purpose": "Create owner money data, whimsical themes, business money lanes, owner queue, trust snapshot, protected MrkTrade lane, skincare money-only lane, and calm mode seed without mounting UI yet.",
+      "backup": "pack_backups/pack_050D_A_20260525_141605"
+    },
+    "050D_B": {
+      "name": "Owner Visual Workspace and Theme Closet",
+      "status": "complete",
+      "timestamp": "2026-05-25T14:25:29.172474",
+      "files_written": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "purpose": "Mount the owner money workspace behind Tower owner clearance with whimsical themes, Today\u2019s Money Focus, snapshot cards, business lanes, calm mode, and protected MrkTrade handling.",
+      "backup": "pack_backups/pack_050D_B_20260525_142527"
+    },
+    "050D_C_FOCUS_BOARD_PREVIEW": {
+      "name": "Owner Anti-List Focus Board Preview",
+      "status": "complete",
+      "timestamp": "2026-05-25T14:50:02.039712",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_FOCUS_BOARD_PREVIEW_20260525_145002",
+      "purpose": "Replace the list-heavy owner dashboard with a focus-board preview: large priority focus, business orbit, grouped constellations, quiet snapshot ribbon, and calm mode."
+    },
+    "050D_C_REPAIR_PRIORITY_LAYOUT": {
+      "name": "Owner Focus Board Priority Layout Repair",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:03:56.246991",
+      "files_patched": [
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_REPAIR_PRIORITY_LAYOUT_20260525_150354",
+      "purpose": "Fix Start Here priority card layout so text stays readable and the amount panel no longer crowds the right side."
+    },
+    "050D_C_REPAIR_URGENT_MATTERS": {
+      "name": "Owner Urgent Matters Clarity Repair",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:07:29.799005",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_REPAIR_URGENT_MATTERS_20260525_150728",
+      "purpose": "Rename Start Here to Most Urgent Matters and replace the unclear bottom amount strip with due, money involved, and next move priority context."
+    },
+    "050D_C_REPAIR_BUSINESS_SPECIFIC_SWITCH": {
+      "name": "Owner Business Specific Switch",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:15:05.566466",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_REPAIR_BUSINESS_SPECIFIC_SWITCH_20260525_151504",
+      "purpose": "Make business orbit selection control the business-specific workspace, actions, items, snapshot focus, and lower sections."
+    },
+    "050D_C_ADD_OWNER_THEMES": {
+      "name": "Add More Owner Themes",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:26:57.932967",
+      "files_patched": [
+        "src/teller/ownerMoneyData.js"
+      ],
+      "backup": "pack_backups/pack_050D_C_ADD_OWNER_THEMES_20260525_152656",
+      "purpose": "Add more whimsical owner-only themes to the private Tower-opened owner money workspace."
+    },
+    "050D_D_SETTINGS_CORNER_AND_CALM_MODE": {
+      "name": "Settings Corner and Calm Mode in Settings",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:40:47.991545",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_D_SETTINGS_CORNER_AND_CALM_MODE_20260525_154046",
+      "purpose": "Move owner settings into a corner drawer and move Calm Money Mode into settings so the main owner workspace stays clear."
+    },
+    "050D_E_OWNER_ACTION_RECEIPTS": {
+      "name": "Owner Action Receipts and Final Review",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:54:01.798749",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_E_OWNER_ACTION_RECEIPTS_20260525_155400",
+      "purpose": "Add final action previews, owner receipts, and click behavior for owner workspace actions so buttons feel real."
+    },
+    "050D_F_OWNER_GUIDANCE_POLISH": {
+      "name": "Owner Guidance Polish",
+      "status": "complete",
+      "timestamp": "2026-05-25T16:10:53.891642",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_F_OWNER_GUIDANCE_POLISH_20260525_161052",
+      "purpose": "Add visible workflow guidance so the owner dashboard clearly shows what to touch and in what order."
+    },
+    "050D_G_OWNER_REVIEW_DESK": {
+      "name": "Owner Review Desk",
+      "status": "complete",
+      "timestamp": "2026-05-25T16:28:18.053562",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_G_OWNER_REVIEW_DESK_20260525_162816",
+      "purpose": "Add big-picture plus small-picture review desk with manager view, clock-in cards, proof cards, pay impact, approve/hold/request proof/send Tower actions."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

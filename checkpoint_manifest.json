@@ -256,6 +256,50 @@
       ],
       "backup": "pack_backups/pack_050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3_20260525_192613",
       "purpose": "Replace ReviewDetailPanel by function boundary so details open as a popup and detail-level decisions auto-create receipts and Tower copies."
+    },
+    "050L_DECISION_REASONS_NOTES": {
+      "name": "Decision Reasons and Notes",
+      "status": "complete",
+      "timestamp": "2026-05-25T19:49:03.239405",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050L_DECISION_REASONS_NOTES_20260525_194902",
+      "purpose": "Add decision reason picker, optional owner note, receipt reason capture, Tower copy reason capture, and notification reason display."
+    },
+    "050M_PROOF_EVIDENCE_SLOTS": {
+      "name": "Proof Evidence Slots",
+      "status": "complete",
+      "timestamp": "2026-05-25T20:00:45.360601",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050M_PROOF_EVIDENCE_SLOTS_20260525_200044",
+      "purpose": "Add proof/evidence slots, missing proof warnings, Archive Vault placeholders, and proof-reviewed data copied into owner/Tower receipts."
+    },
+    "050N_ARCHIVE_VAULT_HANDOFF_PREVIEW": {
+      "name": "Archive Vault Handoff Preview",
+      "status": "complete",
+      "timestamp": "2026-05-25T20:31:06.677677",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050N_ARCHIVE_VAULT_HANDOFF_PREVIEW_20260525_203105",
+      "purpose": "Add local Archive Vault evidence packet handoff preview from Review Detail evidence slots, with receipts and notifications."
+    },
+    "050O_MANAGER_OWNER_REVIEW_BRIDGE": {
+      "name": "Manager Owner Review Bridge",
+      "status": "complete",
+      "timestamp": "2026-05-25T20:58:08.710462",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050O_MANAGER_OWNER_REVIEW_BRIDGE_20260525_205807",
+      "purpose": "Add manager-submitted context, manager recommendations, owner decision lane, conflict/Tower escalation indicators, and manager context in receipts."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

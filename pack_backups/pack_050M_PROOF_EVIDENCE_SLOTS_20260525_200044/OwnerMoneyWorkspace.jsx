@@ -60,7 +60,6 @@ function makeOwnerReceipt(action) {
     decisionReason: action?.decisionReason || "Owner reviewed and recorded this money action.",
     decisionNote: action?.decisionNote || "",
     proofReviewed: Array.isArray(action?.proofReviewed) ? action.proofReviewed : [],
-    managerContext: action?.managerContext || null,
     towerCopyRequired: true,
     towerReceiptId: `TOWER-COPY-${random}`,
     towerReceiptStatus: "Queued for Tower",
@@ -83,7 +82,6 @@ function makeTowerReceiptCopy(ownerReceipt) {
     decisionReason: ownerReceipt.decisionReason,
     decisionNote: ownerReceipt.decisionNote,
     proofReviewed: ownerReceipt.proofReviewed,
-    managerContext: ownerReceipt.managerContext,
     deliveryMode: "local_handoff_until_tower_api",
   };
 }
@@ -517,410 +515,7 @@ function getReviewCardDetails(card) {
 
 
 
-
-function getEvidenceSlots(card) {
-  const key = String(card?.key || "").toLowerCase();
-  const proof = card?.proof || "Proof record";
-  const tower = Boolean(card?.tower);
-
-  const baseSlots = [
-    {
-      key: "source-proof",
-      label: proof,
-      status: String(card?.status || "").toLowerCase().includes("proof") ? "missing" : "attached",
-      detail: String(card?.status || "").toLowerCase().includes("proof") ? "Proof still needs to be attached or confirmed." : "Proof source is visible for review.",
-    },
-    {
-      key: "owner-review",
-      label: "Owner review",
-      status: "ready",
-      detail: "Owner can approve, hold, request proof, or send to Tower.",
-    },
-    {
-      key: "archive-vault",
-      label: "Archive Vault placeholder",
-      status: "queued",
-      detail: "Later this evidence slot should connect to Archive Vault storage.",
-    },
-  ];
-
-  if (key.includes("clock")) {
-    return [
-      {
-        key: "time-clock",
-        label: "Time clock proof",
-        status: "attached",
-        detail: "Clock-in and clock-out times are visible.",
-      },
-      {
-        key: "schedule-match",
-        label: "Schedule match",
-        status: "attached",
-        detail: "Scheduled shift can be compared to clock record.",
-      },
-      ...baseSlots,
-    ];
-  }
-
-  if (key.includes("edit")) {
-    return [
-      {
-        key: "manager-note",
-        label: "Manager note",
-        status: "missing",
-        detail: "Manager edit reason needs to be attached or confirmed.",
-      },
-      {
-        key: "original-punches",
-        label: "Original punches",
-        status: "attached",
-        detail: "Original punches should remain visible for audit.",
-      },
-      ...baseSlots,
-    ];
-  }
-
-  if (key.includes("break")) {
-    return [
-      {
-        key: "break-confirmation",
-        label: "Break confirmation",
-        status: "missing",
-        detail: "Break confirmation is missing.",
-      },
-      ...baseSlots,
-    ];
-  }
-
-  if (key.includes("deposit")) {
-    return [
-      {
-        key: "identity-proof",
-        label: "Identity proof",
-        status: "tower",
-        detail: "Identity proof belongs behind The Tower.",
-      },
-      {
-        key: "bank-change-proof",
-        label: "Bank change proof",
-        status: "tower",
-        detail: "Bank change verification must be Tower-routed.",
-      },
-      {
-        key: "tower-handoff",
-        label: "Tower handoff",
-        status: "queued",
-        detail: "Sensitive banking change should be sent to The Tower.",
-      },
-    ];
-  }
-
-  if (tower) {
-    return [
-      {
-        key: "tower-handoff",
-        label: "Tower handoff packet",
-        status: "queued",
-        detail: "Protected details must be reviewed through The Tower.",
-      },
-      {
-        key: "protected-evidence",
-        label: "Protected evidence",
-        status: "tower",
-        detail: "Evidence exists behind Tower clearance and should not be exposed here.",
-      },
-      ...baseSlots,
-    ];
-  }
-
-  return baseSlots;
-}
-
-function evidenceStatusLabel(status) {
-  const map = {
-    attached: "Attached",
-    missing: "Missing",
-    ready: "Ready",
-    queued: "Queued",
-    tower: "Tower",
-  };
-
-  return map[status] || "Evidence";
-}
-
-function evidenceStatusTone(status) {
-  const map = {
-    attached: "strong",
-    missing: "warn",
-    ready: "quiet",
-    queued: "warn",
-    tower: "warn",
-  };
-
-  return map[status] || "quiet";
-}
-
-function EvidenceSlots({ card }) {
-  const slots = getEvidenceSlots(card);
-  const missingCount = slots.filter((slot) => slot.status === "missing").length;
-  const towerCount = slots.filter((slot) => slot.status === "tower").length;
-
-  return (
-    <section className="fb-evidence-slots">
-      <div className="fb-section-head">
-        <div>
-          <p className="fb-kicker">Proof / evidence slots</p>
-          <h3>What proof is tied to this review?</h3>
-        </div>
-        <div className="fb-badge-row">
-          {missingCount ? <Badge tone="warn">{missingCount} missing</Badge> : <Badge tone="strong">Proof visible</Badge>}
-          {towerCount ? <Badge tone="warn">{towerCount} Tower</Badge> : null}
-        </div>
-      </div>
-
-      <div className="fb-evidence-grid">
-        {slots.map((slot) => (
-          <article key={slot.key} className={`fb-evidence-card is-${slot.status}`}>
-            <div>
-              <span>{slot.label}</span>
-              <strong>{evidenceStatusLabel(slot.status)}</strong>
-            </div>
-            <p>{slot.detail}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-
-function makeArchiveHandoffPacket({ card, selectedReview, evidenceSlots }) {
-  const random = Math.floor(100000 + Math.random() * 900000);
-  const createdAt = new Date().toISOString();
-
-  return {
-    id: `ARCHIVE-HANDOFF-${random}`,
-    cardKey: card?.key || "unknown-card",
-    title: card?.title || "Review evidence packet",
-    business: selectedReview?.deskTitle || "Review Desk",
-    target: card?.title || "Review item",
-    status: "Prepared locally",
-    destination: "Archive Vault",
-    towerCopyRequired: true,
-    createdAt,
-    evidence: evidenceSlots.map((slot) => ({
-      label: slot.label,
-      status: evidenceStatusLabel(slot.status),
-      detail: slot.detail,
-    })),
-    summary: "Prepared proof/evidence handoff packet for future Archive Vault connection.",
-  };
-}
-
-function ArchiveHandoffDock({ archivePackets }) {
-  if (!archivePackets.length) return null;
-
-  return (
-    <section className="fb-archive-dock">
-      <div className="fb-section-head">
-        <div>
-          <p className="fb-kicker">Archive Vault handoffs</p>
-          <h2>Evidence packets prepared for Archive Vault.</h2>
-          <p>
-            These are local handoff packets for now. Later, this stream should connect to Archive Vault storage and Tower audit.
-          </p>
-        </div>
-        <Badge tone="strong">{archivePackets.length} packets</Badge>
-      </div>
-
-      <div className="fb-archive-grid">
-        {archivePackets.map((packet) => (
-          <article key={packet.id} className="fb-archive-card">
-            <span>{packet.id}</span>
-            <strong>{packet.title}</strong>
-            <p>{packet.summary}</p>
-            <div className="fb-archive-evidence-list">
-              {packet.evidence.slice(0, 4).map((item) => (
-                <small key={`${packet.id}-${item.label}`}>{item.label}: {item.status}</small>
-              ))}
-            </div>
-            <small>{packet.destination} · {new Date(packet.createdAt).toLocaleString()}</small>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-
-
-function getManagerBridgeData(card) {
-  const key = String(card?.key || "").toLowerCase();
-
-  const base = {
-    submittedBy: "Manager queue",
-    submittedAt: "Today",
-    managerDecision: "Needs owner review",
-    managerRiskFlag: card?.risk || "Medium",
-    managerNote: "Manager surfaced this item for owner review.",
-    recommendation: "Review before money moves.",
-    ownerDefault: "Pending owner decision",
-    disagreementRisk: false,
-  };
-
-  if (key.includes("clock")) {
-    return {
-      submittedBy: "Shift Manager",
-      submittedAt: "Today · 9:14 AM",
-      managerDecision: "Looks normal",
-      managerRiskFlag: "Low",
-      managerNote: "Clock-in is slightly early but within expected range. No correction requested.",
-      recommendation: "Owner can approve if schedule match looks clean.",
-      ownerDefault: "Approve likely",
-      disagreementRisk: false,
-    };
-  }
-
-  if (key.includes("edit")) {
-    return {
-      submittedBy: "Payroll Manager",
-      submittedAt: "Today · 10:22 AM",
-      managerDecision: "Needs explanation",
-      managerRiskFlag: "Medium",
-      managerNote: "Two time entries were edited. Manager reason is not attached yet.",
-      recommendation: "Request proof or hold until edit reason is attached.",
-      ownerDefault: "Hold or request proof",
-      disagreementRisk: true,
-    };
-  }
-
-  if (key.includes("break")) {
-    return {
-      submittedBy: "Shift Manager",
-      submittedAt: "Today · 11:03 AM",
-      managerDecision: "Proof missing",
-      managerRiskFlag: "Medium",
-      managerNote: "Break confirmation was not found on the shift card.",
-      recommendation: "Request proof before payroll closes.",
-      ownerDefault: "Request proof",
-      disagreementRisk: true,
-    };
-  }
-
-  if (key.includes("deposit")) {
-    return {
-      submittedBy: "Payroll Manager",
-      submittedAt: "Today · 11:40 AM",
-      managerDecision: "Sensitive change",
-      managerRiskFlag: "High",
-      managerNote: "Direct deposit change was submitted. This should not be approved in the normal manager flow.",
-      recommendation: "Send to The Tower for identity and bank-change verification.",
-      ownerDefault: "Send to Tower",
-      disagreementRisk: true,
-      towerRequired: true,
-    };
-  }
-
-  if (key.includes("mrk") || key.includes("packet")) {
-    return {
-      submittedBy: "Protected finance lane",
-      submittedAt: "Today",
-      managerDecision: "Tower handoff required",
-      managerRiskFlag: "High",
-      managerNote: "This item belongs in protected financial paperwork, not open business operations.",
-      recommendation: "Prepare Tower handoff and keep OB details out of The Teller.",
-      ownerDefault: "Send to Tower",
-      disagreementRisk: true,
-      towerRequired: true,
-    };
-  }
-
-  if (key.includes("shipping") || key.includes("sales") || key.includes("refund")) {
-    return {
-      submittedBy: "Business money review",
-      submittedAt: "Today",
-      managerDecision: "Needs money match",
-      managerRiskFlag: card?.risk || "Medium",
-      managerNote: "Business money item needs proof or matching before the net view is trusted.",
-      recommendation: "Review sales/cost/proof connection before closing.",
-      ownerDefault: "Review before approving",
-      disagreementRisk: false,
-    };
-  }
-
-  return base;
-}
-
-function ManagerOwnerBridge({ card, ownerDecision }) {
-  const bridge = getManagerBridgeData(card);
-  const normalizedOwnerDecision = String(ownerDecision || "open").toLowerCase();
-  const ownerHasDecided = normalizedOwnerDecision && normalizedOwnerDecision !== "open";
-  const possibleConflict =
-    bridge.disagreementRisk &&
-    ownerHasDecided &&
-    normalizedOwnerDecision === "approved";
-
-  return (
-    <section className={`fb-manager-owner-bridge ${possibleConflict ? "has-conflict" : ""}`}>
-      <div className="fb-section-head">
-        <div>
-          <p className="fb-kicker">Manager → Owner bridge</p>
-          <h3>What the manager surfaced, and what the owner decides.</h3>
-        </div>
-        <Badge tone={bridge.towerRequired || possibleConflict ? "warn" : "strong"}>
-          {bridge.towerRequired ? "Tower-sensitive" : possibleConflict ? "Review conflict" : "Manager context"}
-        </Badge>
-      </div>
-
-      <div className="fb-bridge-grid">
-        <article>
-          <span>Submitted by</span>
-          <strong>{bridge.submittedBy}</strong>
-          <p>{bridge.submittedAt}</p>
-        </article>
-        <article>
-          <span>Manager decision</span>
-          <strong>{bridge.managerDecision}</strong>
-          <p>{bridge.managerNote}</p>
-        </article>
-        <article>
-          <span>Manager recommendation</span>
-          <strong>{bridge.recommendation}</strong>
-          <p>Risk flag: {bridge.managerRiskFlag}</p>
-        </article>
-        <article>
-          <span>Owner lane</span>
-          <strong>{ownerHasDecided ? decisionLabel(normalizedOwnerDecision) : bridge.ownerDefault}</strong>
-          <p>{ownerHasDecided ? "Owner decision has been recorded." : "Owner decision is still pending."}</p>
-        </article>
-      </div>
-
-      {possibleConflict ? (
-        <div className="fb-bridge-warning">
-          Manager flagged this as risky, but owner approval was selected. This should leave a stronger Tower/audit trail.
-        </div>
-      ) : null}
-    </section>
-  );
-}
-
-function buildManagerContext(card, ownerDecision) {
-  const bridge = getManagerBridgeData(card);
-
-  return {
-    submittedBy: bridge.submittedBy,
-    submittedAt: bridge.submittedAt,
-    managerDecision: bridge.managerDecision,
-    managerRiskFlag: bridge.managerRiskFlag,
-    managerNote: bridge.managerNote,
-    managerRecommendation: bridge.recommendation,
-    ownerDecision: decisionLabel(ownerDecision || "open"),
-    towerSensitive: Boolean(bridge.towerRequired),
-    possibleConflict: Boolean(bridge.disagreementRisk && ownerDecision === "approved"),
-  };
-}
-
-function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision, onArchiveHandoff, reviewDecisions }) {
+function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
   const [decisionReason, setDecisionReason] = useState(decisionReasonOptions[0]);
   const [decisionNote, setDecisionNote] = useState("");
 
@@ -928,13 +523,9 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
 
   const card = selectedReview.card;
   const details = getReviewCardDetails(card);
-  const evidenceSlots = getEvidenceSlots(card);
   const tower = Boolean(card.tower);
-  const currentDecision = reviewDecisions?.[card.key] || "open";
 
   function detailAction(decision, label, description) {
-    const managerContext = buildManagerContext(card, decision);
-
     const action = {
       label,
       business: selectedReview.deskTitle || "Review Desk",
@@ -942,12 +533,11 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
       description,
       money: true,
       proof: decision === "proof_requested" || decision === "approved",
-      tower: tower || decision === "tower_sent" || managerContext.possibleConflict || managerContext.towerSensitive,
+      tower: tower || decision === "tower_sent",
       decision,
       decisionReason,
       decisionNote,
-      proofReviewed: evidenceSlots.map((slot) => `${slot.label}: ${evidenceStatusLabel(slot.status)}`),
-      managerContext,
+      proofReviewed: details.checklist,
       autoCreated: true,
     };
 
@@ -957,31 +547,6 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
 
     if (onAutoReceipt) {
       onAutoReceipt(action);
-    }
-
-    onClose();
-  }
-
-  function archiveAction() {
-    const packet = makeArchiveHandoffPacket({ card, selectedReview, evidenceSlots });
-    const managerContext = buildManagerContext(card, "archive_prepared");
-
-    if (onArchiveHandoff) {
-      onArchiveHandoff(packet, {
-        label: `Prepare Archive packet · ${card.title}`,
-        business: selectedReview.deskTitle || "Review Desk",
-        target: card.title,
-        description: `Prepared Archive Vault handoff packet for ${card.title}.`,
-        money: false,
-        proof: true,
-        tower: true,
-        decision: "archive_prepared",
-        decisionReason: "Evidence packet prepared for Archive Vault handoff.",
-        decisionNote,
-        proofReviewed: packet.evidence.map((slot) => `${slot.label}: ${slot.status}`),
-        managerContext,
-        autoCreated: true,
-      });
     }
 
     onClose();
@@ -998,8 +563,6 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
           </div>
           <button type="button" className="fb-ghost" onClick={onClose}>Close</button>
         </div>
-
-        <ManagerOwnerBridge card={card} ownerDecision={currentDecision} />
 
         <div className="fb-review-detail-layout">
           <article className="fb-review-detail-main">
@@ -1032,8 +595,6 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
                 </div>
               ))}
             </div>
-
-            <EvidenceSlots card={card} />
 
             <div className="fb-decision-reason-box">
               <p className="fb-kicker">Decision reason</p>
@@ -1094,12 +655,6 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
             onClick={() => detailAction(tower ? "tower_sent" : "proof_requested", tower ? `Send detail to Tower · ${card.title}` : `Request proof from detail · ${card.title}`, tower ? "Protected detail item sent to The Tower handoff queue." : `Proof requested from detail review: ${card.proof}`)}
           >
             {tower ? "Send to Tower" : "Request Proof"}
-          </button>
-          <button
-            type="button"
-            onClick={archiveAction}
-          >
-            Prepare Archive Packet
           </button>
         </div>
       </section>
@@ -1169,27 +724,6 @@ function TowerReceiptDock({ towerReceipts }) {
             <p>{receipt.reason}</p>
             {receipt.decisionReason ? <p className="fb-receipt-reason">Reason: {receipt.decisionReason}</p> : null}
             {receipt.decisionNote ? <p className="fb-receipt-reason">Note: {receipt.decisionNote}</p> : null}
-            {receipt.managerContext ? (
-              <div className="fb-receipt-manager-context">
-                <small>Manager: {receipt.managerContext.managerDecision}</small>
-                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
-                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
-              </div>
-            ) : null}
-            {receipt.managerContext ? (
-              <div className="fb-receipt-manager-context">
-                <small>Manager: {receipt.managerContext.managerDecision}</small>
-                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
-                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
-              </div>
-            ) : null}
-            {receipt.proofReviewed?.length ? (
-              <div className="fb-receipt-proof-list">
-                {receipt.proofReviewed.slice(0, 3).map((proof) => (
-                  <small key={proof}>{proof}</small>
-                ))}
-              </div>
-            ) : null}
             <small>Owner receipt: {receipt.ownerReceiptId}</small>
           </article>
         ))}
@@ -1220,20 +754,6 @@ function ReceiptDock({ receipts }) {
             <p>{receipt.target}</p>
             {receipt.decisionReason ? <p className="fb-receipt-reason">Reason: {receipt.decisionReason}</p> : null}
             {receipt.decisionNote ? <p className="fb-receipt-reason">Note: {receipt.decisionNote}</p> : null}
-            {receipt.managerContext ? (
-              <div className="fb-receipt-manager-context">
-                <small>Manager: {receipt.managerContext.managerDecision}</small>
-                <small>Recommendation: {receipt.managerContext.managerRecommendation}</small>
-                {receipt.managerContext.possibleConflict ? <small>Conflict/Tower trail required</small> : null}
-              </div>
-            ) : null}
-            {receipt.proofReviewed?.length ? (
-              <div className="fb-receipt-proof-list">
-                {receipt.proofReviewed.slice(0, 3).map((proof) => (
-                  <small key={proof}>{proof}</small>
-                ))}
-              </div>
-            ) : null}
             <small>{receipt.status} · {new Date(receipt.createdAt).toLocaleString()}</small>
           </article>
         ))}
@@ -1948,7 +1468,6 @@ export default function OwnerMoneyWorkspace() {
   const [pendingAction, setPendingAction] = useState(null);
   const [receipts, setReceipts] = useState([]);
   const [towerReceiptQueue, setTowerReceiptQueue] = useState([]);
-  const [archivePackets, setArchivePackets] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [reviewDecisions, setReviewDecisions] = useState({});
@@ -2046,22 +1565,6 @@ export default function OwnerMoneyWorkspace() {
     });
   }
 
-  function createArchiveHandoff(packet, action) {
-    setArchivePackets((current) => [packet, ...current].slice(0, 8));
-    autoCreateReceipt(action);
-
-    pushNotification(makeOwnerNotification({
-      type: "tower_copy",
-      title: "Archive packet prepared",
-      body: `${packet.title} was prepared for Archive Vault handoff.`,
-      towerReceiptId: packet.id,
-      decisionReason: action.decisionReason,
-      decisionNote: action.decisionNote,
-    }));
-
-    setNotificationsOpen(true);
-  }
-
   return (
     <main
       className={`focus-board ${calmMode ? "is-calm" : ""}`}
@@ -2136,8 +1639,6 @@ export default function OwnerMoneyWorkspace() {
         selectedReview={selectedReview}
         onClose={() => setSelectedReview(null)}
         onAutoReceipt={autoCreateReceipt}
-        onArchiveHandoff={createArchiveHandoff}
-        reviewDecisions={reviewDecisions}
         onDetailDecision={(key, decision) => setReviewDecisions((current) => ({
           ...current,
           [key]: decision,
@@ -2187,7 +1688,6 @@ export default function OwnerMoneyWorkspace() {
         </>
       )}
 
-      <ArchiveHandoffDock archivePackets={archivePackets} />
       <ReceiptDock receipts={receipts} />
       <TowerReceiptDock towerReceipts={towerReceiptQueue} />
     </main>

@@ -234,6 +234,28 @@
       ],
       "backup": "pack_backups/pack_050J_OWNER_NOTIFICATIONS_DROPDOWN_20260525_175339",
       "purpose": "Add owner notifications dropdown for auto-created owner receipts, Tower receipt copies, review decisions, and proof/Tower activity."
+    },
+    "050K_REVIEW_DETAIL_DRAWER": {
+      "name": "Review Detail Drawer",
+      "status": "complete",
+      "timestamp": "2026-05-25T18:13:05.763379",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050K_REVIEW_DETAIL_DRAWER_20260525_181304",
+      "purpose": "Add Review Desk detail panel with time-card details, proof checklist, manager note, and detail-level approve/hold/proof/Tower actions."
+    },
+    "050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3": {
+      "name": "Review Detail Popup and Auto Receipt Repair V3",
+      "status": "complete",
+      "timestamp": "2026-05-25T19:26:14.853984",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3_20260525_192613",
+      "purpose": "Replace ReviewDetailPanel by function boundary so details open as a popup and detail-level decisions auto-create receipts and Tower copies."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

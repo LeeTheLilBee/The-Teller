@@ -468,7 +468,6 @@ function getReviewCardDetails(card) {
 }
 
 
-
 function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
   if (!selectedReview?.card) return null;
 

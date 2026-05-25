@@ -357,237 +357,6 @@ function ThemeCloset({ themeKey, setThemeKey, theme, calmMode, setCalmMode, onCl
   );
 }
 
-
-function getReviewCardDetails(card) {
-  const key = String(card?.key || "").toLowerCase();
-
-  const base = {
-    timeline: [
-      ["Source", card?.proof || "Review record"],
-      ["Status", card?.status || "Open"],
-      ["Risk", card?.risk || "Unknown"],
-    ],
-    checklist: [
-      "Confirm money impact",
-      "Confirm proof source",
-      "Confirm decision reason",
-    ],
-    managerNote: "No manager note has been attached yet.",
-  };
-
-  if (key.includes("clock")) {
-    return {
-      timeline: [
-        ["Scheduled shift", "9:00 AM - 2:00 PM"],
-        ["Clock in", "8:57 AM"],
-        ["Clock out", "2:01 PM"],
-        ["Rounding impact", "Low"],
-      ],
-      checklist: [
-        "Clock-in time is within expected range",
-        "Shift matches schedule",
-        "No missing punch",
-        "Pay impact reviewed",
-      ],
-      managerNote: "Clock-in appears normal. No manager correction required unless rounding policy changes the paid time.",
-    };
-  }
-
-  if (key.includes("edit")) {
-    return {
-      timeline: [
-        ["Original punch count", "2"],
-        ["Edited entries", "2"],
-        ["Edited by", "Manager"],
-        ["Reason attached", "Missing"],
-      ],
-      checklist: [
-        "Manager reason attached",
-        "Original punches reviewed",
-        "Edited time does not create payroll mismatch",
-        "Employee dispute status checked",
-      ],
-      managerNote: "Manager edited two entries. Owner should request or confirm the edit reason before payroll closes.",
-    };
-  }
-
-  if (key.includes("break")) {
-    return {
-      timeline: [
-        ["Shift reviewed", "One shift"],
-        ["Break confirmation", "Missing"],
-        ["Pay impact", card?.money || "Unknown"],
-        ["Proof source", "Break confirmation"],
-      ],
-      checklist: [
-        "Break confirmation attached",
-        "Policy impact reviewed",
-        "Manager follow-up completed",
-      ],
-      managerNote: "Break confirmation is missing. Request proof before final payroll approval.",
-    };
-  }
-
-  if (key.includes("deposit")) {
-    return {
-      timeline: [
-        ["Change type", "Direct deposit"],
-        ["Sensitive field", "Bank account"],
-        ["Identity check", "Required"],
-        ["Access route", "The Tower"],
-      ],
-      checklist: [
-        "Do not approve inside The Teller",
-        "Send to The Tower",
-        "Require identity/bank change proof",
-        "Audit receipt required",
-      ],
-      managerNote: "Direct deposit changes are Tower-routed. The Teller should never casually approve bank changes.",
-    };
-  }
-
-  if (key.includes("packet") || key.includes("mrk")) {
-    return {
-      timeline: [
-        ["Workspace", "MrkTrade paperwork only"],
-        ["Protected details", "Hidden"],
-        ["Tower handoff", "Required"],
-        ["OB access", "Blocked here"],
-      ],
-      checklist: [
-        "No OB details exposed",
-        "Prepare financial paperwork only",
-        "Queue Tower copy",
-        "Audit receipt created",
-      ],
-      managerNote: "MrkTrade protected details must stay behind The Tower. This review is paperwork-only.",
-    };
-  }
-
-  return base;
-}
-
-
-
-function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
-  if (!selectedReview?.card) return null;
-
-  const card = selectedReview.card;
-  const details = getReviewCardDetails(card);
-  const tower = Boolean(card.tower);
-
-  function detailAction(decision, label, description) {
-    const action = {
-      label,
-      business: selectedReview.deskTitle || "Review Desk",
-      target: card.title,
-      description,
-      money: true,
-      proof: decision === "proof_requested" || decision === "approved",
-      tower: tower || decision === "tower_sent",
-      autoCreated: true,
-    };
-
-    if (onDetailDecision) {
-      onDetailDecision(card.key, decision);
-    }
-
-    if (onAutoReceipt) {
-      onAutoReceipt(action);
-    }
-
-    onClose();
-  }
-
-  return (
-    <div className="fb-review-detail-overlay" role="dialog" aria-modal="true">
-      <section className={`fb-review-detail-panel ${tower ? "is-tower" : ""}`}>
-        <div className="fb-section-head">
-          <div>
-            <p className="fb-kicker">Review details</p>
-            <h2>{card.title}</h2>
-            <p>{card.detail}</p>
-          </div>
-          <button type="button" className="fb-ghost" onClick={onClose}>Close</button>
-        </div>
-
-        <div className="fb-review-detail-layout">
-          <article className="fb-review-detail-main">
-            <p className="fb-kicker">Small-picture breakdown</p>
-            <div className="fb-review-detail-facts">
-              <div>
-                <span>Money impact</span>
-                <strong>{card.money}</strong>
-              </div>
-              <div>
-                <span>Risk</span>
-                <strong>{card.risk}</strong>
-              </div>
-              <div>
-                <span>Proof</span>
-                <strong>{card.proof}</strong>
-              </div>
-              <div>
-                <span>Status</span>
-                <strong>{card.status}</strong>
-              </div>
-            </div>
-
-            <div className="fb-review-timeline">
-              <p className="fb-kicker">Timeline / card facts</p>
-              {details.timeline.map(([label, value]) => (
-                <div key={`${label}-${value}`}>
-                  <span>{label}</span>
-                  <strong>{value}</strong>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          <aside className="fb-review-detail-side">
-            <p className="fb-kicker">Proof checklist</p>
-            <div className="fb-proof-checklist">
-              {details.checklist.map((item) => (
-                <label key={item}>
-                  <input type="checkbox" readOnly />
-                  <span>{item}</span>
-                </label>
-              ))}
-            </div>
-
-            <div className="fb-manager-note">
-              <p className="fb-kicker">Manager note</p>
-              <p>{details.managerNote}</p>
-            </div>
-          </aside>
-        </div>
-
-        <div className="fb-review-detail-actions">
-          <button
-            type="button"
-            onClick={() => detailAction("approved", `Approve detail · ${card.title}`, `Approved from detail review: ${card.detail}`)}
-          >
-            Approve
-          </button>
-          <button
-            type="button"
-            onClick={() => detailAction("held", `Hold detail · ${card.title}`, `Held from detail review: ${card.detail}`)}
-          >
-            Hold
-          </button>
-          <button
-            type="button"
-            onClick={() => detailAction(tower ? "tower_sent" : "proof_requested", tower ? `Send detail to Tower · ${card.title}` : `Request proof from detail · ${card.title}`, tower ? "Protected detail item sent to The Tower handoff queue." : `Proof requested from detail review: ${card.proof}`)}
-          >
-            {tower ? "Send to Tower" : "Request Proof"}
-          </button>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-
 function FinalActionPreview({ action, onCancel, onConfirm }) {
   if (!action) return null;
 
@@ -1104,7 +873,7 @@ function getReviewDeskData(activeBusiness) {
   return map[activeBusiness] || map.simpleepay;
 }
 
-function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions, onOpenReviewCard }) {
+function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions }) {
   const [reviewFilter, setReviewFilter] = useState("all");
   const desk = getReviewDeskData(activeBusiness);
   const filteredCards = desk.cards.filter((card) => reviewFilterMatches(card, reviewFilter, reviewDecisions));
@@ -1248,12 +1017,6 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
                 <div className="fb-review-actions">
                   <button
                     type="button"
-                    onClick={() => onOpenReviewCard({ deskTitle: desk.title, card })}
-                  >
-                    View Details
-                  </button>
-                  <button
-                    type="button"
                     onClick={() => reviewAction(
                       card,
                       "approved",
@@ -1386,7 +1149,6 @@ export default function OwnerMoneyWorkspace() {
   const [notifications, setNotifications] = useState([]);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [reviewDecisions, setReviewDecisions] = useState({});
-  const [selectedReview, setSelectedReview] = useState(null);
 
   const theme = getOwnerTheme(themeKey);
   const focus = useMemo(() => getTodayOwnerFocus(ownerMoneyQueue), []);
@@ -1542,16 +1304,6 @@ export default function OwnerMoneyWorkspace() {
         onConfirm={confirmAction}
       />
 
-      <ReviewDetailPanel
-        selectedReview={selectedReview}
-        onClose={() => setSelectedReview(null)}
-        onAutoReceipt={autoCreateReceipt}
-        onDetailDecision={(key, decision) => setReviewDecisions((current) => ({
-          ...current,
-          [key]: decision,
-        }))}
-      />
-
       <OwnerFlowGuide activeBusiness={activeBusiness} pendingAction={pendingAction} receipts={receipts} />
 
       <PriorityFocus focus={focus} onAction={openAction} />
@@ -1588,7 +1340,6 @@ export default function OwnerMoneyWorkspace() {
             onAutoReceipt={autoCreateReceipt}
             reviewDecisions={reviewDecisions}
             setReviewDecisions={setReviewDecisions}
-            onOpenReviewCard={setSelectedReview}
           />
           <MoneyConstellations queue={getBusinessSpecificItems(activeBusiness)} onAction={openAction} />
           <SnapshotRibbon cards={[getBusinessSnapshot(activeBusiness), ...ownerSnapshotCards.filter((card) => card.key !== activeBusiness).slice(0, 3)]} />

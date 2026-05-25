@@ -467,9 +467,7 @@ function getReviewCardDetails(card) {
   return base;
 }
 
-
-
-function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
+function ReviewDetailPanel({ selectedReview, onClose, onAction }) {
   if (!selectedReview?.card) return null;
 
   const card = selectedReview.card;
@@ -477,7 +475,7 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
   const tower = Boolean(card.tower);
 
   function detailAction(decision, label, description) {
-    const action = {
+    onAction({
       label,
       business: selectedReview.deskTitle || "Review Desk",
       target: card.title,
@@ -485,108 +483,94 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
       money: true,
       proof: decision === "proof_requested" || decision === "approved",
       tower: tower || decision === "tower_sent",
-      autoCreated: true,
-    };
-
-    if (onDetailDecision) {
-      onDetailDecision(card.key, decision);
-    }
-
-    if (onAutoReceipt) {
-      onAutoReceipt(action);
-    }
-
-    onClose();
+    });
   }
 
   return (
-    <div className="fb-review-detail-overlay" role="dialog" aria-modal="true">
-      <section className={`fb-review-detail-panel ${tower ? "is-tower" : ""}`}>
-        <div className="fb-section-head">
-          <div>
-            <p className="fb-kicker">Review details</p>
-            <h2>{card.title}</h2>
-            <p>{card.detail}</p>
+    <section className={`fb-review-detail-panel ${tower ? "is-tower" : ""}`}>
+      <div className="fb-section-head">
+        <div>
+          <p className="fb-kicker">Review details</p>
+          <h2>{card.title}</h2>
+          <p>{card.detail}</p>
+        </div>
+        <button type="button" className="fb-ghost" onClick={onClose}>Close</button>
+      </div>
+
+      <div className="fb-review-detail-layout">
+        <article className="fb-review-detail-main">
+          <p className="fb-kicker">Small-picture breakdown</p>
+          <div className="fb-review-detail-facts">
+            <div>
+              <span>Money impact</span>
+              <strong>{card.money}</strong>
+            </div>
+            <div>
+              <span>Risk</span>
+              <strong>{card.risk}</strong>
+            </div>
+            <div>
+              <span>Proof</span>
+              <strong>{card.proof}</strong>
+            </div>
+            <div>
+              <span>Status</span>
+              <strong>{card.status}</strong>
+            </div>
           </div>
-          <button type="button" className="fb-ghost" onClick={onClose}>Close</button>
-        </div>
 
-        <div className="fb-review-detail-layout">
-          <article className="fb-review-detail-main">
-            <p className="fb-kicker">Small-picture breakdown</p>
-            <div className="fb-review-detail-facts">
-              <div>
-                <span>Money impact</span>
-                <strong>{card.money}</strong>
+          <div className="fb-review-timeline">
+            <p className="fb-kicker">Timeline / card facts</p>
+            {details.timeline.map(([label, value]) => (
+              <div key={`${label}-${value}`}>
+                <span>{label}</span>
+                <strong>{value}</strong>
               </div>
-              <div>
-                <span>Risk</span>
-                <strong>{card.risk}</strong>
-              </div>
-              <div>
-                <span>Proof</span>
-                <strong>{card.proof}</strong>
-              </div>
-              <div>
-                <span>Status</span>
-                <strong>{card.status}</strong>
-              </div>
-            </div>
+            ))}
+          </div>
+        </article>
 
-            <div className="fb-review-timeline">
-              <p className="fb-kicker">Timeline / card facts</p>
-              {details.timeline.map(([label, value]) => (
-                <div key={`${label}-${value}`}>
-                  <span>{label}</span>
-                  <strong>{value}</strong>
-                </div>
-              ))}
-            </div>
-          </article>
+        <aside className="fb-review-detail-side">
+          <p className="fb-kicker">Proof checklist</p>
+          <div className="fb-proof-checklist">
+            {details.checklist.map((item) => (
+              <label key={item}>
+                <input type="checkbox" readOnly />
+                <span>{item}</span>
+              </label>
+            ))}
+          </div>
 
-          <aside className="fb-review-detail-side">
-            <p className="fb-kicker">Proof checklist</p>
-            <div className="fb-proof-checklist">
-              {details.checklist.map((item) => (
-                <label key={item}>
-                  <input type="checkbox" readOnly />
-                  <span>{item}</span>
-                </label>
-              ))}
-            </div>
+          <div className="fb-manager-note">
+            <p className="fb-kicker">Manager note</p>
+            <p>{details.managerNote}</p>
+          </div>
+        </aside>
+      </div>
 
-            <div className="fb-manager-note">
-              <p className="fb-kicker">Manager note</p>
-              <p>{details.managerNote}</p>
-            </div>
-          </aside>
-        </div>
-
-        <div className="fb-review-detail-actions">
-          <button
-            type="button"
-            onClick={() => detailAction("approved", `Approve detail · ${card.title}`, `Approved from detail review: ${card.detail}`)}
-          >
-            Approve
-          </button>
-          <button
-            type="button"
-            onClick={() => detailAction("held", `Hold detail · ${card.title}`, `Held from detail review: ${card.detail}`)}
-          >
-            Hold
-          </button>
-          <button
-            type="button"
-            onClick={() => detailAction(tower ? "tower_sent" : "proof_requested", tower ? `Send detail to Tower · ${card.title}` : `Request proof from detail · ${card.title}`, tower ? "Protected detail item sent to The Tower handoff queue." : `Proof requested from detail review: ${card.proof}`)}
-          >
-            {tower ? "Send to Tower" : "Request Proof"}
-          </button>
-        </div>
-      </section>
-    </div>
+      <div className="fb-review-detail-actions">
+        <button
+          type="button"
+          onClick={() => detailAction("approved", `Approve detail · ${card.title}`, `Approved from detail review: ${card.detail}`)}
+        >
+          Approve
+        </button>
+        <button
+          type="button"
+          onClick={() => detailAction("held", `Hold detail · ${card.title}`, `Held from detail review: ${card.detail}`)}
+        >
+          Hold
+        </button>
+        <button
+          type="button"
+          onClick={() => detailAction(tower ? "tower_sent" : "proof_requested", tower ? `Send detail to Tower · ${card.title}` : `Request proof from detail · ${card.title}`, tower ? "Protected detail item sent to The Tower handoff queue." : `Proof requested from detail review: ${card.proof}`)}
+        >
+          {tower ? "Send to Tower" : "Request Proof"}
+        </button>
+      </div>
+    </section>
   );
 }
-
 
 function FinalActionPreview({ action, onCancel, onConfirm }) {
   if (!action) return null;
@@ -1545,11 +1529,7 @@ export default function OwnerMoneyWorkspace() {
       <ReviewDetailPanel
         selectedReview={selectedReview}
         onClose={() => setSelectedReview(null)}
-        onAutoReceipt={autoCreateReceipt}
-        onDetailDecision={(key, decision) => setReviewDecisions((current) => ({
-          ...current,
-          [key]: decision,
-        }))}
+        onAction={openAction}
       />
 
       <OwnerFlowGuide activeBusiness={activeBusiness} pendingAction={pendingAction} receipts={receipts} />

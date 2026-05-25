@@ -350,6 +350,16 @@
       ],
       "backup": "pack_backups/pack_050S_MANAGER_STANDALONE_OWNER_SEND_BACK_20260525_225334",
       "purpose": "Create standalone manager workspace, local manager-owner bridge, owner send-back action, and manager return queue."
+    },
+    "050S_REPAIR_FIX_TELLER_VIEW_RUNTIME": {
+      "name": "Fix Teller View Runtime Guard Error",
+      "status": "complete",
+      "timestamp": "2026-05-25T23:29:17.486149",
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050S_REPAIR_FIX_TELLER_VIEW_RUNTIME_20260525_232915",
+      "purpose": "Define manager route query variable inside App render scope so owner and manager views do not crash."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

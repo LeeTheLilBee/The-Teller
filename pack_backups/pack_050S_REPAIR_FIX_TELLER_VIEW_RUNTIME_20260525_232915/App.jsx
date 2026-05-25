@@ -7,6 +7,7 @@ import "./teller/tellerShell.css";
 
 function readTowerClearance() {
   const params = new URLSearchParams(window.location.search);
+const tellerView = params.get("teller_view") || "";
   const clearance = String(params.get("tower_clearance") || "").toLowerCase().trim();
 
   if (["employee", "manager", "owner"].includes(clearance)) {
@@ -104,8 +105,6 @@ function OwnerComingSoon() {
 }
 
 export default function App() {
-  const __tellerView = new URLSearchParams(window.location.search).get("teller_view") || "";
-
   const clearance = readTowerClearance();
 
   if (!clearance) {
@@ -124,7 +123,7 @@ export default function App() {
         <main className="teller-main">
           <section className="teller-screen-card">
             {clearance === "employee" ? <EmployeeDocumentVaultPanel /> : null}
-            {clearance === "manager" || __tellerView === "manager" ? <ManagerStandaloneWorkspace /> : null}
+            {clearance === "manager" || tellerView === "manager" ? <ManagerStandaloneWorkspace /> : null}
             {clearance === "owner" ? <OwnerMoneyWorkspace /> : null}
           </section>
         </main>

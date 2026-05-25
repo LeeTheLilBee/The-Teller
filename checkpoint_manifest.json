@@ -1,0 +1,95 @@
+{
+  "packs": {
+    "050A": {
+      "name": "Secure Money Intelligence Foundation",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:26:26.084574",
+      "files_written": [
+        "src/teller/securityIntelligence.js",
+        "src/teller/SecureMoneyComponents.jsx"
+      ],
+      "purpose": "Reusable security chips, source confidence, secure documents, Tower routing, receipts, final review, calm money mode, and money focus foundation."
+    },
+    "050B": {
+      "name": "Employee Document Vault Wiring",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:28:43.511764",
+      "files_written": [
+        "src/teller/EmployeeDocumentVaultPanel.jsx",
+        "src/teller/Pack050BDemo.jsx"
+      ],
+      "files_patched": [],
+      "purpose": "Employee W-2, W-4, I-9, pay stubs, direct deposit form, handbook signature routing, Tower change receipts, secure download warnings, and access receipt trail."
+    },
+    "050B_REPAIR_MOUNT": {
+      "name": "Mount Employee Document Vault Preview",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:32:04.525797",
+      "files_written": [
+        "src/AppBefore050B.jsx"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "purpose": "Safely mount Pack 050B employee document vault preview underneath the existing app.",
+      "backup": "pack_backups/pack_050B_REPAIR_MOUNT_20260525_033201"
+    },
+    "050C": {
+      "name": "Manager Meld Panel",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:35:19.823369",
+      "files_written": [
+        "src/teller/ManagerMeldPanel.jsx",
+        "src/teller/Pack050CDemo.jsx"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "purpose": "Manager = employee portal + manager schedule-to-payroll tools, manager ID, employee ID, receipts, escalation, and secure employee document vault access.",
+      "backup": "pack_backups/pack_050C_20260525_033519"
+    },
+    "050C_REPAIR_TOWER_OPEN_ONLY": {
+      "name": "Tower Opens The Teller Only",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:43:28.463516",
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050C_REPAIR_TOWER_OPEN_ONLY_20260525_034326",
+      "purpose": "Make The Teller require Tower clearance and remove casual Employee/Manager/Owner tab access."
+    },
+    "050C_REPAIR_VISUAL_SHELL": {
+      "name": "Visual Shell Fix",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:53:51.009092",
+      "files_written": [
+        "src/teller/tellerShell.css"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050C_REPAIR_VISUAL_SHELL_20260525_035349",
+      "purpose": "Give The Teller its own styled Tower-gated shell so it does not render as plain left-aligned text."
+    },
+    "050C_REPAIR_STYLE_INNER_PANELS": {
+      "name": "Style Inner Employee and Manager Panels",
+      "status": "complete",
+      "timestamp": "2026-05-25T04:00:44.589271",
+      "files_patched": [
+        "src/teller/tellerShell.css"
+      ],
+      "backup": "pack_backups/pack_050C_REPAIR_STYLE_INNER_PANELS_20260525_040043",
+      "purpose": "Style the inner Employee and Manager panels so they render as designed cards, grids, buttons, chips, document vaults, and receipt sections instead of plain text."
+    }
+  },
+  "050C_REPAIR_PRIMARY_VIEW": {
+    "name": "Make New Teller View Primary",
+    "status": "complete",
+    "timestamp": "2026-05-25T03:39:55.677918",
+    "files_patched": [
+      "src/App.jsx"
+    ],
+    "backup": "pack_backups/pack_050C_REPAIR_PRIMARY_VIEW_20260525_033954",
+    "purpose": "Stop showing the old brown app first and make the new secure Employee/Manager Teller views the primary visible app."
+  }
+}

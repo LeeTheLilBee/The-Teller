@@ -77,90 +77,6 @@ function makeTowerReceiptCopy(ownerReceipt) {
   };
 }
 
-
-function makeOwnerNotification({ type = "info", title, body, receiptId, towerReceiptId }) {
-  const random = Math.floor(100000 + Math.random() * 900000);
-
-  return {
-    id: `NOTICE-${random}`,
-    type,
-    title,
-    body,
-    receiptId,
-    towerReceiptId,
-    createdAt: new Date().toISOString(),
-    read: false,
-  };
-}
-
-function notificationTone(type = "info") {
-  const map = {
-    owner_receipt: "strong",
-    tower_copy: "warn",
-    approved: "strong",
-    held: "warn",
-    proof_requested: "warn",
-    tower_sent: "warn",
-    info: "quiet",
-  };
-
-  return map[type] || "quiet";
-}
-
-function NotificationsDropdown({ notifications, open, setOpen, onClear }) {
-  const unreadCount = notifications.filter((notice) => !notice.read).length;
-
-  return (
-    <div className="fb-notifications-shell">
-      <button
-        type="button"
-        className={`fb-notifications-button ${open ? "is-open" : ""}`}
-        onClick={() => setOpen((value) => !value)}
-      >
-        Notifications
-        {notifications.length ? <span>{unreadCount || notifications.length}</span> : null}
-      </button>
-
-      {open ? (
-        <aside className="fb-notifications-menu">
-          <div className="fb-notifications-head">
-            <div>
-              <p className="fb-kicker">Notifications</p>
-              <h2>Recent money activity</h2>
-            </div>
-            {notifications.length ? (
-              <button type="button" className="fb-ghost" onClick={onClear}>
-                Clear
-              </button>
-            ) : null}
-          </div>
-
-          <div className="fb-notifications-list">
-            {notifications.length ? notifications.map((notice) => (
-              <article key={notice.id} className={`fb-notice fb-notice-${notice.type}`}>
-                <div className="fb-notice-top">
-                  <Badge tone={notificationTone(notice.type)}>{notice.type.replaceAll("_", " ")}</Badge>
-                  <small>{new Date(notice.createdAt).toLocaleTimeString()}</small>
-                </div>
-                <strong>{notice.title}</strong>
-                <p>{notice.body}</p>
-                {notice.receiptId ? <small>Owner: {notice.receiptId}</small> : null}
-                {notice.towerReceiptId ? <small>Tower: {notice.towerReceiptId}</small> : null}
-              </article>
-            )) : (
-              <article className="fb-notice-empty">
-                <p className="fb-kicker">Quiet</p>
-                <strong>No notifications yet.</strong>
-                <p>Review Desk decisions will appear here.</p>
-              </article>
-            )}
-          </div>
-        </aside>
-      ) : null}
-    </div>
-  );
-}
-
 function Badge({ children, tone = "quiet" }) {
   return <span className={`fb-badge fb-badge-${tone}`}>{children}</span>;
 }
@@ -1146,8 +1062,6 @@ export default function OwnerMoneyWorkspace() {
   const [pendingAction, setPendingAction] = useState(null);
   const [receipts, setReceipts] = useState([]);
   const [towerReceiptQueue, setTowerReceiptQueue] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [reviewDecisions, setReviewDecisions] = useState({});
 
   const theme = getOwnerTheme(themeKey);
@@ -1158,37 +1072,12 @@ export default function OwnerMoneyWorkspace() {
     setPendingAction(action);
   }
 
-  function pushNotification(notification) {
-    setNotifications((current) => [notification, ...current].slice(0, 12));
-  }
-
-  function clearNotifications() {
-    setNotifications([]);
-    setNotificationsOpen(false);
-  }
-
   function confirmAction(action) {
     const receipt = makeOwnerReceipt(action);
     const towerCopy = makeTowerReceiptCopy(receipt);
 
     setReceipts((current) => [receipt, ...current].slice(0, 8));
     setTowerReceiptQueue((current) => [towerCopy, ...current].slice(0, 8));
-
-    pushNotification(makeOwnerNotification({
-      type: "owner_receipt",
-      title: "Owner receipt created",
-      body: `${receipt.action} was recorded in The Teller.`,
-      receiptId: receipt.id,
-    }));
-
-    pushNotification(makeOwnerNotification({
-      type: "tower_copy",
-      title: "Tower copy queued",
-      body: `${receipt.action} was copied into the Tower handoff queue.`,
-      receiptId: receipt.id,
-      towerReceiptId: towerCopy.id,
-    }));
-
     setPendingAction(null);
   }
 
@@ -1198,34 +1087,6 @@ export default function OwnerMoneyWorkspace() {
 
     setReceipts((current) => [receipt, ...current].slice(0, 8));
     setTowerReceiptQueue((current) => [towerCopy, ...current].slice(0, 8));
-
-    const decisionType = action.tower
-      ? "tower_sent"
-      : String(action.label || "").toLowerCase().includes("hold")
-        ? "held"
-        : String(action.label || "").toLowerCase().includes("proof")
-          ? "proof_requested"
-          : String(action.label || "").toLowerCase().includes("approve")
-            ? "approved"
-            : "owner_receipt";
-
-    pushNotification(makeOwnerNotification({
-      type: decisionType,
-      title: "Review decision recorded",
-      body: `${action.label} was recorded and receipted.`,
-      receiptId: receipt.id,
-    }));
-
-    pushNotification(makeOwnerNotification({
-      type: "tower_copy",
-      title: "Tower copy queued",
-      body: `${action.label} was copied into the Tower handoff queue.`,
-      receiptId: receipt.id,
-      towerReceiptId: towerCopy.id,
-    }));
-
-    setNotificationsOpen(true);
-
     setPendingAction({
       ...action,
       label: `Receipt auto-created · ${action.label}`,
@@ -1251,22 +1112,13 @@ export default function OwnerMoneyWorkspace() {
         "--fb-good": theme.good,
       }}
     >
-      <div className="fb-corner-tools">
-        <NotificationsDropdown
-          notifications={notifications}
-          open={notificationsOpen}
-          setOpen={setNotificationsOpen}
-          onClear={clearNotifications}
-        />
-
-        <button
-          type="button"
-          className={`fb-settings-corner ${settingsOpen ? "is-open" : ""}`}
-          onClick={() => setSettingsOpen((value) => !value)}
-        >
-          Settings
-        </button>
-      </div>
+      <button
+        type="button"
+        className={`fb-settings-corner ${settingsOpen ? "is-open" : ""}`}
+        onClick={() => setSettingsOpen((value) => !value)}
+      >
+        Settings
+      </button>
 
       {settingsOpen ? (
         <ThemeCloset

@@ -39,126 +39,19 @@ function confidenceLabel(confidence = "") {
   return map[confidence] || String(confidence || "Estimated");
 }
 
-
 function makeOwnerReceipt(action) {
   const stamp = new Date().toISOString();
   const random = Math.floor(100000 + Math.random() * 900000);
-  const receiptId = `OWNER-RCPT-${random}`;
-
   return {
-    id: receiptId,
+    id: `OWNER-RCPT-${random}`,
     action: action?.label || action?.action || "Owner action",
     target: action?.target || action?.business || "Owner workspace",
-    business: action?.business || "Owner workspace",
     tower: Boolean(action?.tower),
     money: Boolean(action?.money),
     proof: Boolean(action?.proof),
     createdAt: stamp,
     status: action?.tower ? "Queued for Tower" : "Recorded",
-    towerCopyRequired: true,
-    towerReceiptId: `TOWER-COPY-${random}`,
-    towerReceiptStatus: "Queued for Tower",
   };
-}
-
-function makeTowerReceiptCopy(ownerReceipt) {
-  return {
-    id: ownerReceipt.towerReceiptId,
-    ownerReceiptId: ownerReceipt.id,
-    action: ownerReceipt.action,
-    target: ownerReceipt.target,
-    business: ownerReceipt.business,
-    createdAt: ownerReceipt.createdAt,
-    status: "Queued for Tower",
-    reason: ownerReceipt.tower
-      ? "Protected or Tower-routed owner action."
-      : "Owner money action receipt copied to The Tower for audit trail.",
-    deliveryMode: "local_handoff_until_tower_api",
-  };
-}
-
-
-function makeOwnerNotification({ type = "info", title, body, receiptId, towerReceiptId }) {
-  const random = Math.floor(100000 + Math.random() * 900000);
-
-  return {
-    id: `NOTICE-${random}`,
-    type,
-    title,
-    body,
-    receiptId,
-    towerReceiptId,
-    createdAt: new Date().toISOString(),
-    read: false,
-  };
-}
-
-function notificationTone(type = "info") {
-  const map = {
-    owner_receipt: "strong",
-    tower_copy: "warn",
-    approved: "strong",
-    held: "warn",
-    proof_requested: "warn",
-    tower_sent: "warn",
-    info: "quiet",
-  };
-
-  return map[type] || "quiet";
-}
-
-function NotificationsDropdown({ notifications, open, setOpen, onClear }) {
-  const unreadCount = notifications.filter((notice) => !notice.read).length;
-
-  return (
-    <div className="fb-notifications-shell">
-      <button
-        type="button"
-        className={`fb-notifications-button ${open ? "is-open" : ""}`}
-        onClick={() => setOpen((value) => !value)}
-      >
-        Notifications
-        {notifications.length ? <span>{unreadCount || notifications.length}</span> : null}
-      </button>
-
-      {open ? (
-        <aside className="fb-notifications-menu">
-          <div className="fb-notifications-head">
-            <div>
-              <p className="fb-kicker">Notifications</p>
-              <h2>Recent money activity</h2>
-            </div>
-            {notifications.length ? (
-              <button type="button" className="fb-ghost" onClick={onClear}>
-                Clear
-              </button>
-            ) : null}
-          </div>
-
-          <div className="fb-notifications-list">
-            {notifications.length ? notifications.map((notice) => (
-              <article key={notice.id} className={`fb-notice fb-notice-${notice.type}`}>
-                <div className="fb-notice-top">
-                  <Badge tone={notificationTone(notice.type)}>{notice.type.replaceAll("_", " ")}</Badge>
-                  <small>{new Date(notice.createdAt).toLocaleTimeString()}</small>
-                </div>
-                <strong>{notice.title}</strong>
-                <p>{notice.body}</p>
-                {notice.receiptId ? <small>Owner: {notice.receiptId}</small> : null}
-                {notice.towerReceiptId ? <small>Tower: {notice.towerReceiptId}</small> : null}
-              </article>
-            )) : (
-              <article className="fb-notice-empty">
-                <p className="fb-kicker">Quiet</p>
-                <strong>No notifications yet.</strong>
-                <p>Review Desk decisions will appear here.</p>
-              </article>
-            )}
-          </div>
-        </aside>
-      ) : null}
-    </div>
-  );
 }
 
 function Badge({ children, tone = "quiet" }) {
@@ -363,7 +256,7 @@ function FinalActionPreview({ action, onCancel, onConfirm }) {
   return (
     <section className="fb-final-preview">
       <div>
-        <p className="fb-kicker">{action.alreadyReceipted ? "Receipt auto-created + Tower copy queued" : "Step 4 · Final review"}</p>
+        <p className="fb-kicker">Step 4 · Final review</p>
         <h2>{action.label}</h2>
         <p>{action.description}</p>
 
@@ -375,50 +268,12 @@ function FinalActionPreview({ action, onCancel, onConfirm }) {
       </div>
 
       <div className="fb-final-actions">
-        {action.alreadyReceipted ? (
-          <button type="button" className="fb-primary" onClick={onCancel}>
-            Got it
-          </button>
-        ) : (
-          <button type="button" className="fb-primary" onClick={() => onConfirm(action)}>
-            Create receipt + Tower copy
-          </button>
-        )}
-        <button type="button" className="fb-ghost" onClick={onCancel}>
-          {action.alreadyReceipted ? "Close" : "Cancel"}
+        <button type="button" className="fb-primary" onClick={() => onConfirm(action)}>
+          Create receipt
         </button>
-      </div>
-    </section>
-  );
-}
-
-
-function TowerReceiptDock({ towerReceipts }) {
-  if (!towerReceipts.length) return null;
-
-  return (
-    <section className="fb-tower-receipt-dock">
-      <div className="fb-section-head">
-        <div>
-          <p className="fb-kicker">Tower receipt copies</p>
-          <h2>Receipts queued for The Tower too.</h2>
-          <p>
-            These are local Tower handoff copies for now. When The Tower backend is connected,
-            this is the stream that should be sent into the real Tower audit system.
-          </p>
-        </div>
-        <Badge tone="warn">{towerReceipts.length} Tower copies</Badge>
-      </div>
-
-      <div className="fb-tower-receipt-grid">
-        {towerReceipts.map((receipt) => (
-          <article key={receipt.id} className="fb-tower-receipt-card">
-            <span>{receipt.id}</span>
-            <strong>{receipt.action}</strong>
-            <p>{receipt.reason}</p>
-            <small>Owner receipt: {receipt.ownerReceiptId}</small>
-          </article>
-        ))}
+        <button type="button" className="fb-ghost" onClick={onCancel}>
+          Cancel
+        </button>
       </div>
     </section>
   );
@@ -647,47 +502,6 @@ function BusinessSpecificWorkspace({ activeBusiness, lane, onAction }) {
 }
 
 
-function getCardDecisionState(card, reviewDecisions) {
-  return reviewDecisions[card.key] || "open";
-}
-
-function reviewFilterMatches(card, filter, reviewDecisions) {
-  const decision = getCardDecisionState(card, reviewDecisions);
-  const status = String(card.status || "").toLowerCase();
-
-  if (filter === "all") return true;
-  if (filter === "open") return decision === "open";
-  if (filter === "needs_review") return status.includes("review") || decision === "open";
-  if (filter === "needs_proof") return status.includes("proof") || decision === "proof_requested";
-  if (filter === "tower_required") return card.tower || decision === "tower_sent";
-  if (filter === "approved") return decision === "approved";
-  if (filter === "held") return decision === "held";
-
-  return true;
-}
-
-function decisionLabel(value) {
-  const map = {
-    open: "Open",
-    approved: "Approved",
-    held: "Held",
-    proof_requested: "Proof requested",
-    tower_sent: "Sent to Tower",
-  };
-  return map[value] || "Open";
-}
-
-function decisionTone(value) {
-  const map = {
-    open: "quiet",
-    approved: "strong",
-    held: "warn",
-    proof_requested: "warn",
-    tower_sent: "warn",
-  };
-  return map[value] || "quiet";
-}
-
 function getReviewDeskData(activeBusiness) {
   const map = {
     simpleepay: {
@@ -873,58 +687,8 @@ function getReviewDeskData(activeBusiness) {
   return map[activeBusiness] || map.simpleepay;
 }
 
-function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions }) {
-  const [reviewFilter, setReviewFilter] = useState("all");
+function OwnerReviewDesk({ activeBusiness, lane, onAction }) {
   const desk = getReviewDeskData(activeBusiness);
-  const filteredCards = desk.cards.filter((card) => reviewFilterMatches(card, reviewFilter, reviewDecisions));
-
-  const filters = [
-    ["all", "All"],
-    ["open", "Open"],
-    ["needs_review", "Needs Review"],
-    ["needs_proof", "Needs Proof"],
-    ["tower_required", "Tower Required"],
-    ["approved", "Approved"],
-    ["held", "Held"],
-  ];
-
-  function setDecision(card, decision) {
-    setReviewDecisions((current) => ({
-      ...current,
-      [card.key]: decision,
-    }));
-  }
-
-  function reviewAction(card, decision, label, description) {
-    setDecision(card, decision);
-
-    const action = {
-      label,
-      business: desk.title,
-      target: card.title,
-      description,
-      money: true,
-      proof: decision === "proof_requested" || decision === "approved",
-      tower: card.tower || decision === "tower_sent",
-      autoCreated: true,
-    };
-
-    if (onAutoReceipt) {
-      onAutoReceipt(action);
-    } else {
-      onAction(action);
-    }
-  }
-
-  const counts = {
-    all: desk.cards.length,
-    open: desk.cards.filter((card) => getCardDecisionState(card, reviewDecisions) === "open").length,
-    needs_review: desk.cards.filter((card) => reviewFilterMatches(card, "needs_review", reviewDecisions)).length,
-    needs_proof: desk.cards.filter((card) => reviewFilterMatches(card, "needs_proof", reviewDecisions)).length,
-    tower_required: desk.cards.filter((card) => reviewFilterMatches(card, "tower_required", reviewDecisions)).length,
-    approved: desk.cards.filter((card) => getCardDecisionState(card, reviewDecisions) === "approved").length,
-    held: desk.cards.filter((card) => getCardDecisionState(card, reviewDecisions) === "held").length,
-  };
 
   return (
     <section className="fb-review-desk" style={{ "--review-color": lane.color }}>
@@ -935,20 +699,6 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
           <p>{desk.subtitle}</p>
         </div>
         <Badge tone="strong">{desk.managerView}</Badge>
-      </div>
-
-      <div className="fb-review-filter-row">
-        {filters.map(([key, label]) => (
-          <button
-            key={key}
-            type="button"
-            className={reviewFilter === key ? "is-active" : ""}
-            onClick={() => setReviewFilter(key)}
-          >
-            {label}
-            <span>{counts[key] || 0}</span>
-          </button>
-        ))}
       </div>
 
       <div className="fb-review-layout">
@@ -967,102 +717,92 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
             </article>
             <article>
               <span>Needs proof</span>
-              <strong>{counts.needs_proof}</strong>
+              <strong>{desk.cards.filter((card) => String(card.status).toLowerCase().includes("proof")).length}</strong>
             </article>
             <article>
               <span>Tower</span>
-              <strong>{counts.tower_required}</strong>
-            </article>
-            <article>
-              <span>Approved</span>
-              <strong>{counts.approved}</strong>
+              <strong>{desk.cards.filter((card) => card.tower).length}</strong>
             </article>
           </div>
         </aside>
 
         <div className="fb-review-card-grid">
-          {filteredCards.length ? filteredCards.map((card) => {
-            const decision = getCardDecisionState(card, reviewDecisions);
+          {desk.cards.map((card) => (
+            <article key={card.key} className={`fb-review-card ${card.tower ? "is-tower" : ""}`}>
+              <div className="fb-review-card-top">
+                <span>{card.label}</span>
+                <small>{card.status}</small>
+              </div>
+              <h3>{card.title}</h3>
+              <p>{card.detail}</p>
 
-            return (
-              <article key={card.key} className={`fb-review-card is-${decision} ${card.tower ? "is-tower" : ""}`}>
-                <div className="fb-review-card-top">
-                  <span>{card.label}</span>
-                  <small>{card.status}</small>
+              <div className="fb-review-facts">
+                <div>
+                  <span>Money impact</span>
+                  <strong>{card.money}</strong>
                 </div>
-
-                <div className="fb-review-decision-row">
-                  <Badge tone={decisionTone(decision)}>{decisionLabel(decision)}</Badge>
-                  {card.tower ? <Badge tone="warn">Tower item</Badge> : null}
+                <div>
+                  <span>Risk</span>
+                  <strong>{card.risk}</strong>
                 </div>
-
-                <h3>{card.title}</h3>
-                <p>{card.detail}</p>
-
-                <div className="fb-review-facts">
-                  <div>
-                    <span>Money impact</span>
-                    <strong>{card.money}</strong>
-                  </div>
-                  <div>
-                    <span>Risk</span>
-                    <strong>{card.risk}</strong>
-                  </div>
-                  <div>
-                    <span>Proof</span>
-                    <strong>{card.proof}</strong>
-                  </div>
+                <div>
+                  <span>Proof</span>
+                  <strong>{card.proof}</strong>
                 </div>
+              </div>
 
-                <div className="fb-review-actions">
-                  <button
-                    type="button"
-                    onClick={() => reviewAction(
-                      card,
-                      "approved",
-                      `Approve · ${card.title}`,
-                      `Approve this reviewed card: ${card.detail}`
-                    )}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => reviewAction(
-                      card,
-                      "held",
-                      `Hold · ${card.title}`,
-                      `Hold this card for more review: ${card.detail}`
-                    )}
-                  >
-                    Hold
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => reviewAction(
-                      card,
-                      card.tower ? "tower_sent" : "proof_requested",
-                      card.tower ? `Send to Tower · ${card.title}` : `Request proof · ${card.title}`,
-                      card.tower ? "Send this protected review item to The Tower." : `Request proof for this review item: ${card.proof}`
-                    )}
-                  >
-                    {card.tower ? "Send to Tower" : "Request proof"}
-                  </button>
-                </div>
-              </article>
-            );
-          }) : (
-            <article className="fb-review-empty">
-              <p className="fb-kicker">Nothing here</p>
-              <h3>No cards match this filter.</h3>
-              <p>Switch filters or choose another business circle.</p>
+              <div className="fb-review-actions">
+                <button
+                  type="button"
+                  onClick={() => onAction({
+                    label: `Approve · ${card.title}`,
+                    business: desk.title,
+                    target: card.title,
+                    description: `Approve this reviewed card: ${card.detail}`,
+                    money: true,
+                    proof: true,
+                    tower: card.tower,
+                  })}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onAction({
+                    label: `Hold · ${card.title}`,
+                    business: desk.title,
+                    target: card.title,
+                    description: `Hold this card for more review: ${card.detail}`,
+                    money: true,
+                    proof: false,
+                    tower: card.tower,
+                  })}
+                >
+                  Hold
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onAction({
+                    label: card.tower ? `Send to Tower · ${card.title}` : `Request proof · ${card.title}`,
+                    business: desk.title,
+                    target: card.title,
+                    description: card.tower ? "Send this protected review item to The Tower." : `Request proof for this review item: ${card.proof}`,
+                    money: true,
+                    proof: true,
+                    tower: card.tower,
+                  })}
+                >
+                  {card.tower ? "Send to Tower" : "Request proof"}
+                </button>
+              </div>
             </article>
-          )}
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
 function MoneyConstellations({ queue, onAction }) {
   const grouped = {
     "Pay People": queue.filter((item) => item.lane === "Pay People"),
@@ -1145,10 +885,6 @@ export default function OwnerMoneyWorkspace() {
   const [activeBusiness, setActiveBusiness] = useState("simpleepay");
   const [pendingAction, setPendingAction] = useState(null);
   const [receipts, setReceipts] = useState([]);
-  const [towerReceiptQueue, setTowerReceiptQueue] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [reviewDecisions, setReviewDecisions] = useState({});
 
   const theme = getOwnerTheme(themeKey);
   const focus = useMemo(() => getTodayOwnerFocus(ownerMoneyQueue), []);
@@ -1158,80 +894,10 @@ export default function OwnerMoneyWorkspace() {
     setPendingAction(action);
   }
 
-  function pushNotification(notification) {
-    setNotifications((current) => [notification, ...current].slice(0, 12));
-  }
-
-  function clearNotifications() {
-    setNotifications([]);
-    setNotificationsOpen(false);
-  }
-
   function confirmAction(action) {
     const receipt = makeOwnerReceipt(action);
-    const towerCopy = makeTowerReceiptCopy(receipt);
-
     setReceipts((current) => [receipt, ...current].slice(0, 8));
-    setTowerReceiptQueue((current) => [towerCopy, ...current].slice(0, 8));
-
-    pushNotification(makeOwnerNotification({
-      type: "owner_receipt",
-      title: "Owner receipt created",
-      body: `${receipt.action} was recorded in The Teller.`,
-      receiptId: receipt.id,
-    }));
-
-    pushNotification(makeOwnerNotification({
-      type: "tower_copy",
-      title: "Tower copy queued",
-      body: `${receipt.action} was copied into the Tower handoff queue.`,
-      receiptId: receipt.id,
-      towerReceiptId: towerCopy.id,
-    }));
-
     setPendingAction(null);
-  }
-
-  function autoCreateReceipt(action) {
-    const receipt = makeOwnerReceipt(action);
-    const towerCopy = makeTowerReceiptCopy(receipt);
-
-    setReceipts((current) => [receipt, ...current].slice(0, 8));
-    setTowerReceiptQueue((current) => [towerCopy, ...current].slice(0, 8));
-
-    const decisionType = action.tower
-      ? "tower_sent"
-      : String(action.label || "").toLowerCase().includes("hold")
-        ? "held"
-        : String(action.label || "").toLowerCase().includes("proof")
-          ? "proof_requested"
-          : String(action.label || "").toLowerCase().includes("approve")
-            ? "approved"
-            : "owner_receipt";
-
-    pushNotification(makeOwnerNotification({
-      type: decisionType,
-      title: "Review decision recorded",
-      body: `${action.label} was recorded and receipted.`,
-      receiptId: receipt.id,
-    }));
-
-    pushNotification(makeOwnerNotification({
-      type: "tower_copy",
-      title: "Tower copy queued",
-      body: `${action.label} was copied into the Tower handoff queue.`,
-      receiptId: receipt.id,
-      towerReceiptId: towerCopy.id,
-    }));
-
-    setNotificationsOpen(true);
-
-    setPendingAction({
-      ...action,
-      label: `Receipt auto-created · ${action.label}`,
-      description: `A receipt was automatically created here and copied into the Tower handoff queue. ${action.description || ""}`,
-      alreadyReceipted: true,
-    });
   }
 
   return (
@@ -1251,22 +917,13 @@ export default function OwnerMoneyWorkspace() {
         "--fb-good": theme.good,
       }}
     >
-      <div className="fb-corner-tools">
-        <NotificationsDropdown
-          notifications={notifications}
-          open={notificationsOpen}
-          setOpen={setNotificationsOpen}
-          onClear={clearNotifications}
-        />
-
-        <button
-          type="button"
-          className={`fb-settings-corner ${settingsOpen ? "is-open" : ""}`}
-          onClick={() => setSettingsOpen((value) => !value)}
-        >
-          Settings
-        </button>
-      </div>
+      <button
+        type="button"
+        className={`fb-settings-corner ${settingsOpen ? "is-open" : ""}`}
+        onClick={() => setSettingsOpen((value) => !value)}
+      >
+        Settings
+      </button>
 
       {settingsOpen ? (
         <ThemeCloset
@@ -1333,21 +990,13 @@ export default function OwnerMoneyWorkspace() {
         <>
           <BusinessOrbit lanes={ownerBusinessLanes} activeBusiness={activeBusiness} setActiveBusiness={setActiveBusiness} />
           <BusinessSpecificWorkspace activeBusiness={activeBusiness} lane={activeLane} onAction={openAction} />
-          <OwnerReviewDesk
-            activeBusiness={activeBusiness}
-            lane={activeLane}
-            onAction={openAction}
-            onAutoReceipt={autoCreateReceipt}
-            reviewDecisions={reviewDecisions}
-            setReviewDecisions={setReviewDecisions}
-          />
+          <OwnerReviewDesk activeBusiness={activeBusiness} lane={activeLane} onAction={openAction} />
           <MoneyConstellations queue={getBusinessSpecificItems(activeBusiness)} onAction={openAction} />
           <SnapshotRibbon cards={[getBusinessSnapshot(activeBusiness), ...ownerSnapshotCards.filter((card) => card.key !== activeBusiness).slice(0, 3)]} />
         </>
       )}
 
       <ReceiptDock receipts={receipts} />
-      <TowerReceiptDock towerReceipts={towerReceiptQueue} />
     </main>
   );
 }

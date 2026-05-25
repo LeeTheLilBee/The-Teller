@@ -201,6 +201,39 @@
       ],
       "backup": "pack_backups/pack_050D_G_OWNER_REVIEW_DESK_20260525_162816",
       "purpose": "Add big-picture plus small-picture review desk with manager view, clock-in cards, proof cards, pay impact, approve/hold/request proof/send Tower actions."
+    },
+    "050H_REVIEW_DESK_FILTERS_DECISION_LANES": {
+      "name": "Review Desk Filters and Decision Lanes",
+      "status": "complete",
+      "timestamp": "2026-05-25T17:22:57.194781",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050H_REVIEW_DESK_FILTERS_DECISION_LANES_20260525_172255",
+      "purpose": "Add owner Review Desk filters, decision state badges, approved/held/proof/Tower lanes, and filter counts."
+    },
+    "050I_AUTO_CREATE_RECEIPTS_AND_TOWER_COPY": {
+      "name": "Auto Create Receipts and Tower Copy",
+      "status": "complete",
+      "timestamp": "2026-05-25T17:45:33.367239",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050I_AUTO_CREATE_RECEIPTS_AND_TOWER_COPY_20260525_174531",
+      "purpose": "Make Review Desk decisions automatically create local owner receipts and a Tower handoff receipt copy at the same time."
+    },
+    "050J_OWNER_NOTIFICATIONS_DROPDOWN": {
+      "name": "Owner Notifications Dropdown",
+      "status": "complete",
+      "timestamp": "2026-05-25T17:53:41.181682",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050J_OWNER_NOTIFICATIONS_DROPDOWN_20260525_175339",
+      "purpose": "Add owner notifications dropdown for auto-created owner receipts, Tower receipt copies, review decisions, and proof/Tower activity."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

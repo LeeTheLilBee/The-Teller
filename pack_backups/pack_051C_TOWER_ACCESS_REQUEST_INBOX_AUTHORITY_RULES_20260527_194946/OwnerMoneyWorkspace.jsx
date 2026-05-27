@@ -12,7 +12,6 @@ import {
 import { readManagerSubmissions, saveManagerReturnItem, saveManagerSubmission, createBridgeId } from "./managerOwnerBridge";
 import "./ownerMoneyWorkspace.css";
 
-import { saveTowerAccessRequest } from "./towerBackupPlugin";
 function statusLabel(status = "") {
   const map = {
     needs_review: "Needs review",
@@ -2239,7 +2238,6 @@ export default function OwnerMoneyWorkspace() {
         status: "Pending Tower clearance",
       };
 
-      saveTowerAccessRequest(request);
       window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
       window.sessionStorage.removeItem("the_teller_tower_clearance_token_v1");
       window.sessionStorage.setItem("the_teller_tower_access_request_v1", JSON.stringify(request));

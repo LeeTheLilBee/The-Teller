@@ -197,26 +197,3 @@ export function createEmployeeResponseItem(request, response) {
     createdAt,
   };
 }
-
-
-export function createEmployeeDecisionResponseItem(request, decision) {
-  const id = createBridgeId("EMP-DECISION");
-  const createdAt = new Date().toISOString();
-
-  const decisionLabel = decision?.decisionStatus || "Manager reviewed";
-  const managerNote = decision?.managerNote || "Manager reviewed your request.";
-
-  return {
-    id,
-    requestId: request.id,
-    employeeName: request.employeeName || "Employee",
-    businessKey: request.businessKey || "simpleepay",
-    title: `${decisionLabel} · ${request.title}`,
-    body: managerNote,
-    responseStatus: decisionLabel,
-    proofStatus: decision?.proofStatus || request.proofStatus || "Manager reviewed",
-    managerName: decision?.managerName || "Manager Portal",
-    towerBackedUp: true,
-    createdAt,
-  };
-}

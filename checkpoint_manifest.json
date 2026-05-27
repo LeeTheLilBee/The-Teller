@@ -594,6 +594,65 @@
       ],
       "backup": "pack_backups/pack_051B_REPAIR_OWNER_CLEARANCE_CANNOT_BE_REVOKED_20260527_194023",
       "purpose": "Prevent owner-level Tower clearance from being revoked from local Tower Evidence UI while preserving revoke for non-owner local sessions."
+    },
+    "051C_TOWER_ACCESS_REQUEST_INBOX_AUTHORITY_RULES": {
+      "name": "Tower Access Request Inbox Authority Rules",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:49:47.876491",
+      "files_patched": [
+        "src/teller/towerBackupPlugin.js",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051C_TOWER_ACCESS_REQUEST_INBOX_AUTHORITY_RULES_20260527_194946",
+      "purpose": "Add auditable Tower access request inbox, authority rules, Soulaana authority read, and owner/manager/direct/employee access distinctions."
+    },
+    "051D_MANAGER_EMPLOYEE_REQUEST_REVIEW_CENTER": {
+      "name": "Manager Employee Request Review Center",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:15:52.039970",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051D_MANAGER_EMPLOYEE_REQUEST_REVIEW_CENTER_20260527_201550",
+      "purpose": "Make employee requests the primary manager work area and add approve/reject/needs-proof decisions with Tower-backed employee responses."
+    },
+    "051E_ROLE_SCOPED_TOWER_EVIDENCE_VIEWS": {
+      "name": "Role Scoped Tower Evidence Views",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:22:42.959667",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051E_ROLE_SCOPED_TOWER_EVIDENCE_VIEWS_20260527_202241",
+      "purpose": "Make Tower Evidence role-scoped so managers see only employee Tower/secure document requests while owners keep full Tower dashboard."
+    },
+    "051E_REPAIR_TOWER_ACCESS_STATE_051F_EMPLOYEE_NOTIFICATIONS": {
+      "name": "Fix Tower Access State And Employee Notifications",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:33:19.496918",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051E_REPAIR_TOWER_ACCESS_STATE_051F_EMPLOYEE_NOTIFICATIONS_20260527_203317",
+      "purpose": "Fix towerAccessRequest runtime error and add employee notification dropdown for sent requests and manager responses."
+    },
+    "051E_REPAIR_B_FULL_TOWER_WORKSPACE_SCOPE_FIX": {
+      "name": "Full Tower Workspace Scope Fix",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:45:44.572030",
+      "files_rewritten": [
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_051E_REPAIR_B_FULL_TOWER_WORKSPACE_SCOPE_FIX_20260527_204543",
+      "purpose": "Fully rewrite TowerBackupWorkspace so towerAccessRequest and related Tower state are safely scoped before role-based Tower rendering."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

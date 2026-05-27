@@ -35,66 +35,6 @@ function EmployeeBadge({ children, tone = "quiet" }) {
   return <span className={`emp-badge emp-badge-${tone}`}>{children}</span>;
 }
 
-
-function createEmployeeNotice({ type = "info", title, body, target }) {
-  return {
-    id: `EMP-NOTICE-${Math.floor(100000 + Math.random() * 900000)}`,
-    type,
-    title,
-    body,
-    target,
-    createdAt: new Date().toISOString(),
-  };
-}
-
-function EmployeeNotificationsDropdown({ notifications, open, setOpen, onClear }) {
-  return (
-    <div className="emp-notifications-shell">
-      <button
-        type="button"
-        className={`emp-notifications-button ${open ? "is-open" : ""}`}
-        onClick={() => setOpen((value) => !value)}
-      >
-        Notifications
-        {notifications.length ? <span>{notifications.length}</span> : null}
-      </button>
-
-      {open ? (
-        <aside className="emp-notifications-menu">
-          <div className="emp-section-head">
-            <div>
-              <p className="emp-kicker">Employee notifications</p>
-              <h2>Updates from your lane.</h2>
-            </div>
-            {notifications.length ? (
-              <button type="button" className="emp-secondary-button" onClick={onClear}>
-                Clear
-              </button>
-            ) : null}
-          </div>
-
-          <div className="emp-notice-list">
-            {notifications.length ? notifications.map((notice) => (
-              <article key={notice.id} className={`emp-notice emp-notice-${notice.type}`}>
-                <span>{notice.type}</span>
-                <strong>{notice.title}</strong>
-                <p>{notice.body}</p>
-                {notice.target ? <small>{notice.target}</small> : null}
-              </article>
-            )) : (
-              <article className="emp-notice emp-notice-empty">
-                <span>Quiet</span>
-                <strong>No employee notifications yet.</strong>
-                <p>Requests and manager replies will show here.</p>
-              </article>
-            )}
-          </div>
-        </aside>
-      ) : null}
-    </div>
-  );
-}
-
 function createEmployeeRequest(form) {
   const id = createBridgeId("EMP-REQ");
   const createdAt = new Date().toISOString();
@@ -118,8 +58,6 @@ function createEmployeeRequest(form) {
 export default function EmployeeStandaloneWorkspace() {
   const [activity, setActivity] = useState([]);
   const [managerResponses, setManagerResponses] = useState([]);
-  const [employeeNotificationsOpen, setEmployeeNotificationsOpen] = useState(false);
-  const [employeeNotifications, setEmployeeNotifications] = useState([]);
   const [form, setForm] = useState({
     requestType: "missing_punch",
     title: "",
@@ -128,38 +66,12 @@ export default function EmployeeStandaloneWorkspace() {
     urgency: "Normal",
   });
 
-  function pushEmployeeNotice(notice) {
-    setEmployeeNotifications((current) => [notice, ...current].slice(0, 12));
-  }
-
-  function clearEmployeeNotifications() {
-    setEmployeeNotifications([]);
-    setEmployeeNotificationsOpen(false);
-  }
-
   function refreshEmployeeResponses() {
     const responses = readEmployeeResponseQueue()
       .filter((item) => item.employeeName === portalEmployee.name)
       .slice(0, 10);
 
-    setManagerResponses((current) => {
-      const currentIds = new Set(current.map((item) => item.id));
-      const freshResponses = responses.filter((item) => !currentIds.has(item.id));
-
-      if (current.length && freshResponses.length) {
-        freshResponses.forEach((item) => {
-          pushEmployeeNotice(createEmployeeNotice({
-            type: "manager",
-            title: "Manager responded",
-            body: item.body || "Your manager responded to your request.",
-            target: item.responseStatus || item.title,
-          }));
-        });
-        setEmployeeNotificationsOpen(true);
-      }
-
-      return responses;
-    });
+    setManagerResponses(responses);
   }
 
   useEffect(() => {
@@ -203,14 +115,6 @@ export default function EmployeeStandaloneWorkspace() {
     saveEmployeeManagerItem(request);
     saveTowerBackupItem(towerBackup);
 
-    pushEmployeeNotice(createEmployeeNotice({
-      type: request.requestType === "tower_record" ? "tower" : "sent",
-      title: "Sent to manager",
-      body: `${request.title} was sent to your manager and backed up to The Tower.`,
-      target: request.id,
-    }));
-    setEmployeeNotificationsOpen(true);
-
     setActivity((current) => [
       {
         id: createBridgeId("EMP-ACTIVITY"),
@@ -234,15 +138,6 @@ export default function EmployeeStandaloneWorkspace() {
 
   return (
     <main className="employee-workspace">
-      <div className="emp-corner-tools">
-        <EmployeeNotificationsDropdown
-          notifications={employeeNotifications}
-          open={employeeNotificationsOpen}
-          setOpen={setEmployeeNotificationsOpen}
-          onClear={clearEmployeeNotifications}
-        />
-      </div>
-
       <section className="emp-simple-hero">
         <div className="emp-hero-copy">
           <p className="emp-kicker">Employee lane · The Teller</p>

@@ -9,12 +9,6 @@ import {
   updateFormalTowerHandoffPacket,
   getSoulaanaTowerGuidance,
   TOWER_HANDOFF_STATUSES,
-  readTowerAccessRequestInbox,
-  updateTowerAccessRequestStatus,
-  getTowerAccessRequestSummary,
-  getTowerAuthorityRule,
-  getSoulaanaAuthorityRead,
-  TOWER_ACCESS_STATUSES,
 } from "./towerBackupPlugin";
 import "./towerBackupWorkspace.css";
 
@@ -28,10 +22,9 @@ function payloadSummary(payload) {
   const keys = Object.keys(payload).slice(0, 6);
   if (!keys.length) return "Payload exists but has no visible keys.";
 
-  return keys
-    .map((key) => `${key}: ${typeof payload[key] === "object" ? "object" : String(payload[key]).slice(0, 54)}`)
-    .join(" · ");
+  return keys.map((key) => `${key}: ${typeof payload[key] === "object" ? "object" : String(payload[key]).slice(0, 54)}`).join(" · ");
 }
+
 
 function readTowerAccessRequest() {
   try {
@@ -109,55 +102,13 @@ function clearTowerClearanceToken() {
   }
 }
 
-function getTowerScope(accessRequest, token) {
-  const lane = String(token?.sourceLane || accessRequest?.sourceLane || "").toLowerCase();
-  const requestedBy = String(token?.requestedBy || accessRequest?.requestedBy || "").toLowerCase();
-
-  if (lane === "owner" || requestedBy.includes("owner")) return "owner";
-  if (lane === "manager" || requestedBy.includes("manager")) return "manager";
-  if (lane === "employee" || requestedBy.includes("employee")) return "employee";
-  return "direct";
-}
 
 function isOwnerTowerClearance(token, accessRequest) {
-  return getTowerScope(accessRequest, token) === "owner";
-}
+  const tokenLane = String(token?.sourceLane || "").toLowerCase();
+  const requestLane = String(accessRequest?.sourceLane || "").toLowerCase();
+  const requestedBy = String(token?.requestedBy || accessRequest?.requestedBy || "").toLowerCase();
 
-function isEmployeeTowerRequestItem(item) {
-  const payload = item?.payload || {};
-  const text = JSON.stringify(payload).toLowerCase();
-  const source = String(item?.source || "").toLowerCase();
-  const action = String(item?.action || "").toLowerCase();
-  const target = String(item?.target || "").toLowerCase();
-  const summary = String(item?.summary || "").toLowerCase();
-
-  return (
-    source.includes("employee") &&
-    (
-      text.includes("tower_record") ||
-      text.includes("secure document") ||
-      text.includes("tower record") ||
-      action.includes("tower") ||
-      target.includes("tower") ||
-      summary.includes("tower") ||
-      summary.includes("secure document")
-    )
-  );
-}
-
-function getManagerTowerRequestItems(items) {
-  return items.filter((item) => isEmployeeTowerRequestItem(item));
-}
-
-function towerFilterMatches(item, filter) {
-  if (filter === "all") return true;
-  if (filter === "employee") return item.source === "employee_portal";
-  if (filter === "manager") return item.source === "manager_board";
-  if (filter === "owner") return String(item.source || "").includes("owner") || String(item.action || "").toLowerCase().includes("owner");
-  if (filter === "handoff") return item.deliveryMode === "local_handoff_until_tower_api";
-  if (filter === "reviewed") return String(item.pluginStatus || "").toLowerCase().includes("reviewed");
-  if (filter === "awaiting") return String(item.pluginStatus || "").toLowerCase().includes("awaiting");
-  return true;
+  return tokenLane === "owner" || requestLane === "owner" || requestedBy.includes("owner");
 }
 
 function getSoulaanaClearanceGuidance(accessRequest, token) {
@@ -184,41 +135,17 @@ function getSoulaanaClearanceGuidance(accessRequest, token) {
   };
 }
 
-function getSoulaanaManagerTowerGuidance(items) {
-  const count = items.length;
-  const urgentCount = items.filter((item) => JSON.stringify(item.payload || {}).toLowerCase().includes("payroll urgent")).length;
-  const proofCount = items.filter((item) => JSON.stringify(item.payload || {}).toLowerCase().includes("proof")).length;
-
-  if (!count) {
-    return {
-      title: "Soulaana manager Tower read",
-      body: "No employee Tower record requests are waiting in this manager-limited view.",
-      next: "Managers should only see employee-originated Tower requests here. Full evidence stays owner-scoped.",
-    };
-  }
-
-  if (urgentCount) {
-    return {
-      title: "Soulaana manager Tower read",
-      body: `${count} employee Tower request(s) are visible, including ${urgentCount} payroll-urgent item(s).`,
-      next: "Review urgent employee requests first, then send only necessary items upward to owner/Tower.",
-    };
-  }
-
-  if (proofCount) {
-    return {
-      title: "Soulaana manager Tower read",
-      body: `${count} employee Tower request(s) are visible, and some involve proof or secure document handling.`,
-      next: "Check whether the employee gave enough context before escalating.",
-    };
-  }
-
-  return {
-    title: "Soulaana manager Tower read",
-    body: `${count} employee Tower request(s) are waiting for manager review.`,
-    next: "Approve, reject, or request more information from the employee path before escalating.",
-  };
+function towerFilterMatches(item, filter) {
+  if (filter === "all") return true;
+  if (filter === "employee") return item.source === "employee_portal";
+  if (filter === "manager") return item.source === "manager_board";
+  if (filter === "owner") return String(item.source || "").includes("owner") || String(item.action || "").toLowerCase().includes("owner");
+  if (filter === "handoff") return item.deliveryMode === "local_handoff_until_tower_api";
+  if (filter === "reviewed") return String(item.pluginStatus || "").toLowerCase().includes("reviewed");
+  if (filter === "awaiting") return String(item.pluginStatus || "").toLowerCase().includes("awaiting");
+  return true;
 }
+
 
 function TowerClearanceGate({ accessRequest, onGrant }) {
   const [code, setCode] = useState("");
@@ -298,9 +225,6 @@ export default function TowerBackupWorkspace() {
   const [towerAccessRequest, setTowerAccessRequest] = useState(() => readTowerAccessRequest() || createFallbackTowerAccessRequest());
   const [towerClearanceToken, setTowerClearanceToken] = useState(() => readTowerClearanceToken());
   const [towerClearanceGranted, setTowerClearanceGranted] = useState(() => Boolean(readTowerClearanceToken()));
-
-  const [accessRequests, setAccessRequests] = useState([]);
-  const [accessSummary, setAccessSummary] = useState(getTowerAccessRequestSummary());
   const [items, setItems] = useState([]);
   const [handoffPackets, setHandoffPackets] = useState([]);
   const [summary, setSummary] = useState(getTowerBackupSummary());
@@ -308,23 +232,7 @@ export default function TowerBackupWorkspace() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [pluginNotes, setPluginNotes] = useState("");
 
-  function refreshTowerItems() {
-    setAccessRequests(readTowerAccessRequestInbox());
-    setAccessSummary(getTowerAccessRequestSummary());
-    setItems(getTowerBackupItems());
-    setHandoffPackets(getFormalTowerHandoffPackets());
-    setSummary(getTowerBackupSummary());
-  }
-
   function revokeTowerClearance() {
-    if (towerAccessRequest?.id) {
-      updateTowerAccessRequestStatus(towerAccessRequest.id, TOWER_ACCESS_STATUSES.REVOKED, {
-        actor: "Tower Evidence",
-        note: "Local non-owner Tower clearance was revoked.",
-        tokenId: towerClearanceToken?.tokenId,
-      });
-    }
-
     clearTowerClearanceToken();
     const nextRequest = readTowerAccessRequest() || createFallbackTowerAccessRequest();
     setTowerAccessRequest(nextRequest);
@@ -332,16 +240,16 @@ export default function TowerBackupWorkspace() {
     setTowerClearanceGranted(false);
   }
 
+  function refreshTowerItems() {
+    setItems(getTowerBackupItems());
+    setHandoffPackets(getFormalTowerHandoffPackets());
+    setSummary(getTowerBackupSummary());
+  }
+
   useEffect(() => {
     refreshTowerItems();
 
     function handleUpdate() {
-      const nextRequest = readTowerAccessRequest() || createFallbackTowerAccessRequest();
-      const nextToken = readTowerClearanceToken();
-
-      setTowerAccessRequest(nextRequest);
-      setTowerClearanceToken(nextToken);
-      setTowerClearanceGranted(Boolean(nextToken));
       refreshTowerItems();
     }
 
@@ -385,6 +293,16 @@ export default function TowerBackupWorkspace() {
     setPluginNotes(item.pluginNotes || "");
   }
 
+  function updatePacketStatus(packetId, packetStatus, notes = "") {
+    updateFormalTowerHandoffPacket(packetId, {
+      packetStatus,
+      notes,
+      reviewedBy: "Tower Backup Viewer",
+    });
+
+    refreshTowerItems();
+  }
+
   function markReviewed() {
     if (!selectedItem) return;
 
@@ -400,177 +318,17 @@ export default function TowerBackupWorkspace() {
     refreshTowerItems();
   }
 
-  function updatePacketStatus(packetId, packetStatus, notes = "") {
-    updateFormalTowerHandoffPacket(packetId, {
-      packetStatus,
-      notes,
-      reviewedBy: "Tower Backup Viewer",
-    });
-
-    refreshTowerItems();
-  }
-
   const selectedPacket = selectedItem ? createTowerPluginPacket(selectedItem) : null;
-  const towerScope = getTowerScope(towerAccessRequest, towerClearanceToken);
-  const managerTowerItems = getManagerTowerRequestItems(items);
-  const managerGuidance = getSoulaanaManagerTowerGuidance(managerTowerItems);
-  const clearanceGuidance = getSoulaanaClearanceGuidance(towerAccessRequest, towerClearanceToken);
 
   if (!towerClearanceGranted) {
     return (
       <TowerClearanceGate
         accessRequest={towerAccessRequest}
         onGrant={(token) => {
-          if (towerAccessRequest?.id) {
-            updateTowerAccessRequestStatus(towerAccessRequest.id, TOWER_ACCESS_STATUSES.GRANTED, {
-              actor: "Tower Clearance Gate",
-              note: "Local Tower clearance token issued.",
-              tokenId: token?.tokenId,
-            });
-          }
           setTowerClearanceToken(token);
           setTowerClearanceGranted(true);
-          refreshTowerItems();
         }}
       />
-    );
-  }
-
-  if (towerScope === "manager") {
-    return (
-      <main className="tower-backup-workspace tower-manager-scope-workspace">
-        <section className="tower-manager-hero">
-          <div>
-            <p className="tower-kicker">The Tower · Manager-limited evidence</p>
-            <h1>Employee Tower requests only.</h1>
-            <p>
-              Managers can review employee-originated Tower record and secure document requests here.
-              Full Tower Evidence, raw packets, access authority controls, and owner-level evidence stay owner-scoped.
-            </p>
-            <div className="tower-badge-row">
-              <TowerBadge tone="strong">Manager limited</TowerBadge>
-              <TowerBadge tone="warn">{managerTowerItems.length} employee Tower request(s)</TowerBadge>
-              <TowerBadge>No owner root controls</TowerBadge>
-            </div>
-          </div>
-
-          <aside className="tower-manager-token-card">
-            <p className="tower-kicker">Local clearance</p>
-            <strong>{towerClearanceToken?.requestedBy || "Manager Dashboard"}</strong>
-            <span>{towerClearanceToken?.tokenId || "Local token active"}</span>
-            <small>Lane: {towerClearanceToken?.sourceLane || towerAccessRequest?.sourceLane || "manager"}</small>
-            <small>Expires: {towerClearanceToken?.expiresAt ? new Date(towerClearanceToken.expiresAt).toLocaleString() : "No expiry"}</small>
-            <button type="button" onClick={revokeTowerClearance}>
-              Revoke manager clearance
-            </button>
-          </aside>
-        </section>
-
-        <section className="tower-manager-soulaana-panel">
-          <div>
-            <p className="tower-kicker">{managerGuidance.title}</p>
-            <h2>Manager scope stays narrow.</h2>
-            <p>{managerGuidance.body}</p>
-            <strong>{managerGuidance.next}</strong>
-          </div>
-        </section>
-
-        <section className="tower-manager-request-panel">
-          <div className="tower-section-head">
-            <div>
-              <p className="tower-kicker">Employee Tower requests</p>
-              <h2>What employees are asking Tower for.</h2>
-              <p>These are filtered from Teller backup records and limited to employee-originated Tower/secure document requests.</p>
-            </div>
-            <TowerBadge tone="strong">{managerTowerItems.length} visible</TowerBadge>
-          </div>
-
-          <div className="tower-manager-request-grid">
-            {managerTowerItems.length ? managerTowerItems.map((item) => (
-              <article key={item.id} className="tower-manager-request-card">
-                <div className="tower-card-top">
-                  <span>{item.source}</span>
-                  <small>{item.pluginStatus || item.status}</small>
-                </div>
-
-                <strong>{item.target || item.action}</strong>
-                <p>{item.summary || "Employee requested Tower/secure document review."}</p>
-
-                <div className="tower-manager-request-facts">
-                  <small>{item.id}</small>
-                  <small>{item.deliveryMode || "local handoff"}</small>
-                  <small>{item.createdAt ? new Date(item.createdAt).toLocaleString() : "No timestamp"}</small>
-                </div>
-
-                <div className="tower-manager-request-actions">
-                  <button type="button" onClick={() => openItem(item)}>
-                    Open limited evidence
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      markTowerBackupItemReviewed(item.id, {
-                        pluginStatus: "Manager reviewed employee Tower request",
-                        reviewedBy: "Manager Tower View",
-                      });
-                      refreshTowerItems();
-                    }}
-                  >
-                    Mark manager reviewed
-                  </button>
-                </div>
-              </article>
-            )) : (
-              <article className="tower-empty-card">
-                <p className="tower-kicker">No employee Tower requests</p>
-                <strong>No employee Tower record or secure document requests are waiting.</strong>
-                <p>Employee requests of type Tower record / secure document request will appear here.</p>
-              </article>
-            )}
-          </div>
-        </section>
-
-        {selectedItem ? (
-          <div className="tower-detail-overlay" role="dialog" aria-modal="true">
-            <section className="tower-detail-modal">
-              <div className="tower-section-head">
-                <div>
-                  <p className="tower-kicker">Manager-limited evidence detail</p>
-                  <h2>{selectedItem.action}</h2>
-                  <p>{selectedItem.summary || selectedItem.target}</p>
-                </div>
-                <button type="button" className="tower-secondary" onClick={() => setSelectedItem(null)}>
-                  Close
-                </button>
-              </div>
-
-              <div className="tower-detail-grid">
-                <article>
-                  <span>Source</span>
-                  <strong>{selectedItem.source}</strong>
-                </article>
-                <article>
-                  <span>Status</span>
-                  <strong>{selectedItem.pluginStatus}</strong>
-                </article>
-                <article>
-                  <span>Delivery</span>
-                  <strong>{selectedItem.deliveryMode}</strong>
-                </article>
-                <article>
-                  <span>Manager scope</span>
-                  <strong>Employee request only</strong>
-                </article>
-              </div>
-
-              <section className="tower-payload-box">
-                <p className="tower-kicker">Limited payload summary</p>
-                <p>{payloadSummary(selectedItem.payload)}</p>
-              </section>
-            </section>
-          </div>
-        ) : null}
-      </main>
     );
   }
 
@@ -620,116 +378,9 @@ export default function TowerBackupWorkspace() {
         </div>
 
         <div className="tower-soulaana-clearance">
-          <span>{clearanceGuidance.title}</span>
-          <p>{clearanceGuidance.body}</p>
-          <strong>{clearanceGuidance.next}</strong>
-        </div>
-      </section>
-
-      <section className="tower-access-inbox-panel">
-        <div className="tower-section-head">
-          <div>
-            <p className="tower-kicker">Tower access request inbox</p>
-            <h2>Who asked to enter The Tower?</h2>
-            <p>Every Tower access request should be visible, explainable, and tied to an authority rule.</p>
-          </div>
-          <TowerBadge tone="strong">{accessSummary.total} requests</TowerBadge>
-        </div>
-
-        <div className="tower-access-summary-grid">
-          <article>
-            <span>Owner root</span>
-            <strong>{accessSummary.ownerRoot}</strong>
-          </article>
-          <article>
-            <span>Manager limited</span>
-            <strong>{accessSummary.managerLimited}</strong>
-          </article>
-          <article>
-            <span>Employee request-only</span>
-            <strong>{accessSummary.employeeRequestOnly}</strong>
-          </article>
-          <article>
-            <span>Direct / low context</span>
-            <strong>{accessSummary.directLowContext}</strong>
-          </article>
-        </div>
-
-        <div className="tower-access-request-grid">
-          {accessRequests.length ? accessRequests.map((request) => {
-            const authority = getTowerAuthorityRule(request);
-            const read = getSoulaanaAuthorityRead(request);
-
-            return (
-              <article key={request.id} className={`tower-access-request-card severity-${authority.severity}`}>
-                <div className="tower-card-top">
-                  <span>{request.sourceLane}</span>
-                  <small>{request.status}</small>
-                </div>
-
-                <strong>{request.requestedAccess}</strong>
-                <p>{request.reason}</p>
-
-                <div className="tower-access-request-facts">
-                  <small>{request.id}</small>
-                  <small>{request.requestedBy}</small>
-                  <small>{authority.level}</small>
-                  <small>{request.createdAt ? new Date(request.createdAt).toLocaleString() : "No timestamp"}</small>
-                </div>
-
-                <div className="tower-authority-read">
-                  <span>{read.title}</span>
-                  <p>{read.summary}</p>
-                  <strong>{read.next}</strong>
-                </div>
-
-                <div className="tower-access-actions">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      updateTowerAccessRequestStatus(request.id, TOWER_ACCESS_STATUSES.GRANTED, {
-                        actor: "Tower Evidence",
-                        note: "Access request marked granted from inbox.",
-                      });
-                      refreshTowerItems();
-                    }}
-                  >
-                    Mark granted
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      updateTowerAccessRequestStatus(request.id, TOWER_ACCESS_STATUSES.DENIED, {
-                        actor: "Tower Evidence",
-                        note: "Access request denied or blocked from inbox.",
-                      });
-                      refreshTowerItems();
-                    }}
-                  >
-                    Deny / block
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      updateTowerAccessRequestStatus(request.id, TOWER_ACCESS_STATUSES.OWNER_LOCKED, {
-                        actor: "Tower Evidence",
-                        note: "Owner authority marked locked/non-revocable.",
-                      });
-                      refreshTowerItems();
-                    }}
-                  >
-                    Mark authority locked
-                  </button>
-                </div>
-              </article>
-            );
-          }) : (
-            <article className="tower-empty-card">
-              <p className="tower-kicker">No access requests</p>
-              <strong>No Tower access requests have been recorded yet.</strong>
-              <p>Open Tower Evidence from the owner or manager dashboard to create one.</p>
-            </article>
-          )}
+          <span>{getSoulaanaClearanceGuidance(towerAccessRequest, towerClearanceToken).title}</span>
+          <p>{getSoulaanaClearanceGuidance(towerAccessRequest, towerClearanceToken).body}</p>
+          <strong>{getSoulaanaClearanceGuidance(towerAccessRequest, towerClearanceToken).next}</strong>
         </div>
       </section>
 

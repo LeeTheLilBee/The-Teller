@@ -7,7 +7,6 @@ import {
   readEmployeeManagerQueue,
   updateEmployeeManagerItem,
   createEmployeeResponseItem,
-  createEmployeeDecisionResponseItem,
   saveEmployeeResponseItem,
   createTowerBackupItem,
   saveTowerBackupItem,
@@ -17,7 +16,6 @@ import {
 } from "./managerOwnerBridge";
 import "./managerStandaloneWorkspace.css";
 
-import { saveTowerAccessRequest } from "./towerBackupPlugin";
 const managerBusinessOptions = [
   ["simpleepay", "SimpleePay"],
   ["skincare", "SimpleeSkincare"],
@@ -332,109 +330,44 @@ function ManagerUnifiedWorkBoard({ workItems, activeFilter, onOpenReturn, onMark
 
 
 
-
-function getEmployeeDecisionGuidance(item) {
-  const urgency = String(item.urgency || "").toLowerCase();
-  const proof = String(item.proofStatus || "").toLowerCase();
-  const status = String(item.managerStatus || "").toLowerCase();
-
-  if (status.includes("approved")) {
-    return "Approved. Employee can see the decision. Keep the Tower trail for proof.";
-  }
-
-  if (status.includes("rejected")) {
-    return "Rejected. Employee should see why. Keep the reason clear and professional.";
-  }
-
-  if (status.includes("proof")) {
-    return "Needs proof. Ask for the missing detail before deciding.";
-  }
-
-  if (urgency.includes("payroll")) {
-    return "Payroll urgent. Review quickly and avoid letting this sit.";
-  }
-
-  if (proof.includes("ready")) {
-    return "Proof is ready. Open details or approve if the request is clear.";
-  }
-
-  return "Review the employee request, then approve, reject, or ask for proof.";
-}
-
-
-function ManagerEmployeeRequestDock({ requests, onMark, onOpen, onDecision }) {
-  if (!requests.length) {
-    return (
-      <section className="mgr-panel mgr-employee-request-dock mgr-employee-request-primary">
-        <div className="mgr-section-head">
-          <div>
-            <p className="mgr-kicker">Employee request center</p>
-            <h2>Employee requests will land here first.</h2>
-            <p>When employees send payroll questions, proof, secure document requests, or Tower record requests, managers approve, reject, or ask for proof here.</p>
-          </div>
-          <ManagerBadge tone="quiet">0 pending</ManagerBadge>
-        </div>
-      </section>
-    );
-  }
-
-  const pendingCount = requests.filter((item) => {
-    const status = String(item.managerStatus || "").toLowerCase();
-    return !status.includes("approved") && !status.includes("rejected") && !status.includes("resolved");
-  }).length;
+function ManagerEmployeeRequestDock({ requests, onMark, onOpen }) {
+  if (!requests.length) return null;
 
   return (
-    <section className="mgr-panel mgr-employee-request-dock mgr-employee-request-primary">
+    <section className="mgr-panel mgr-employee-request-dock">
       <div className="mgr-section-head">
         <div>
-          <p className="mgr-kicker">Employee request center</p>
-          <h2>Approve, reject, or ask for proof.</h2>
-          <p>This is the manager’s main work area. Employee requests are Tower-backed and should be decided clearly.</p>
+          <p className="mgr-kicker">Employee requests</p>
+          <h2>Employee items sent back to manager.</h2>
+          <p>These came from the employee portal and were backed up to The Tower.</p>
         </div>
-        <div className="mgr-request-count-stack">
-          <ManagerBadge tone="warn">{pendingCount} pending</ManagerBadge>
-          <ManagerBadge tone="strong">{requests.length} total</ManagerBadge>
-        </div>
+        <ManagerBadge tone="warn">{requests.length}</ManagerBadge>
       </div>
 
-      <div className="mgr-employee-request-grid mgr-employee-request-grid-primary">
-        {requests.map((item) => {
-          const status = String(item.managerStatus || "Needs manager review").toLowerCase();
-          const decided = status.includes("approved") || status.includes("rejected") || status.includes("resolved");
-
-          return (
-            <article key={item.id} className={`mgr-employee-request-card mgr-review-card ${item.urgency === "Payroll urgent" ? "is-urgent" : ""} ${decided ? "is-decided" : ""}`}>
-              <div className="mgr-card-top">
-                <span>{item.employeeName}</span>
-                <small>{item.managerStatus}</small>
-              </div>
-
-              <strong>{item.title}</strong>
-              <p>{item.body}</p>
-
-              {item.managerResponse ? <p className="mgr-employee-response-preview">Response: {item.managerResponse}</p> : null}
-
-              <div className="mgr-decision-guidance">
-                <span>Soulaana read</span>
-                <p>{getEmployeeDecisionGuidance(item)}</p>
-              </div>
-
-              <div className="mgr-work-meta">
-                <small>{item.businessKey}</small>
-                <small>{item.proofStatus}</small>
-                <small>{item.urgency}</small>
-                <small>Tower-backed</small>
-              </div>
-
-              <div className="mgr-card-actions mgr-decision-actions">
-                <button type="button" onClick={() => onOpen(item)}>Open details</button>
-                <button type="button" className="mgr-approve" onClick={() => onDecision(item, "Approved", "Approved by manager. Your request has been reviewed.")}>Approve</button>
-                <button type="button" className="mgr-needs-proof" onClick={() => onDecision(item, "Needs Proof", "Manager needs more proof before this can be approved.")}>Needs proof</button>
-                <button type="button" className="mgr-reject" onClick={() => onDecision(item, "Rejected", "Rejected by manager. Please review the note or submit a clearer request.")}>Reject</button>
-              </div>
-            </article>
-          );
-        })}
+      <div className="mgr-employee-request-grid">
+        {requests.map((item) => (
+          <article key={item.id} className={`mgr-employee-request-card ${item.urgency === "Payroll urgent" ? "is-urgent" : ""}`}>
+            <div className="mgr-card-top">
+              <span>{item.employeeName}</span>
+              <small>{item.managerStatus}</small>
+            </div>
+            <strong>{item.title}</strong>
+            <p>{item.body}</p>
+            {item.managerResponse ? <p className="mgr-employee-response-preview">Response: {item.managerResponse}</p> : null}
+            <div className="mgr-work-meta">
+              <small>{item.businessKey}</small>
+              <small>{item.proofStatus}</small>
+              <small>{item.urgency}</small>
+              <small>Tower-backed</small>
+            </div>
+            <div className="mgr-card-actions">
+              <button type="button" onClick={() => onOpen(item)}>Open details</button>
+              <button type="button" onClick={() => onMark(item.id, "Manager acknowledged")}>Acknowledge</button>
+              <button type="button" onClick={() => onMark(item.id, "Proof being reviewed")}>Review proof</button>
+              <button type="button" onClick={() => onMark(item.id, "Ready for manager decision")}>Ready</button>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );
@@ -496,7 +429,6 @@ export default function ManagerStandaloneWorkspace() {
         status: "Pending Tower clearance",
       };
 
-      saveTowerAccessRequest(request);
       window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
       window.sessionStorage.removeItem("the_teller_tower_clearance_token_v1");
       window.sessionStorage.setItem("the_teller_tower_access_request_v1", JSON.stringify(request));
@@ -576,53 +508,6 @@ export default function ManagerStandaloneWorkspace() {
       recommendation: "",
       towerSensitive: false,
     }));
-  }
-
-  function decideEmployeeRequest(item, decisionStatus, managerNote) {
-    const now = new Date().toISOString();
-
-    const decision = {
-      decisionStatus,
-      managerNote,
-      proofStatus: decisionStatus === "Needs Proof" ? "More proof needed" : "Manager reviewed",
-      managerName: "Manager Portal",
-    };
-
-    const responseItem = createEmployeeDecisionResponseItem(item, decision);
-    const towerBackup = createTowerBackupItem({
-      source: "manager_board",
-      action: `Manager decision: ${decisionStatus}`,
-      target: responseItem.title,
-      summary: "Manager decision on employee request backed up to The Tower local handoff queue.",
-      payload: {
-        request: item,
-        decision,
-        response: responseItem,
-      },
-    });
-
-    saveEmployeeResponseItem(responseItem);
-    saveTowerBackupItem(towerBackup);
-
-    updateEmployeeManagerItem(item.id, {
-      managerStatus: decisionStatus,
-      managerResponse: managerNote,
-      proofStatus: decision.proofStatus,
-      managerDecisionAt: now,
-      employeeResponseId: responseItem.id,
-      towerBackupId: towerBackup.id,
-    });
-
-    refreshBridgeData();
-
-    if (typeof pushManagerNotice === "function") {
-      pushManagerNotice(createManagerNotice({
-        type: decisionStatus === "Needs Proof" ? "proof" : "ready",
-        title: `Employee request ${decisionStatus}`,
-        body: `${item.title} was marked ${decisionStatus} and sent back to the employee.`,
-        target: item.id,
-      }));
-    }
   }
 
   function openEmployeeRequest(item) {
@@ -802,7 +687,6 @@ export default function ManagerStandaloneWorkspace() {
         requests={employeeRequests}
         onMark={markEmployeeRequest}
         onOpen={openEmployeeRequest}
-        onDecision={decideEmployeeRequest}
       />
 
       <ManagerFilterTabs

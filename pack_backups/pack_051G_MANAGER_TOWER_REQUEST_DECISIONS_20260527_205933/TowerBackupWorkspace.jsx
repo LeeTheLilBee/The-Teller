@@ -16,12 +16,6 @@ import {
   getSoulaanaAuthorityRead,
   TOWER_ACCESS_STATUSES,
 } from "./towerBackupPlugin";
-import {
-  createEmployeeTowerDecisionResponseItem,
-  createTowerBackupItem,
-  saveEmployeeResponseItem,
-  saveTowerBackupItem,
-} from "./managerOwnerBridge";
 import "./towerBackupWorkspace.css";
 
 function TowerBadge({ children, tone = "quiet" }) {
@@ -226,67 +220,6 @@ function getSoulaanaManagerTowerGuidance(items) {
   };
 }
 
-
-function getManagerTowerDecisionGuidance(item) {
-  const text = JSON.stringify(item?.payload || {}).toLowerCase();
-
-  if (text.includes("direct deposit") || text.includes("bank") || text.includes("tax")) {
-    return {
-      tone: "high",
-      body: "This looks sensitive. Do not fully approve casually. Send upward to owner/Tower if payment, bank, tax, or identity records are involved.",
-      recommended: "Send upward",
-    };
-  }
-
-  if (text.includes("payroll urgent")) {
-    return {
-      tone: "medium",
-      body: "This is payroll urgent. Manager can ask for more proof or send upward quickly if the request affects pay.",
-      recommended: "Needs info or send upward",
-    };
-  }
-
-  if (text.includes("proof ready") || text.includes("proof")) {
-    return {
-      tone: "medium",
-      body: "Proof is involved. Check whether the employee gave enough context before approving.",
-      recommended: "Review proof",
-    };
-  }
-
-  return {
-    tone: "steady",
-    body: "This is an employee Tower/secure document request. Manager can approve, reject, ask for more info, or send upward if it needs owner authority.",
-    recommended: "Review and decide",
-  };
-}
-
-function buildManagerTowerDecision(item, decisionStatus) {
-  const guidance = getManagerTowerDecisionGuidance(item);
-
-  const notes = {
-    "Approved": "Your Tower / secure document request was approved by manager review.",
-    "Needs More Info": "Manager needs more information before this Tower / secure document request can move forward.",
-    "Rejected": "Your Tower / secure document request was rejected by manager review. Please submit a clearer request if needed.",
-    "Sent Upward": "Your Tower / secure document request was sent upward for owner/Tower review.",
-  };
-
-  const proofStatus = {
-    "Approved": "Manager approved",
-    "Needs More Info": "More info needed",
-    "Rejected": "Manager rejected",
-    "Sent Upward": "Escalated upward",
-  };
-
-  return {
-    decisionStatus,
-    managerNote: notes[decisionStatus] || "Manager reviewed your Tower request.",
-    proofStatus: proofStatus[decisionStatus] || "Tower request reviewed",
-    managerName: "Manager Tower View",
-    guidance,
-  };
-}
-
 function TowerClearanceGate({ accessRequest, onGrant }) {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -447,45 +380,6 @@ export default function TowerBackupWorkspace() {
     denied: handoffPackets.filter((packet) => packet.packetStatus === TOWER_HANDOFF_STATUSES.DENIED).length,
   };
 
-  function decideManagerTowerRequest(item, decisionStatus) {
-    const decision = buildManagerTowerDecision(item, decisionStatus);
-    const sourcePayload = item?.payload || {};
-
-    const responseItem = createEmployeeTowerDecisionResponseItem(
-      {
-        ...sourcePayload,
-        id: item?.id,
-        title: item?.target || item?.action || "Tower request",
-        target: item?.target,
-        action: item?.action,
-      },
-      decision
-    );
-
-    const towerBackup = createTowerBackupItem({
-      source: "manager_tower_view",
-      action: `Manager Tower decision: ${decisionStatus}`,
-      target: responseItem.title,
-      summary: "Manager decision on employee Tower / secure document request backed up to The Tower local handoff queue.",
-      payload: {
-        sourceEvidence: item,
-        decision,
-        response: responseItem,
-      },
-    });
-
-    saveEmployeeResponseItem(responseItem);
-    saveTowerBackupItem(towerBackup);
-
-    markTowerBackupItemReviewed(item.id, {
-      pluginStatus: `Manager Tower decision: ${decisionStatus}`,
-      reviewedBy: "Manager Tower View",
-      pluginNotes: decision.managerNote,
-    });
-
-    refreshTowerItems();
-  }
-
   function openItem(item) {
     setSelectedItem(item);
     setPluginNotes(item.pluginNotes || "");
@@ -608,27 +502,21 @@ export default function TowerBackupWorkspace() {
                   <small>{item.createdAt ? new Date(item.createdAt).toLocaleString() : "No timestamp"}</small>
                 </div>
 
-                <div className={`tower-manager-decision-guidance tone-${getManagerTowerDecisionGuidance(item).tone}`}>
-                  <span>Soulaana manager read</span>
-                  <p>{getManagerTowerDecisionGuidance(item).body}</p>
-                  <strong>Recommended: {getManagerTowerDecisionGuidance(item).recommended}</strong>
-                </div>
-
-                <div className="tower-manager-request-actions tower-manager-decision-actions">
+                <div className="tower-manager-request-actions">
                   <button type="button" onClick={() => openItem(item)}>
                     Open limited evidence
                   </button>
-                  <button type="button" className="tower-manager-approve" onClick={() => decideManagerTowerRequest(item, "Approved")}>
-                    Approve
-                  </button>
-                  <button type="button" className="tower-manager-info" onClick={() => decideManagerTowerRequest(item, "Needs More Info")}>
-                    Needs info
-                  </button>
-                  <button type="button" className="tower-manager-reject" onClick={() => decideManagerTowerRequest(item, "Rejected")}>
-                    Reject
-                  </button>
-                  <button type="button" className="tower-manager-upward" onClick={() => decideManagerTowerRequest(item, "Sent Upward")}>
-                    Send upward
+                  <button
+                    type="button"
+                    onClick={() => {
+                      markTowerBackupItemReviewed(item.id, {
+                        pluginStatus: "Manager reviewed employee Tower request",
+                        reviewedBy: "Manager Tower View",
+                      });
+                      refreshTowerItems();
+                    }}
+                  >
+                    Mark manager reviewed
                   </button>
                 </div>
               </article>

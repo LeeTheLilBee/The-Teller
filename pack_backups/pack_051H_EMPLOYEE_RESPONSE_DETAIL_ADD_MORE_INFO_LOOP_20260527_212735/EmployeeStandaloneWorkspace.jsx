@@ -144,13 +144,6 @@ export default function EmployeeStandaloneWorkspace() {
   const [managerResponses, setManagerResponses] = useState([]);
   const [employeeNotificationsOpen, setEmployeeNotificationsOpen] = useState(false);
   const [employeeNotifications, setEmployeeNotifications] = useState([]);
-  const [selectedManagerResponse, setSelectedManagerResponse] = useState(null);
-  const [employeeFollowUpDraft, setEmployeeFollowUpDraft] = useState({
-    title: "",
-    body: "",
-    proofStatus: "Additional info provided",
-    urgency: "Normal",
-  });
   const [form, setForm] = useState({
     requestType: "missing_punch",
     title: "",
@@ -219,87 +212,6 @@ export default function EmployeeStandaloneWorkspace() {
       ...current,
       [key]: value,
     }));
-  }
-
-  function openManagerResponseDetail(response) {
-    setSelectedManagerResponse(response);
-    setEmployeeFollowUpDraft({
-      title: `Follow-up · ${response.title || "Manager response"}`,
-      body: "",
-      proofStatus: "Additional info provided",
-      urgency: String(response.responseStatus || "").toLowerCase().includes("proof") ? "Important" : "Normal",
-    });
-  }
-
-  function updateEmployeeFollowUpDraft(key, value) {
-    setEmployeeFollowUpDraft((current) => ({
-      ...current,
-      [key]: value,
-    }));
-  }
-
-  function sendManagerResponseFollowUp() {
-    if (!selectedManagerResponse) return;
-
-    const followUp = {
-      id: createBridgeId("EMP-FOLLOWUP"),
-      source: "employee_portal",
-      employeeName: portalEmployee.name,
-      businessKey: portalEmployee.businessKey,
-      requestType: selectedManagerResponse.responseStatus === "Needs More Info" ? "tower_record" : "manager_help",
-      title: employeeFollowUpDraft.title || `Follow-up · ${selectedManagerResponse.title}`,
-      body: employeeFollowUpDraft.body || "Employee added more information to a manager response.",
-      proofStatus: employeeFollowUpDraft.proofStatus,
-      urgency: employeeFollowUpDraft.urgency,
-      managerStatus: "Employee follow-up needs manager review",
-      createdAt: new Date().toISOString(),
-      towerBackedUp: true,
-      parentResponseId: selectedManagerResponse.id,
-      parentRequestId: selectedManagerResponse.requestId,
-      followUpType: "employee_response_follow_up",
-    };
-
-    const towerBackup = createTowerBackupItem({
-      source: "employee_portal",
-      action: "Employee added more information to manager response",
-      target: followUp.title,
-      summary: "Employee follow-up to manager response backed up to The Tower local handoff queue.",
-      payload: {
-        followUp,
-        managerResponse: selectedManagerResponse,
-      },
-    });
-
-    saveEmployeeManagerItem(followUp);
-    saveTowerBackupItem(towerBackup);
-
-    pushEmployeeNotice(createEmployeeNotice({
-      type: followUp.requestType === "tower_record" ? "tower" : "sent",
-      title: "Follow-up sent",
-      body: "Your added information was sent back to the manager and backed up to The Tower.",
-      target: followUp.id,
-    }));
-    setEmployeeNotificationsOpen(true);
-
-    setActivity((current) => [
-      {
-        id: createBridgeId("EMP-ACTIVITY"),
-        title: "Follow-up sent",
-        body: `${followUp.title} was sent back to the manager.`,
-        createdAt: new Date().toISOString(),
-        requestId: followUp.id,
-        towerBackupId: towerBackup.id,
-      },
-      ...current,
-    ].slice(0, 10));
-
-    setSelectedManagerResponse(null);
-    setEmployeeFollowUpDraft({
-      title: "",
-      body: "",
-      proofStatus: "Additional info provided",
-      urgency: "Normal",
-    });
   }
 
   function submitToManager() {
@@ -500,22 +412,12 @@ export default function EmployeeStandaloneWorkspace() {
 
           <div className="emp-activity-grid">
             {managerResponses.map((item) => (
-              <article
-                key={item.id}
-                className="emp-manager-response-card emp-clickable-response"
-                onClick={() => openManagerResponseDetail(item)}
-              >
+              <article key={item.id} className="emp-manager-response-card">
                 <span>{item.responseStatus}</span>
                 <strong>{item.title}</strong>
                 <p>{item.body}</p>
                 <small>Proof: {item.proofStatus}</small>
                 <small>Tower-backed: {item.towerBackedUp ? "Yes" : "No"}</small>
-                <button type="button" onClick={(event) => {
-                  event.stopPropagation();
-                  openManagerResponseDetail(item);
-                }}>
-                  Add more info
-                </button>
               </article>
             ))}
           </div>
@@ -544,101 +446,6 @@ export default function EmployeeStandaloneWorkspace() {
           </div>
         </section>
       ) : null}
-      {selectedManagerResponse ? (
-        <div className="emp-response-detail-overlay" role="dialog" aria-modal="true">
-          <section className="emp-response-detail-modal">
-            <div className="emp-section-head">
-              <div>
-                <p className="emp-kicker">Manager response detail</p>
-                <h2>{selectedManagerResponse.title}</h2>
-                <p>{selectedManagerResponse.body}</p>
-              </div>
-              <button type="button" className="emp-secondary-button" onClick={() => setSelectedManagerResponse(null)}>
-                Close
-              </button>
-            </div>
-
-            <div className="emp-response-detail-grid">
-              <article>
-                <span>Status</span>
-                <strong>{selectedManagerResponse.responseStatus}</strong>
-              </article>
-              <article>
-                <span>Proof</span>
-                <strong>{selectedManagerResponse.proofStatus}</strong>
-              </article>
-              <article>
-                <span>Manager</span>
-                <strong>{selectedManagerResponse.managerName}</strong>
-              </article>
-              <article>
-                <span>Tower</span>
-                <strong>{selectedManagerResponse.towerBackedUp ? "Backed up" : "Not backed up"}</strong>
-              </article>
-            </div>
-
-            <section className="emp-followup-card">
-              <p className="emp-kicker">Add more information</p>
-              <h3>Send a follow-up back to manager.</h3>
-              <p>
-                Use this when the manager needs more proof, you need to correct something,
-                or you want to add detail before they decide.
-              </p>
-
-              <div className="emp-followup-grid">
-                <label>
-                  <span>Proof status</span>
-                  <select
-                    value={employeeFollowUpDraft.proofStatus}
-                    onChange={(event) => updateEmployeeFollowUpDraft("proofStatus", event.target.value)}
-                  >
-                    <option>Additional info provided</option>
-                    <option>Proof ready</option>
-                    <option>Proof still missing</option>
-                    <option>Needs manager review</option>
-                  </select>
-                </label>
-
-                <label>
-                  <span>Urgency</span>
-                  <select
-                    value={employeeFollowUpDraft.urgency}
-                    onChange={(event) => updateEmployeeFollowUpDraft("urgency", event.target.value)}
-                  >
-                    <option>Normal</option>
-                    <option>Important</option>
-                    <option>Payroll urgent</option>
-                  </select>
-                </label>
-
-                <label className="emp-wide">
-                  <span>Follow-up title</span>
-                  <input
-                    value={employeeFollowUpDraft.title}
-                    onChange={(event) => updateEmployeeFollowUpDraft("title", event.target.value)}
-                    placeholder="Example: Here is the missing proof"
-                  />
-                </label>
-
-                <label className="emp-wide">
-                  <span>More information</span>
-                  <textarea
-                    value={employeeFollowUpDraft.body}
-                    onChange={(event) => updateEmployeeFollowUpDraft("body", event.target.value)}
-                    rows={5}
-                    placeholder="Add the correction, proof note, or extra detail for your manager..."
-                  />
-                </label>
-              </div>
-
-              <button type="button" className="emp-primary" onClick={sendManagerResponseFollowUp}>
-                Send follow-up to manager + Tower backup
-              </button>
-            </section>
-          </section>
-        </div>
-      ) : null}
-
     </main>
   );
 }

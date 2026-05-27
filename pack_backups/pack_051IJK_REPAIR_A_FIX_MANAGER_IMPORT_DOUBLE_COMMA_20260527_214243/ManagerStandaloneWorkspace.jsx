@@ -14,8 +14,6 @@ import {
   saveManagerSubmission,
   updateManagerReturnItem,
   createManagerReReviewSubmission,
-  createOwnerEscalationItem,
-  saveOwnerEscalationItem
 } from "./managerOwnerBridge";
 import "./managerStandaloneWorkspace.css";
 
@@ -364,121 +362,79 @@ function getEmployeeDecisionGuidance(item) {
 }
 
 
-
-function getManagerLaneForRequest(item) {
-  const status = String(item.managerStatus || "").toLowerCase();
-  const type = String(item.requestType || "").toLowerCase();
-  const text = JSON.stringify(item || {}).toLowerCase();
-
-  if (type === "tower_record" || text.includes("tower record") || text.includes("secure document") || text.includes("tower/secure")) {
-    return "tower";
-  }
-
-  if (item.followUpType === "employee_response_follow_up" || status.includes("follow-up") || String(item.id || "").includes("EMP-FOLLOWUP")) {
-    return "followups";
-  }
-
-  if (status.includes("proof") || status.includes("more info") || status.includes("needs info")) {
-    return "needsProof";
-  }
-
-  if (status.includes("approved") || status.includes("rejected") || status.includes("resolved") || status.includes("sent upward")) {
-    return "resolved";
-  }
-
-  return "new";
-}
-
-function ManagerLane({ title, subtitle, items, tone, onOpen, onDecision, onEscalate }) {
-  return (
-    <section className={`mgr-lane mgr-lane-${tone}`}>
-      <div className="mgr-lane-head">
-        <div>
-          <p className="mgr-kicker">{title}</p>
-          <h3>{items.length}</h3>
-          <span>{subtitle}</span>
+function ManagerEmployeeRequestDock({ requests, onMark, onOpen, onDecision }) {
+  if (!requests.length) {
+    return (
+      <section className="mgr-panel mgr-employee-request-dock mgr-employee-request-primary">
+        <div className="mgr-section-head">
+          <div>
+            <p className="mgr-kicker">Employee request center</p>
+            <h2>Employee requests will land here first.</h2>
+            <p>When employees send payroll questions, proof, secure document requests, or Tower record requests, managers approve, reject, or ask for proof here.</p>
+          </div>
+          <ManagerBadge tone="quiet">0 pending</ManagerBadge>
         </div>
-      </div>
+      </section>
+    );
+  }
 
-      <div className="mgr-lane-cards">
-        {items.length ? items.map((item) => (
-          <article key={item.id} className={`mgr-employee-request-card mgr-review-card ${item.urgency === "Payroll urgent" ? "is-urgent" : ""}`}>
-            <div className="mgr-card-top">
-              <span>{item.employeeName}</span>
-              <small>{item.managerStatus}</small>
-            </div>
-
-            <strong>{item.title}</strong>
-            <p>{item.body}</p>
-
-            {item.managerResponse ? <p className="mgr-employee-response-preview">Response: {item.managerResponse}</p> : null}
-
-            <div className="mgr-decision-guidance">
-              <span>Soulaana read</span>
-              <p>{getEmployeeDecisionGuidance(item)}</p>
-            </div>
-
-            <div className="mgr-work-meta">
-              <small>{item.businessKey}</small>
-              <small>{item.proofStatus}</small>
-              <small>{item.urgency}</small>
-              <small>{item.towerBackedUp ? "Tower-backed" : "Needs backup"}</small>
-            </div>
-
-            <div className="mgr-card-actions mgr-decision-actions">
-              <button type="button" onClick={() => onOpen(item)}>Open details</button>
-              <button type="button" className="mgr-approve" onClick={() => onDecision(item, "Approved", "Approved by manager. Your request has been reviewed.")}>Approve</button>
-              <button type="button" className="mgr-needs-proof" onClick={() => onDecision(item, "Needs Proof", "Manager needs more proof before this can be approved.")}>Needs proof</button>
-              <button type="button" className="mgr-reject" onClick={() => onDecision(item, "Rejected", "Rejected by manager. Please review the note or submit a clearer request.")}>Reject</button>
-              <button type="button" className="mgr-send-upward" onClick={() => onEscalate(item)}>Send upward</button>
-            </div>
-          </article>
-        )) : (
-          <article className="mgr-empty-lane-card">
-            <span>Clear</span>
-            <strong>No items here.</strong>
-            <p>This lane will fill when matching employee requests arrive.</p>
-          </article>
-        )}
-      </div>
-    </section>
-  );
-}
-
-function ManagerEmployeeRequestDock({ requests, onMark, onOpen, onDecision, onEscalate }) {
-  const lanes = {
-    new: requests.filter((item) => getManagerLaneForRequest(item) === "new"),
-    needsProof: requests.filter((item) => getManagerLaneForRequest(item) === "needsProof"),
-    tower: requests.filter((item) => getManagerLaneForRequest(item) === "tower"),
-    followups: requests.filter((item) => getManagerLaneForRequest(item) === "followups"),
-    resolved: requests.filter((item) => getManagerLaneForRequest(item) === "resolved"),
-  };
-
-  const pendingCount = requests.filter((item) => getManagerLaneForRequest(item) !== "resolved").length;
+  const pendingCount = requests.filter((item) => {
+    const status = String(item.managerStatus || "").toLowerCase();
+    return !status.includes("approved") && !status.includes("rejected") && !status.includes("resolved");
+  }).length;
 
   return (
-    <section className="mgr-panel mgr-employee-request-dock mgr-employee-request-primary mgr-lane-board">
+    <section className="mgr-panel mgr-employee-request-dock mgr-employee-request-primary">
       <div className="mgr-section-head">
         <div>
-          <p className="mgr-kicker">Employee request lanes</p>
-          <h2>Manager workbench.</h2>
-          <p>
-            Employee requests are organized by what the manager needs to do next:
-            review new items, ask for proof, handle Tower requests, review follow-ups, or close resolved items.
-          </p>
+          <p className="mgr-kicker">Employee request center</p>
+          <h2>Approve, reject, or ask for proof.</h2>
+          <p>This is the manager’s main work area. Employee requests are Tower-backed and should be decided clearly.</p>
         </div>
         <div className="mgr-request-count-stack">
-          <ManagerBadge tone="warn">{pendingCount} active</ManagerBadge>
+          <ManagerBadge tone="warn">{pendingCount} pending</ManagerBadge>
           <ManagerBadge tone="strong">{requests.length} total</ManagerBadge>
         </div>
       </div>
 
-      <div className="mgr-lane-grid">
-        <ManagerLane title="New Employee Requests" subtitle="Fresh requests waiting for manager review." items={lanes.new} tone="new" onOpen={onOpen} onDecision={onDecision} onEscalate={onEscalate} />
-        <ManagerLane title="Needs Proof / More Info" subtitle="Items that need clarification before approval." items={lanes.needsProof} tone="proof" onOpen={onOpen} onDecision={onDecision} onEscalate={onEscalate} />
-        <ManagerLane title="Tower / Secure Document Requests" subtitle="Employee Tower record and secure document requests." items={lanes.tower} tone="tower" onOpen={onOpen} onDecision={onDecision} onEscalate={onEscalate} />
-        <ManagerLane title="Employee Follow-Ups" subtitle="Employee replies after a manager response." items={lanes.followups} tone="followup" onOpen={onOpen} onDecision={onDecision} onEscalate={onEscalate} />
-        <ManagerLane title="Approved / Rejected / Resolved" subtitle="Completed or escalated manager decisions." items={lanes.resolved} tone="resolved" onOpen={onOpen} onDecision={onDecision} onEscalate={onEscalate} />
+      <div className="mgr-employee-request-grid mgr-employee-request-grid-primary">
+        {requests.map((item) => {
+          const status = String(item.managerStatus || "Needs manager review").toLowerCase();
+          const decided = status.includes("approved") || status.includes("rejected") || status.includes("resolved");
+
+          return (
+            <article key={item.id} className={`mgr-employee-request-card mgr-review-card ${item.urgency === "Payroll urgent" ? "is-urgent" : ""} ${decided ? "is-decided" : ""}`}>
+              <div className="mgr-card-top">
+                <span>{item.employeeName}</span>
+                <small>{item.managerStatus}</small>
+              </div>
+
+              <strong>{item.title}</strong>
+              <p>{item.body}</p>
+
+              {item.managerResponse ? <p className="mgr-employee-response-preview">Response: {item.managerResponse}</p> : null}
+
+              <div className="mgr-decision-guidance">
+                <span>Soulaana read</span>
+                <p>{getEmployeeDecisionGuidance(item)}</p>
+              </div>
+
+              <div className="mgr-work-meta">
+                <small>{item.businessKey}</small>
+                <small>{item.proofStatus}</small>
+                <small>{item.urgency}</small>
+                <small>Tower-backed</small>
+              </div>
+
+              <div className="mgr-card-actions mgr-decision-actions">
+                <button type="button" onClick={() => onOpen(item)}>Open details</button>
+                <button type="button" className="mgr-approve" onClick={() => onDecision(item, "Approved", "Approved by manager. Your request has been reviewed.")}>Approve</button>
+                <button type="button" className="mgr-needs-proof" onClick={() => onDecision(item, "Needs Proof", "Manager needs more proof before this can be approved.")}>Needs proof</button>
+                <button type="button" className="mgr-reject" onClick={() => onDecision(item, "Rejected", "Rejected by manager. Please review the note or submit a clearer request.")}>Reject</button>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -620,57 +576,6 @@ export default function ManagerStandaloneWorkspace() {
       recommendation: "",
       towerSensitive: false,
     }));
-  }
-
-  function escalateEmployeeRequestToOwner(item, reason = "Manager sent this item upward for owner/Tower review.") {
-    const escalation = createOwnerEscalationItem(item, {
-      reason,
-      managerNote: "Manager escalated this item from the employee request center.",
-      title: `Owner/Tower review · ${item.title}`,
-      body: item.body,
-    });
-
-    const towerBackup = createTowerBackupItem({
-      source: "manager_board",
-      action: "Manager escalated employee request to owner/Tower",
-      target: escalation.title,
-      summary: "Manager sent employee request upward for owner/Tower review.",
-      payload: {
-        request: item,
-        escalation,
-      },
-    });
-
-    saveOwnerEscalationItem(escalation);
-    saveTowerBackupItem(towerBackup);
-
-    updateEmployeeManagerItem(item.id, {
-      managerStatus: "Sent Upward",
-      managerResponse: "Manager sent this item upward for owner/Tower review.",
-      proofStatus: item.proofStatus || "Escalated upward",
-      ownerEscalationId: escalation.id,
-      towerBackupId: towerBackup.id,
-      managerEscalatedAt: new Date().toISOString(),
-    });
-
-    const responseItem = createEmployeeDecisionResponseItem(item, {
-      decisionStatus: "Sent Upward",
-      managerNote: "Your request was sent upward for owner/Tower review.",
-      proofStatus: "Escalated upward",
-      managerName: "Manager Portal",
-    });
-
-    saveEmployeeResponseItem(responseItem);
-    refreshBridgeData();
-
-    if (typeof pushManagerNotice === "function") {
-      pushManagerNotice(createManagerNotice({
-        type: "ready",
-        title: "Sent upward to owner/Tower",
-        body: `${item.title} was escalated for owner/Tower review.`,
-        target: escalation.id,
-      }));
-    }
   }
 
   function decideEmployeeRequest(item, decisionStatus, managerNote) {
@@ -898,7 +803,6 @@ export default function ManagerStandaloneWorkspace() {
         onMark={markEmployeeRequest}
         onOpen={openEmployeeRequest}
         onDecision={decideEmployeeRequest}
-        onEscalate={escalateEmployeeRequestToOwner}
       />
 
       <ManagerFilterTabs

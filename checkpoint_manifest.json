@@ -687,6 +687,23 @@
       ],
       "backup": "pack_backups/pack_051H_EMPLOYEE_RESPONSE_DETAIL_ADD_MORE_INFO_LOOP_20260527_212735",
       "purpose": "Allow employees to click manager responses and send follow-up information back to manager with Tower backup."
+    },
+    "051IJK_V3_MANAGER_LANES_OWNER_ESCALATION_FINAL_RECEIPTS": {
+      "name": "Manager Lanes Owner Escalation Final Receipts V3",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:02:49.943158",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx"
+      ],
+      "files_written": [
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_051IJK_V3_MANAGER_LANES_OWNER_ESCALATION_FINAL_RECEIPTS_20260527_220248",
+      "purpose": "Add manager request lanes, owner escalation queue, and final resolution receipt packets after repairing missing exports."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

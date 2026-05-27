@@ -13,7 +13,6 @@ import { readManagerSubmissions, saveManagerReturnItem, saveManagerSubmission, c
 import "./ownerMoneyWorkspace.css";
 
 import { saveTowerAccessRequest } from "./towerBackupPlugin";
-import OwnerEscalationDock from "./OwnerEscalationDock.jsx";
 function statusLabel(status = "") {
   const map = {
     needs_review: "Needs review",
@@ -2440,8 +2439,6 @@ export default function OwnerMoneyWorkspace() {
         "--fb-good": theme.good,
       }}
     >
-      <OwnerEscalationDock />
-
       <div className="fb-tower-evidence-entry">
         <button type="button" onClick={openTowerEvidence}>
           Open Tower Evidence

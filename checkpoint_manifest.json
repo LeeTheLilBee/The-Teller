@@ -439,6 +439,58 @@
       ],
       "backup": "pack_backups/pack_050V_REPAIR_PIN_MANAGER_NOTIFICATIONS_20260527_170719",
       "purpose": "Move manager notifications dropdown into fixed top-right corner so it is visible and usable."
+    },
+    "050W_EMPLOYEE_PORTAL_SEND_TO_MANAGER_TOWER_BACKUP": {
+      "name": "Employee Portal Send To Manager Tower Backup",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:19:39.447694",
+      "files_written": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050W_EMPLOYEE_PORTAL_SEND_TO_MANAGER_TOWER_BACKUP_20260527_171938",
+      "purpose": "Add employee portal foundation, employee-to-manager requests, local Tower backup queue, and manager board employee request dock."
+    },
+    "050W_REPAIR_EMPLOYEE_VISUAL_COHESION": {
+      "name": "Employee Portal Visual Cohesion",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:37:20.773707",
+      "files_rewritten": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050W_REPAIR_EMPLOYEE_VISUAL_COHESION_20260527_173719",
+      "purpose": "Redesign employee portal into a cohesive Teller-style employee lane while preserving employee-to-manager requests and Tower backup flow."
+    },
+    "050X_EMPLOYEE_LANE_SECURE_DOCS_PROFILE_MERGE": {
+      "name": "Employee Lane Secure Docs Profile Merge",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:43:06.319850",
+      "files_rewritten": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx"
+      ],
+      "files_patched": [
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050X_EMPLOYEE_LANE_SECURE_DOCS_PROFILE_MERGE_20260527_174305",
+      "purpose": "Merge employee lane, secure documents, profile, pay placeholders, proof requests, and Tower-backed document language into one cohesive employee portal."
+    },
+    "050X_REPAIR_SIMPLIFY_EMPLOYEE_LANE_REMOVE_NAME": {
+      "name": "Simplify Employee Lane Remove Name Field",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:50:15.466596",
+      "files_rewritten": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050X_REPAIR_SIMPLIFY_EMPLOYEE_LANE_REMOVE_NAME_20260527_175014",
+      "purpose": "Simplify employee portal to hours/pay card plus request form, remove employee name field, and reserve clock-in for The Tower."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

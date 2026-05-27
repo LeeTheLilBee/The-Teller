@@ -1,0 +1,308 @@
+
+.employee-workspace {
+  min-height: 100vh;
+  padding: clamp(16px, 3vw, 34px);
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(147,197,253,0.18), transparent 32%),
+    radial-gradient(circle at 92% 12%, rgba(252,211,77,0.12), transparent 34%),
+    linear-gradient(135deg, #08111f, #121b31 58%, #070713);
+  border-radius: 32px;
+}
+
+.employee-workspace * {
+  box-sizing: border-box;
+}
+
+.emp-simple-hero,
+.emp-main-flow,
+.emp-request-card,
+.emp-side-card,
+.emp-activity-panel {
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(145deg, rgba(31,45,82,0.88), rgba(20,29,55,0.86));
+  box-shadow: 0 24px 80px rgba(0,0,0,0.24);
+  border-radius: 34px;
+}
+
+.emp-simple-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 20px;
+  align-items: stretch;
+  min-height: 340px;
+  padding: clamp(20px, 4vw, 38px);
+  margin-bottom: 22px;
+  overflow: hidden;
+  position: relative;
+}
+
+.emp-simple-hero::after {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 999px;
+  right: -110px;
+  top: -120px;
+  background: rgba(147,197,253,0.16);
+  filter: blur(18px);
+}
+
+.emp-hero-copy,
+.emp-hours-card {
+  position: relative;
+  z-index: 1;
+}
+
+.emp-hero-copy {
+  display: grid;
+  align-content: end;
+}
+
+.emp-kicker {
+  margin: 0;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.emp-simple-hero h1,
+.emp-request-card h2,
+.emp-activity-panel h2 {
+  margin: 10px 0;
+  color: #f8fbff;
+  font-size: clamp(38px, 7vw, 82px);
+  line-height: 0.9;
+  letter-spacing: -0.075em;
+}
+
+.emp-request-card h2,
+.emp-activity-panel h2 {
+  font-size: clamp(28px, 5vw, 56px);
+}
+
+.emp-simple-hero p,
+.emp-request-card p,
+.emp-side-card p,
+.emp-activity-panel p {
+  color: #cbd7f5;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.emp-command-badges,
+.emp-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.emp-command-badges {
+  justify-content: flex-start;
+}
+
+.emp-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.075);
+  color: #cbd7f5;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.emp-badge-strong {
+  background: #93c5fd;
+  color: #08111f;
+  border-color: transparent;
+}
+
+.emp-badge-warn {
+  background: #fcd34d;
+  color: #160e07;
+  border-color: transparent;
+}
+
+.emp-hours-card {
+  border: 1px solid rgba(147,197,253,0.24);
+  background:
+    radial-gradient(circle at 70% 20%, rgba(147,197,253,0.22), transparent 42%),
+    rgba(255,255,255,0.07);
+  border-radius: 34px;
+  padding: 24px;
+  display: grid;
+  align-content: end;
+}
+
+.emp-hours-card strong {
+  display: block;
+  font-size: clamp(60px, 8vw, 96px);
+  line-height: 0.85;
+  letter-spacing: -0.085em;
+}
+
+.emp-hours-card > span {
+  color: #cbd7f5;
+  font-weight: 850;
+  margin: 8px 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+}
+
+.emp-hours-facts {
+  display: grid;
+  gap: 8px;
+}
+
+.emp-hours-facts div,
+.emp-side-list div,
+.emp-activity-grid article {
+  border: 1px solid rgba(255,255,255,0.11);
+  background: rgba(255,255,255,0.055);
+  border-radius: 16px;
+  padding: 10px;
+}
+
+.emp-hours-facts small,
+.emp-side-list span,
+.emp-activity-grid span,
+.emp-form-grid label > span {
+  display: block;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+
+.emp-hours-facts b,
+.emp-side-list strong,
+.emp-activity-grid strong {
+  display: block;
+  color: #f8fbff;
+  font-size: 16px;
+  line-height: 1.08;
+}
+
+.emp-main-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+.emp-request-card,
+.emp-side-card,
+.emp-activity-panel {
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.emp-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.emp-form-grid input,
+.emp-form-grid select,
+.emp-form-grid textarea {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(2,6,23,0.42);
+  color: #f8fbff;
+  border-radius: 16px;
+  padding: 11px 12px;
+  font: inherit;
+  font-weight: 750;
+  outline: none;
+}
+
+.emp-form-grid textarea {
+  resize: vertical;
+}
+
+.emp-wide {
+  grid-column: span 3;
+}
+
+.emp-primary {
+  appearance: none;
+  border: 0;
+  background: #93c5fd;
+  color: #08111f;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 13px 18px;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.emp-side-card h3 {
+  margin: 10px 0 4px;
+  font-size: clamp(32px, 5vw, 54px);
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+}
+
+.emp-side-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.emp-activity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.emp-activity-grid small {
+  display: block;
+  margin-top: 8px;
+  color: #cbd7f5;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 1080px) {
+  .emp-simple-hero,
+  .emp-main-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .emp-form-grid,
+  .emp-activity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .emp-wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 680px) {
+  .emp-form-grid,
+  .emp-activity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .emp-wide {
+    grid-column: auto;
+  }
+}

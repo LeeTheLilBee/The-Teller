@@ -1,0 +1,340 @@
+
+.employee-workspace {
+  min-height: 100vh;
+  padding: clamp(16px, 3vw, 34px);
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(147,197,253,0.18), transparent 32%),
+    radial-gradient(circle at 92% 12%, rgba(252,211,77,0.12), transparent 34%),
+    linear-gradient(135deg, #08111f, #121b31 58%, #070713);
+  border-radius: 32px;
+}
+
+.employee-workspace * {
+  box-sizing: border-box;
+}
+
+.emp-command-card,
+.emp-task-shell,
+.emp-stage-panel,
+.emp-activity-panel {
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(145deg, rgba(31,45,82,0.88), rgba(20,29,55,0.86));
+  box-shadow: 0 24px 80px rgba(0,0,0,0.24);
+  border-radius: 34px;
+}
+
+.emp-command-card {
+  min-height: 360px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 20px;
+  align-items: end;
+  padding: clamp(20px, 4vw, 38px);
+  margin-bottom: 22px;
+  overflow: hidden;
+  position: relative;
+}
+
+.emp-command-card::after {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  border-radius: 999px;
+  right: -110px;
+  top: -120px;
+  background: rgba(147,197,253,0.16);
+  filter: blur(18px);
+}
+
+.emp-command-copy,
+.emp-pay-orb {
+  position: relative;
+  z-index: 1;
+}
+
+.emp-kicker {
+  margin: 0;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.emp-command-card h1,
+.emp-stage-panel h2,
+.emp-activity-panel h2 {
+  margin: 10px 0;
+  color: #f8fbff;
+  font-size: clamp(38px, 7vw, 84px);
+  line-height: 0.9;
+  letter-spacing: -0.075em;
+}
+
+.emp-stage-panel h2,
+.emp-activity-panel h2 {
+  font-size: clamp(28px, 5vw, 56px);
+}
+
+.emp-command-card p,
+.emp-stage-panel p,
+.emp-activity-panel p {
+  color: #cbd7f5;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.emp-command-badges,
+.emp-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.emp-command-badges {
+  justify-content: flex-start;
+}
+
+.emp-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.075);
+  color: #cbd7f5;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.emp-badge-strong {
+  background: #93c5fd;
+  color: #08111f;
+  border-color: transparent;
+}
+
+.emp-badge-warn {
+  background: #fcd34d;
+  color: #160e07;
+  border-color: transparent;
+}
+
+.emp-pay-orb {
+  border: 1px solid rgba(147,197,253,0.24);
+  background:
+    radial-gradient(circle at 70% 20%, rgba(147,197,253,0.22), transparent 42%),
+    rgba(255,255,255,0.07);
+  border-radius: 34px;
+  padding: 24px;
+  min-height: 250px;
+  display: grid;
+  align-content: end;
+}
+
+.emp-pay-orb strong {
+  display: block;
+  font-size: clamp(52px, 7vw, 82px);
+  line-height: 0.9;
+  letter-spacing: -0.08em;
+}
+
+.emp-pay-orb span {
+  color: #cbd7f5;
+  font-weight: 800;
+  margin: 8px 0 14px;
+}
+
+.emp-task-shell {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+.emp-task-rail {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.emp-task-rail button {
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.13);
+  background: rgba(255,255,255,0.06);
+  color: #f8fbff;
+  border-radius: 24px;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.emp-task-rail button.is-active {
+  border-color: rgba(147,197,253,0.50);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(147,197,253,0.16), transparent 34%),
+    rgba(255,255,255,0.08);
+}
+
+.emp-task-rail span,
+.emp-mini-grid span,
+.emp-doc-grid span,
+.emp-activity-grid span,
+.emp-form-grid label > span {
+  display: block;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+
+.emp-task-rail strong {
+  display: block;
+  font-size: 18px;
+  line-height: 1.05;
+}
+
+.emp-task-rail small {
+  display: block;
+  margin-top: 8px;
+  color: #fcd34d;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.emp-stage-panel {
+  padding: clamp(18px, 3vw, 30px);
+  min-height: 520px;
+}
+
+.emp-mini-grid,
+.emp-doc-grid,
+.emp-activity-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.emp-mini-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.emp-doc-grid,
+.emp-activity-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.emp-mini-grid article,
+.emp-doc-grid article,
+.emp-activity-grid article {
+  border: 1px solid rgba(255,255,255,0.13);
+  background: rgba(255,255,255,0.07);
+  border-radius: 22px;
+  padding: 16px;
+}
+
+.emp-mini-grid strong,
+.emp-doc-grid strong,
+.emp-activity-grid strong {
+  display: block;
+  color: #f8fbff;
+  font-size: 19px;
+  line-height: 1.06;
+}
+
+.emp-form-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.emp-form-grid input,
+.emp-form-grid select,
+.emp-form-grid textarea {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(2,6,23,0.42);
+  color: #f8fbff;
+  border-radius: 16px;
+  padding: 11px 12px;
+  font: inherit;
+  font-weight: 750;
+  outline: none;
+}
+
+.emp-form-grid textarea {
+  resize: vertical;
+}
+
+.emp-wide {
+  grid-column: span 5;
+}
+
+.emp-primary {
+  appearance: none;
+  border: 0;
+  background: #93c5fd;
+  color: #08111f;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 13px 18px;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.emp-activity-panel {
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.emp-activity-grid small {
+  display: block;
+  margin-top: 8px;
+  color: #cbd7f5;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 1080px) {
+  .emp-command-card,
+  .emp-task-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .emp-mini-grid,
+  .emp-doc-grid,
+  .emp-activity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .emp-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .emp-wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 680px) {
+  .emp-mini-grid,
+  .emp-doc-grid,
+  .emp-activity-grid,
+  .emp-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .emp-wide {
+    grid-column: auto;
+  }
+}

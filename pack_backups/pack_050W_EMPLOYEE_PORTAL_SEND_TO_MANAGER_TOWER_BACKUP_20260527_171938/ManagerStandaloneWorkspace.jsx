@@ -4,8 +4,6 @@ import {
   createBridgeId,
   readManagerReturnQueue,
   readManagerSubmissions,
-  readEmployeeManagerQueue,
-  updateEmployeeManagerItem,
   saveManagerSubmission,
   updateManagerReturnItem,
   createManagerReReviewSubmission,
@@ -324,52 +322,9 @@ function ManagerUnifiedWorkBoard({ workItems, activeFilter, onOpenReturn, onMark
   );
 }
 
-
-function ManagerEmployeeRequestDock({ requests, onMark }) {
-  if (!requests.length) return null;
-
-  return (
-    <section className="mgr-panel mgr-employee-request-dock">
-      <div className="mgr-section-head">
-        <div>
-          <p className="mgr-kicker">Employee requests</p>
-          <h2>Employee items sent back to manager.</h2>
-          <p>These came from the employee portal and were backed up to The Tower.</p>
-        </div>
-        <ManagerBadge tone="warn">{requests.length}</ManagerBadge>
-      </div>
-
-      <div className="mgr-employee-request-grid">
-        {requests.map((item) => (
-          <article key={item.id} className={`mgr-employee-request-card ${item.urgency === "Payroll urgent" ? "is-urgent" : ""}`}>
-            <div className="mgr-card-top">
-              <span>{item.employeeName}</span>
-              <small>{item.managerStatus}</small>
-            </div>
-            <strong>{item.title}</strong>
-            <p>{item.body}</p>
-            <div className="mgr-work-meta">
-              <small>{item.businessKey}</small>
-              <small>{item.proofStatus}</small>
-              <small>{item.urgency}</small>
-              <small>Tower-backed</small>
-            </div>
-            <div className="mgr-card-actions">
-              <button type="button" onClick={() => onMark(item.id, "Manager acknowledged")}>Acknowledge</button>
-              <button type="button" onClick={() => onMark(item.id, "Proof being reviewed")}>Review proof</button>
-              <button type="button" onClick={() => onMark(item.id, "Ready for manager decision")}>Ready</button>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 export default function ManagerStandaloneWorkspace() {
   const [submissions, setSubmissions] = useState([]);
   const [returnQueue, setReturnQueue] = useState([]);
-  const [employeeRequests, setEmployeeRequests] = useState([]);
   const [selectedReturnItem, setSelectedReturnItem] = useState(null);
   const [activeManagerFilter, setActiveManagerFilter] = useState("all");
   const [managerNotificationsOpen, setManagerNotificationsOpen] = useState(false);
@@ -401,7 +356,6 @@ export default function ManagerStandaloneWorkspace() {
   function refreshBridgeData() {
     setSubmissions(readManagerSubmissions());
     setReturnQueue(readManagerReturnQueue());
-    setEmployeeRequests(readEmployeeManagerQueue());
   }
 
   function pushManagerNotice(notice) {
@@ -467,23 +421,6 @@ export default function ManagerStandaloneWorkspace() {
       recommendation: "",
       towerSensitive: false,
     }));
-  }
-
-  function markEmployeeRequest(id, status) {
-    updateEmployeeManagerItem(id, {
-      managerStatus: status,
-      managerUpdatedAt: new Date().toISOString(),
-    });
-    refreshBridgeData();
-
-    if (typeof pushManagerNotice === "function") {
-      pushManagerNotice(createManagerNotice({
-        type: status.toLowerCase().includes("proof") ? "proof" : "status",
-        title: "Employee request updated",
-        body: `Manager marked employee request as: ${status}.`,
-        target: id,
-      }));
-    }
   }
 
   function markReturnItem(id, status) {
@@ -575,11 +512,6 @@ export default function ManagerStandaloneWorkspace() {
           </div>
         </div>
       </section>
-
-      <ManagerEmployeeRequestDock
-        requests={employeeRequests}
-        onMark={markEmployeeRequest}
-      />
 
       <ManagerFilterTabs
         activeFilter={activeManagerFilter}

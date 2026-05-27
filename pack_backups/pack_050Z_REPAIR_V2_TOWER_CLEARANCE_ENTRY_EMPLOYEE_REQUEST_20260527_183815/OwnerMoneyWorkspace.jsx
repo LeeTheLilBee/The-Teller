@@ -2223,17 +2223,6 @@ export default function OwnerMoneyWorkspace() {
     };
   }, []);
 
-
-  function openTowerEvidence() {
-    try {
-      window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
-    } catch {
-      // session storage is optional
-    }
-
-    window.location.href = `${window.location.origin}${window.location.pathname}?teller_view=tower`;
-  }
-
   function openAction(action) {
     setPendingAction(action);
   }
@@ -2423,13 +2412,6 @@ export default function OwnerMoneyWorkspace() {
         "--fb-good": theme.good,
       }}
     >
-      <div className="fb-tower-evidence-entry">
-        <button type="button" onClick={openTowerEvidence}>
-          Open Tower Evidence
-        </button>
-        <span>Protected backup queue</span>
-      </div>
-
       <div className="fb-corner-tools">
         <NotificationsDropdown
           notifications={notifications}

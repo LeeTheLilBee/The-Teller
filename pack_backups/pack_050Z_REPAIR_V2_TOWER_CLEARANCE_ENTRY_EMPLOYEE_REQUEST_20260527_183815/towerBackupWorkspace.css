@@ -1,0 +1,324 @@
+
+.tower-backup-workspace {
+  min-height: 100vh;
+  padding: clamp(16px, 3vw, 34px);
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(96,165,250,0.16), transparent 32%),
+    radial-gradient(circle at 92% 12%, rgba(248,113,113,0.10), transparent 34%),
+    linear-gradient(135deg, #050816, #0f172a 58%, #020617);
+  border-radius: 32px;
+}
+
+.tower-backup-workspace * {
+  box-sizing: border-box;
+}
+
+.tower-hero,
+.tower-filter-panel,
+.tower-detail-modal {
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(145deg, rgba(15,23,42,0.92), rgba(30,41,59,0.88));
+  box-shadow: 0 24px 80px rgba(0,0,0,0.34);
+  border-radius: 34px;
+}
+
+.tower-hero {
+  min-height: 340px;
+  display: grid;
+  align-content: end;
+  padding: clamp(20px, 4vw, 38px);
+  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tower-hero::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  right: -120px;
+  top: -130px;
+  background: rgba(96,165,250,0.16);
+  filter: blur(18px);
+}
+
+.tower-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.tower-kicker {
+  margin: 0;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.tower-hero h1,
+.tower-detail-modal h2 {
+  margin: 10px 0;
+  font-size: clamp(42px, 7vw, 88px);
+  line-height: 0.9;
+  letter-spacing: -0.08em;
+}
+
+.tower-detail-modal h2 {
+  font-size: clamp(32px, 5vw, 64px);
+}
+
+.tower-hero p,
+.tower-detail-modal p,
+.tower-record-card p,
+.tower-empty-card p {
+  color: #cbd5e1;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.tower-badge-row,
+.tower-section-head,
+.tower-card-top,
+.tower-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tower-badge-row,
+.tower-detail-actions {
+  justify-content: flex-start;
+}
+
+.tower-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.075);
+  color: #cbd5e1;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.tower-badge-strong {
+  background: #93c5fd;
+  color: #020617;
+  border-color: transparent;
+}
+
+.tower-badge-warn {
+  background: #fcd34d;
+  color: #160e07;
+  border-color: transparent;
+}
+
+.tower-summary-grid,
+.tower-record-grid,
+.tower-detail-grid {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.tower-summary-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.tower-record-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tower-detail-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.tower-summary-grid article,
+.tower-record-card,
+.tower-empty-card,
+.tower-detail-grid article,
+.tower-payload-box,
+.tower-packet-box,
+.tower-notes-box {
+  border: 1px solid rgba(255,255,255,0.13);
+  background: rgba(255,255,255,0.07);
+  border-radius: 24px;
+  padding: 16px;
+}
+
+.tower-summary-grid span,
+.tower-record-card span,
+.tower-detail-grid span,
+.tower-notes-box span {
+  display: block;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+
+.tower-summary-grid strong,
+.tower-record-card strong,
+.tower-detail-grid strong,
+.tower-empty-card strong {
+  display: block;
+  color: #f8fbff;
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.tower-summary-grid strong {
+  font-size: clamp(34px, 5vw, 56px);
+  letter-spacing: -0.06em;
+}
+
+.tower-filter-panel {
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+.tower-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tower-filter-row button,
+.tower-record-card button,
+.tower-primary,
+.tower-secondary {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.075);
+  color: #f8fbff;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tower-filter-row button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tower-filter-row button span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.13);
+}
+
+.tower-filter-row button.is-active,
+.tower-primary {
+  background: #93c5fd;
+  color: #020617;
+  border-color: transparent;
+}
+
+.tower-record-card.is-reviewed {
+  border-color: rgba(147,197,253,0.34);
+}
+
+.tower-card-top small,
+.tower-record-facts small {
+  color: #fcd34d;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tower-record-facts {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.tower-record-facts small {
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.055);
+  border-radius: 12px;
+  padding: 7px 8px;
+  color: #cbd5e1;
+}
+
+.tower-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(2, 6, 23, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.tower-detail-modal {
+  width: min(1160px, 100%);
+  max-height: calc(100vh - 44px);
+  overflow: auto;
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.tower-payload-box,
+.tower-packet-box,
+.tower-notes-box {
+  display: block;
+  margin-top: 14px;
+}
+
+.tower-packet-box pre {
+  max-height: 280px;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: #dbeafe;
+  font-size: 12px;
+}
+
+.tower-notes-box textarea {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(2,6,23,0.42);
+  color: #f8fbff;
+  border-radius: 16px;
+  padding: 11px 12px;
+  font: inherit;
+  font-weight: 750;
+  outline: none;
+  resize: vertical;
+}
+
+@media (max-width: 1080px) {
+  .tower-summary-grid,
+  .tower-record-grid,
+  .tower-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .tower-summary-grid,
+  .tower-record-grid,
+  .tower-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -127,7 +127,6 @@ export default function App() {
           <section className="teller-screen-card">
             {clearance === "employee" ? <EmployeeDocumentVaultPanel /> : null}
             {clearance === "tower" || __tellerView === "tower" ? <TowerBackupWorkspace /> : null}
-      {(__tellerView === "tower" || clearance === "tower") ? <TowerBackupWorkspace /> : null}
       {clearance === "employee" || __tellerView === "employee" ? <EmployeeStandaloneWorkspace /> : null}
       {clearance === "manager" || __tellerView === "manager" ? <ManagerStandaloneWorkspace /> : null}
             {clearance === "owner" ? <OwnerMoneyWorkspace /> : null}

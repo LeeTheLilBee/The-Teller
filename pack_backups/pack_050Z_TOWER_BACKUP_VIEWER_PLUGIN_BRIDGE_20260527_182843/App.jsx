@@ -4,7 +4,6 @@ import ManagerMeldPanel from "./teller/ManagerMeldPanel.jsx";
 import OwnerMoneyWorkspace from "./teller/OwnerMoneyWorkspace.jsx";
 import ManagerStandaloneWorkspace from "./teller/ManagerStandaloneWorkspace.jsx";
 import EmployeeStandaloneWorkspace from "./teller/EmployeeStandaloneWorkspace.jsx";
-import TowerBackupWorkspace from "./teller/TowerBackupWorkspace.jsx";
 import "./teller/tellerShell.css";
 
 function readTowerClearance() {
@@ -126,9 +125,7 @@ export default function App() {
         <main className="teller-main">
           <section className="teller-screen-card">
             {clearance === "employee" ? <EmployeeDocumentVaultPanel /> : null}
-            {clearance === "tower" || __tellerView === "tower" ? <TowerBackupWorkspace /> : null}
-      {(__tellerView === "tower" || clearance === "tower") ? <TowerBackupWorkspace /> : null}
-      {clearance === "employee" || __tellerView === "employee" ? <EmployeeStandaloneWorkspace /> : null}
+            {clearance === "employee" || __tellerView === "employee" ? <EmployeeStandaloneWorkspace /> : null}
       {clearance === "manager" || __tellerView === "manager" ? <ManagerStandaloneWorkspace /> : null}
             {clearance === "owner" ? <OwnerMoneyWorkspace /> : null}
           </section>

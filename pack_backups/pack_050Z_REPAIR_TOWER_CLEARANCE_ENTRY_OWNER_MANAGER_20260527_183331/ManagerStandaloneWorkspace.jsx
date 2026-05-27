@@ -414,17 +414,6 @@ export default function ManagerStandaloneWorkspace() {
     towerSensitive: false,
   });
 
-
-  function openTowerEvidence() {
-    try {
-      window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
-    } catch {
-      // session storage is optional
-    }
-
-    window.location.href = `${window.location.origin}${window.location.pathname}?teller_view=tower`;
-  }
-
   function refreshBridgeData() {
     setSubmissions(readManagerSubmissions());
     setReturnQueue(readManagerReturnQueue());
@@ -631,13 +620,6 @@ export default function ManagerStandaloneWorkspace() {
 
   return (
     <main className="manager-standalone-workspace">
-      <div className="mgr-tower-evidence-entry">
-        <button type="button" onClick={openTowerEvidence}>
-          Open Tower Evidence
-        </button>
-        <span>Protected backup queue</span>
-      </div>
-
       <div className="mgr-corner-tools">
         <ManagerNotificationsDropdown
           notifications={managerNotifications}

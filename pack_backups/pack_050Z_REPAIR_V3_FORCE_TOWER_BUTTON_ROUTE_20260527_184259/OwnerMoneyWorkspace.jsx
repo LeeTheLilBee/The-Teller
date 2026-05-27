@@ -2231,7 +2231,10 @@ export default function OwnerMoneyWorkspace() {
       // session storage is optional
     }
 
-    window.location.href = `${window.location.origin}${window.location.pathname}?teller_view=tower`;
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set("teller_view", "tower");
+    nextUrl.searchParams.delete("tower_clearance");
+    window.location.href = nextUrl.toString();
   }
 
   function openAction(action) {

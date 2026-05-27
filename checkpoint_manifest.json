@@ -505,6 +505,49 @@
       ],
       "backup": "pack_backups/pack_050Y_EMPLOYEE_REQUEST_DETAIL_MANAGER_RESPONSE_20260527_181517",
       "purpose": "Add employee request detail popup on manager board, manager response back to employee, employee response queue, and Tower backup for manager responses."
+    },
+    "050Z_TOWER_BACKUP_VIEWER_PLUGIN_BRIDGE": {
+      "name": "Tower Backup Viewer Plugin Bridge",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:28:44.270169",
+      "files_written": [
+        "src/teller/towerBackupPlugin.js",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050Z_TOWER_BACKUP_VIEWER_PLUGIN_BRIDGE_20260527_182843",
+      "purpose": "Add visible local Tower evidence dock and reusable Tower plugin bridge for Teller backup records."
+    },
+    "050Z_REPAIR_V2_TOWER_CLEARANCE_ENTRY_EMPLOYEE_REQUEST": {
+      "name": "Tower Clearance Entry Employee Tower Request V2",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:38:16.925699",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/EmployeeStandaloneWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_050Z_REPAIR_V2_TOWER_CLEARANCE_ENTRY_EMPLOYEE_REQUEST_20260527_183815",
+      "purpose": "Add Tower Evidence entry buttons to owner/manager dashboards, require Tower clearance, and let employees request Tower records via manager request flow."
+    },
+    "050Z_REPAIR_V3_FORCE_TOWER_BUTTON_ROUTE": {
+      "name": "Force Tower Button Route To Open",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:43:00.719188",
+      "files_patched": [
+        "src/App.jsx",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_050Z_REPAIR_V3_FORCE_TOWER_BUTTON_ROUTE_20260527_184259",
+      "purpose": "Force owner/manager Tower Evidence button to open teller_view=tower and ensure App renders TowerBackupWorkspace for tower route."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

@@ -28,7 +28,6 @@ const employeeRequestTypes = [
   ["schedule_question", "Schedule question"],
   ["tax_document", "Tax document"],
   ["manager_help", "Need manager help"],
-  ["tower_record", "Tower record / secure document request"],
 ];
 
 function EmployeeBadge({ children, tone = "quiet" }) {
@@ -183,7 +182,7 @@ export default function EmployeeStandaloneWorkspace() {
               <p className="emp-kicker">Send to manager</p>
               <h2>Need something fixed or reviewed?</h2>
               <p>
-                Send a pay question, missing punch note, document update, proof message, or Tower record request to the manager.
+                Send a pay question, missing punch note, document update, or proof message to the manager.
                 The Tower keeps a backup trail automatically.
               </p>
             </div>

@@ -25,81 +25,6 @@ function getOwnerDecisionNote(status) {
   return "Owner reviewed this request.";
 }
 
-
-function getOwnerStreamlinePriorityScore(item) {
-  const text = JSON.stringify(item || {}).toLowerCase();
-
-  if (String(item.urgency || "").toLowerCase().includes("payroll urgent")) return 1000;
-  if (text.includes("direct deposit") || text.includes("bank") || text.includes("tax")) return 930;
-  if (text.includes("tower") || text.includes("secure document")) return 860;
-  if (String(item.proofStatus || "").toLowerCase().includes("proof")) return 760;
-  return 500;
-}
-
-function getOwnerStreamlineTask(items) {
-  const active = items
-    .slice()
-    .sort((a, b) => {
-      const scoreDiff = getOwnerStreamlinePriorityScore(b) - getOwnerStreamlinePriorityScore(a);
-      if (scoreDiff !== 0) return scoreDiff;
-
-      return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
-    });
-
-  return active[0] || null;
-}
-
-function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
-  const task = getOwnerStreamlineTask(items);
-
-  if (!task) return null;
-
-  const score = getOwnerStreamlinePriorityScore(task);
-
-  return (
-    <section className="owner-streamline-panel">
-      <div className="owner-streamline-copy">
-        <p className="owner-dock-kicker">Streamline Mode</p>
-        <h2>One owner decision first.</h2>
-        <p>
-          The Teller surfaced the most important active escalation so owner review stays focused.
-        </p>
-
-        <div className="owner-dock-badge-row">
-          <OwnerDockBadge tone="warn">Priority {score}</OwnerDockBadge>
-          <OwnerDockBadge tone="strong">{task.urgency || "Normal"}</OwnerDockBadge>
-          <OwnerDockBadge>{task.proofStatus || "Proof status"}</OwnerDockBadge>
-        </div>
-      </div>
-
-      <article className="owner-streamline-task-card">
-        <div className="owner-card-top">
-          <span>{task.employeeName}</span>
-          <small>{task.ownerStatus}</small>
-        </div>
-
-        <strong>{task.title}</strong>
-        <p>{task.body}</p>
-
-        <div className="owner-escalation-facts">
-          <small>{task.businessKey}</small>
-          <small>{task.proofStatus}</small>
-          <small>{task.urgency}</small>
-          <small>{task.towerBackedUp ? "Tower-backed" : "Needs backup"}</small>
-        </div>
-
-        <div className="owner-escalation-actions owner-streamline-actions">
-          <button type="button" onClick={() => onOpen(task)}>Open detail</button>
-          <button type="button" className="owner-approve" onClick={() => onDecide(task, "Owner Approved")}>Approve</button>
-          <button type="button" className="owner-return" onClick={() => onDecide(task, "Returned to Manager")}>Return</button>
-          <button type="button" className="owner-reject" onClick={() => onDecide(task, "Owner Rejected")}>Reject</button>
-          <button type="button" className="owner-resolve" onClick={() => onDecide(task, "Resolved")}>Resolve + Receipt</button>
-        </div>
-      </article>
-    </section>
-  );
-}
-
 export default function OwnerEscalationDock() {
   const [items, setItems] = useState([]);
   const [packets, setPackets] = useState([]);
@@ -210,12 +135,6 @@ export default function OwnerEscalationDock() {
           <OwnerDockBadge tone="strong">{packets.length} receipt packets</OwnerDockBadge>
         </div>
       </div>
-
-      <OwnerStreamlinePanel
-        items={activeItems}
-        onOpen={setSelectedItem}
-        onDecide={ownerDecide}
-      />
 
       <div className="owner-escalation-grid">
         {activeItems.length ? activeItems.map((item) => (

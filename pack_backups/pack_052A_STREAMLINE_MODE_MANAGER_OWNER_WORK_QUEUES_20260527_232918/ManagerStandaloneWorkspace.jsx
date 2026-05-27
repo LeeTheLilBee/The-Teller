@@ -365,93 +365,6 @@ function getEmployeeDecisionGuidance(item) {
 
 
 
-
-function getManagerStreamlinePriorityScore(item) {
-  const lane = getManagerLaneForRequest(item);
-  const text = JSON.stringify(item || {}).toLowerCase();
-  const status = String(item.managerStatus || "").toLowerCase();
-
-  if (lane === "resolved") return -999;
-  if (String(item.urgency || "").toLowerCase().includes("payroll urgent")) return 1000;
-  if (text.includes("direct deposit") || text.includes("bank") || text.includes("tax")) return 920;
-  if (lane === "tower") return 860;
-  if (lane === "followups") return 780;
-  if (lane === "needsProof") return 700;
-  if (status.includes("needs manager review")) return 620;
-  return 500;
-}
-
-function getManagerStreamlineTask(requests) {
-  const active = requests
-    .filter((item) => getManagerStreamlinePriorityScore(item) > -999)
-    .sort((a, b) => {
-      const scoreDiff = getManagerStreamlinePriorityScore(b) - getManagerStreamlinePriorityScore(a);
-      if (scoreDiff !== 0) return scoreDiff;
-
-      return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
-    });
-
-  return active[0] || null;
-}
-
-function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
-  const task = getManagerStreamlineTask(requests);
-
-  if (!task) {
-    return null;
-  }
-
-  const lane = getManagerLaneForRequest(task);
-  const score = getManagerStreamlinePriorityScore(task);
-
-  return (
-    <section className="mgr-streamline-panel">
-      <div className="mgr-streamline-copy">
-        <p className="mgr-kicker">Streamline Mode</p>
-        <h2>One manager task first.</h2>
-        <p>
-          The Teller picked the highest-priority active request so the manager can act without scanning every lane.
-        </p>
-
-        <div className="mgr-streamline-badges">
-          <ManagerBadge tone="strong">{lane}</ManagerBadge>
-          <ManagerBadge tone="warn">Priority {score}</ManagerBadge>
-          <ManagerBadge>{task.urgency || "Normal"}</ManagerBadge>
-        </div>
-      </div>
-
-      <article className="mgr-streamline-task-card">
-        <div className="mgr-card-top">
-          <span>{task.employeeName}</span>
-          <small>{task.managerStatus}</small>
-        </div>
-
-        <strong>{task.title}</strong>
-        <p>{task.body}</p>
-
-        <div className="mgr-decision-guidance">
-          <span>Soulaana read</span>
-          <p>{getEmployeeDecisionGuidance(task)}</p>
-        </div>
-
-        <div className="mgr-work-meta">
-          <small>{task.businessKey}</small>
-          <small>{task.proofStatus}</small>
-          <small>{task.towerBackedUp ? "Tower-backed" : "Needs backup"}</small>
-        </div>
-
-        <div className="mgr-card-actions mgr-streamline-actions">
-          <button type="button" onClick={() => onOpen(task)}>Open details</button>
-          <button type="button" className="mgr-approve" onClick={() => onDecision(task, "Approved", "Approved by manager. Your request has been reviewed.")}>Approve</button>
-          <button type="button" className="mgr-needs-proof" onClick={() => onDecision(task, "Needs Proof", "Manager needs more proof before this can be approved.")}>Needs proof</button>
-          <button type="button" className="mgr-reject" onClick={() => onDecision(task, "Rejected", "Rejected by manager. Please review the note or submit a clearer request.")}>Reject</button>
-          <button type="button" className="mgr-send-upward" onClick={() => onEscalate(task)}>Send upward</button>
-        </div>
-      </article>
-    </section>
-  );
-}
-
 function getManagerLaneForRequest(item) {
   const status = String(item.managerStatus || "").toLowerCase();
   const type = String(item.requestType || "").toLowerCase();
@@ -980,14 +893,7 @@ export default function ManagerStandaloneWorkspace() {
         </div>
       </section>
 
-            <ManagerStreamlinePanel
-        requests={employeeRequests}
-        onOpen={openEmployeeRequest}
-        onDecision={decideEmployeeRequest}
-        onEscalate={escalateEmployeeRequestToOwner}
-      />
-
-<ManagerEmployeeRequestDock
+      <ManagerEmployeeRequestDock
         requests={employeeRequests}
         onMark={markEmployeeRequest}
         onOpen={openEmployeeRequest}

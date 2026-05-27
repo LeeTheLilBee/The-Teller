@@ -766,6 +766,19 @@
       ],
       "backup": "pack_backups/pack_051LMN_REPAIR_D_HIDE_OWNER_WORK_INTERFACES_WHEN_EMPTY_20260527_230705",
       "purpose": "Hide owner oversight and receipt/archive-prep interfaces when no active work remains, then reappear when new work exists."
+    },
+    "052A_STREAMLINE_MODE_MANAGER_OWNER_WORK_QUEUES": {
+      "name": "Streamline Mode Manager Owner Work Queues",
+      "status": "complete",
+      "timestamp": "2026-05-27T23:51:59.413150",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052A_STREAMLINE_MODE_MANAGER_OWNER_WORK_QUEUES_20260527_235158",
+      "purpose": "Add Streamline Mode panels that surface one highest-priority manager/owner task at a time."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

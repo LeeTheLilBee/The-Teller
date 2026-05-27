@@ -482,15 +482,6 @@ export default function ManagerStandaloneWorkspace() {
 
   return (
     <main className="manager-standalone-workspace">
-      <div className="mgr-corner-tools">
-        <ManagerNotificationsDropdown
-          notifications={managerNotifications}
-          open={managerNotificationsOpen}
-          setOpen={setManagerNotificationsOpen}
-          onClear={clearManagerNotifications}
-        />
-      </div>
-
       <section className="mgr-hero">
         <div>
           <p className="mgr-kicker">Manager board · The Teller</p>

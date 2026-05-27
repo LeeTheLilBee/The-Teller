@@ -417,6 +417,28 @@
       ],
       "backup": "pack_backups/pack_050U_REPAIR_REMOVE_MANAGER_SUBMISSION_FROM_OWNER_20260527_161615",
       "purpose": "Remove manager submission form from owner dashboard while keeping manager submissions, owner send-back, and re-review flow working."
+    },
+    "050V_V2_MANAGER_NOTIFICATIONS_ACTIVITY_TRAIL": {
+      "name": "Manager Notifications and Activity Trail V2",
+      "status": "complete",
+      "timestamp": "2026-05-27T16:51:31.495571",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050V_V2_MANAGER_NOTIFICATIONS_ACTIVITY_TRAIL_20260527_165130",
+      "purpose": "Add manager-side notifications dropdown, activity trail, and manager action notices for submissions/status changes/re-review sends."
+    },
+    "050V_REPAIR_PIN_MANAGER_NOTIFICATIONS": {
+      "name": "Pin Manager Notifications To Corner",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:07:20.340999",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050V_REPAIR_PIN_MANAGER_NOTIFICATIONS_20260527_170719",
+      "purpose": "Move manager notifications dropdown into fixed top-right corner so it is visible and usable."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

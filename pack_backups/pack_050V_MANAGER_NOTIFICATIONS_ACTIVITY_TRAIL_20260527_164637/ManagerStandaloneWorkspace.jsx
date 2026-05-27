@@ -59,113 +59,6 @@ function buildManagerSubmission(form) {
   };
 }
 
-
-function createManagerNotice({ type = "info", title, body, target }) {
-  const random = Math.floor(100000 + Math.random() * 900000);
-
-  return {
-    id: `MGR-NOTICE-${random}`,
-    type,
-    title,
-    body,
-    target,
-    createdAt: new Date().toISOString(),
-  };
-}
-
-function managerNoticeTone(type = "info") {
-  const map = {
-    submitted: "strong",
-    returned: "warn",
-    proof: "warn",
-    ready: "strong",
-    tower: "warn",
-    status: "quiet",
-    info: "quiet",
-  };
-
-  return map[type] || "quiet";
-}
-
-function ManagerNotificationsDropdown({ notifications, open, setOpen, onClear }) {
-  return (
-    <div className="mgr-notifications-shell">
-      <button
-        type="button"
-        className={`mgr-notifications-button ${open ? "is-open" : ""}`}
-        onClick={() => setOpen((value) => !value)}
-      >
-        Notifications
-        {notifications.length ? <span>{notifications.length}</span> : null}
-      </button>
-
-      {open ? (
-        <aside className="mgr-notifications-menu">
-          <div className="mgr-section-head">
-            <div>
-              <p className="mgr-kicker">Manager notifications</p>
-              <h2>Recent board activity.</h2>
-            </div>
-            {notifications.length ? (
-              <button type="button" className="mgr-secondary" onClick={onClear}>
-                Clear
-              </button>
-            ) : null}
-          </div>
-
-          <div className="mgr-notice-list">
-            {notifications.length ? notifications.map((notice) => (
-              <article key={notice.id} className={`mgr-notice mgr-notice-${notice.type}`}>
-                <div className="mgr-card-top">
-                  <ManagerBadge tone={managerNoticeTone(notice.type)}>{notice.type}</ManagerBadge>
-                  <small>{new Date(notice.createdAt).toLocaleTimeString()}</small>
-                </div>
-                <strong>{notice.title}</strong>
-                <p>{notice.body}</p>
-                {notice.target ? <small>{notice.target}</small> : null}
-              </article>
-            )) : (
-              <article className="mgr-empty">
-                <p className="mgr-kicker">Quiet</p>
-                <strong>No manager notifications yet.</strong>
-                <p>Manager submissions, owner returns, and response actions will appear here.</p>
-              </article>
-            )}
-          </div>
-        </aside>
-      ) : null}
-    </div>
-  );
-}
-
-function ManagerActivityTrail({ activity }) {
-  if (!activity.length) return null;
-
-  return (
-    <section className="mgr-panel mgr-activity-panel">
-      <div className="mgr-section-head">
-        <div>
-          <p className="mgr-kicker">Manager activity trail</p>
-          <h2>Recent manager-side actions.</h2>
-        </div>
-        <ManagerBadge tone="strong">{activity.length}</ManagerBadge>
-      </div>
-
-      <div className="mgr-activity-grid">
-        {activity.map((item) => (
-          <article key={item.id} className={`mgr-activity-card is-${item.type}`}>
-            <span>{item.type}</span>
-            <strong>{item.title}</strong>
-            <p>{item.body}</p>
-            {item.target ? <small>{item.target}</small> : null}
-            <small>{new Date(item.createdAt).toLocaleString()}</small>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function ManagerBadge({ children, tone = "quiet" }) {
   return <span className={`mgr-badge mgr-badge-${tone}`}>{children}</span>;
 }
@@ -327,9 +220,6 @@ export default function ManagerStandaloneWorkspace() {
   const [returnQueue, setReturnQueue] = useState([]);
   const [selectedReturnItem, setSelectedReturnItem] = useState(null);
   const [activeManagerFilter, setActiveManagerFilter] = useState("all");
-  const [managerNotificationsOpen, setManagerNotificationsOpen] = useState(false);
-  const [managerNotifications, setManagerNotifications] = useState([]);
-  const [managerActivity, setManagerActivity] = useState([]);
   const [managerResponse, setManagerResponse] = useState({
     proofStatus: "Ready for owner re-review",
     correctionStatus: "Corrected / explained",
@@ -356,16 +246,6 @@ export default function ManagerStandaloneWorkspace() {
   function refreshBridgeData() {
     setSubmissions(readManagerSubmissions());
     setReturnQueue(readManagerReturnQueue());
-  }
-
-  function pushManagerNotice(notice) {
-    setManagerNotifications((current) => [notice, ...current].slice(0, 12));
-    setManagerActivity((current) => [notice, ...current].slice(0, 12));
-  }
-
-  function clearManagerNotifications() {
-    setManagerNotifications([]);
-    setManagerNotificationsOpen(false);
   }
 
   useEffect(() => {
@@ -403,14 +283,6 @@ export default function ManagerStandaloneWorkspace() {
     saveManagerSubmission(item);
     refreshBridgeData();
 
-    pushManagerNotice(createManagerNotice({
-      type: item.tower ? "tower" : "submitted",
-      title: "Submitted to owner Review Desk",
-      body: `${item.title} was sent upward for owner review.`,
-      target: item.businessKey,
-    }));
-    setManagerNotificationsOpen(true);
-
     setForm((current) => ({
       ...current,
       person: "",
@@ -429,19 +301,6 @@ export default function ManagerStandaloneWorkspace() {
       managerUpdatedAt: new Date().toISOString(),
     });
     refreshBridgeData();
-
-    const type = String(status).toLowerCase().includes("proof")
-      ? "proof"
-      : String(status).toLowerCase().includes("ready")
-        ? "ready"
-        : "status";
-
-    pushManagerNotice(createManagerNotice({
-      type,
-      title: "Return item status updated",
-      body: `Manager marked a returned item as: ${status}.`,
-      target: id,
-    }));
   }
 
   function openReturnItem(item) {
@@ -466,31 +325,13 @@ export default function ManagerStandaloneWorkspace() {
   function sendReturnBackToOwner() {
     if (!selectedReturnItem) return;
 
-    const reReviewItem = createManagerReReviewSubmission(selectedReturnItem, managerResponse);
-
-    pushManagerNotice(createManagerNotice({
-      type: reReviewItem.tower ? "tower" : "ready",
-      title: "Sent back to owner",
-      body: `${reReviewItem.title} was returned to owner for re-review.`,
-      target: reReviewItem.businessKey,
-    }));
-
-    setManagerNotificationsOpen(true);
+    createManagerReReviewSubmission(selectedReturnItem, managerResponse);
     setSelectedReturnItem(null);
     refreshBridgeData();
   }
 
   return (
     <main className="manager-standalone-workspace">
-      <div className="mgr-corner-tools">
-        <ManagerNotificationsDropdown
-          notifications={managerNotifications}
-          open={managerNotificationsOpen}
-          setOpen={setManagerNotificationsOpen}
-          onClear={clearManagerNotifications}
-        />
-      </div>
-
       <section className="mgr-hero">
         <div>
           <p className="mgr-kicker">Manager board · The Teller</p>
@@ -503,12 +344,6 @@ export default function ManagerStandaloneWorkspace() {
             <ManagerBadge tone="strong">{submissions.length} submitted</ManagerBadge>
             <ManagerBadge tone="warn">{returnQueue.length} returned by owner</ManagerBadge>
             <ManagerBadge>Money-side only</ManagerBadge>
-            <ManagerNotificationsDropdown
-              notifications={managerNotifications}
-              open={managerNotificationsOpen}
-              setOpen={setManagerNotificationsOpen}
-              onClear={clearManagerNotifications}
-            />
           </div>
         </div>
       </section>
@@ -649,8 +484,6 @@ export default function ManagerStandaloneWorkspace() {
           </div>
         </article>
       </section>
-
-      <ManagerActivityTrail activity={managerActivity} />
 
       <section className="mgr-panel">
         <div className="mgr-section-head">

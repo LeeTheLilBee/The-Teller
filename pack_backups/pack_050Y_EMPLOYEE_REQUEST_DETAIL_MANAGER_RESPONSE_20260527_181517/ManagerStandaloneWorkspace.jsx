@@ -6,10 +6,6 @@ import {
   readManagerSubmissions,
   readEmployeeManagerQueue,
   updateEmployeeManagerItem,
-  createEmployeeResponseItem,
-  saveEmployeeResponseItem,
-  createTowerBackupItem,
-  saveTowerBackupItem,
   saveManagerSubmission,
   updateManagerReturnItem,
   createManagerReReviewSubmission,
@@ -329,8 +325,7 @@ function ManagerUnifiedWorkBoard({ workItems, activeFilter, onOpenReturn, onMark
 }
 
 
-
-function ManagerEmployeeRequestDock({ requests, onMark, onOpen }) {
+function ManagerEmployeeRequestDock({ requests, onMark }) {
   if (!requests.length) return null;
 
   return (
@@ -353,7 +348,6 @@ function ManagerEmployeeRequestDock({ requests, onMark, onOpen }) {
             </div>
             <strong>{item.title}</strong>
             <p>{item.body}</p>
-            {item.managerResponse ? <p className="mgr-employee-response-preview">Response: {item.managerResponse}</p> : null}
             <div className="mgr-work-meta">
               <small>{item.businessKey}</small>
               <small>{item.proofStatus}</small>
@@ -361,7 +355,6 @@ function ManagerEmployeeRequestDock({ requests, onMark, onOpen }) {
               <small>Tower-backed</small>
             </div>
             <div className="mgr-card-actions">
-              <button type="button" onClick={() => onOpen(item)}>Open details</button>
               <button type="button" onClick={() => onMark(item.id, "Manager acknowledged")}>Acknowledge</button>
               <button type="button" onClick={() => onMark(item.id, "Proof being reviewed")}>Review proof</button>
               <button type="button" onClick={() => onMark(item.id, "Ready for manager decision")}>Ready</button>
@@ -373,19 +366,10 @@ function ManagerEmployeeRequestDock({ requests, onMark, onOpen }) {
   );
 }
 
-
 export default function ManagerStandaloneWorkspace() {
   const [submissions, setSubmissions] = useState([]);
   const [returnQueue, setReturnQueue] = useState([]);
   const [employeeRequests, setEmployeeRequests] = useState([]);
-  const [selectedEmployeeRequest, setSelectedEmployeeRequest] = useState(null);
-  const [employeeResponseDraft, setEmployeeResponseDraft] = useState({
-    responseStatus: "Manager responded",
-    proofStatus: "Manager reviewed",
-    title: "",
-    body: "",
-    managerName: "Manager Portal",
-  });
   const [selectedReturnItem, setSelectedReturnItem] = useState(null);
   const [activeManagerFilter, setActiveManagerFilter] = useState("all");
   const [managerNotificationsOpen, setManagerNotificationsOpen] = useState(false);
@@ -483,65 +467,6 @@ export default function ManagerStandaloneWorkspace() {
       recommendation: "",
       towerSensitive: false,
     }));
-  }
-
-  function openEmployeeRequest(item) {
-    setSelectedEmployeeRequest(item);
-    setEmployeeResponseDraft({
-      responseStatus: item.managerStatus || "Manager responded",
-      proofStatus: item.proofStatus || "Manager reviewed",
-      title: `Response · ${item.title}`,
-      body: "",
-      managerName: "Manager Portal",
-    });
-  }
-
-  function updateEmployeeResponseDraft(key, value) {
-    setEmployeeResponseDraft((current) => ({
-      ...current,
-      [key]: value,
-    }));
-  }
-
-  function sendEmployeeResponse() {
-    if (!selectedEmployeeRequest) return;
-
-    const responseItem = createEmployeeResponseItem(selectedEmployeeRequest, employeeResponseDraft);
-    const towerBackup = createTowerBackupItem({
-      source: "manager_board",
-      action: "Manager responded to employee request",
-      target: responseItem.title,
-      summary: "Manager-to-employee response backed up to The Tower local handoff queue.",
-      payload: {
-        request: selectedEmployeeRequest,
-        response: responseItem,
-      },
-    });
-
-    saveEmployeeResponseItem(responseItem);
-    saveTowerBackupItem(towerBackup);
-
-    updateEmployeeManagerItem(selectedEmployeeRequest.id, {
-      managerStatus: employeeResponseDraft.responseStatus,
-      managerResponse: employeeResponseDraft.body,
-      proofStatus: employeeResponseDraft.proofStatus,
-      managerRespondedAt: new Date().toISOString(),
-      employeeResponseId: responseItem.id,
-      towerBackupId: towerBackup.id,
-    });
-
-    refreshBridgeData();
-
-    if (typeof pushManagerNotice === "function") {
-      pushManagerNotice(createManagerNotice({
-        type: employeeResponseDraft.responseStatus.toLowerCase().includes("proof") ? "proof" : "ready",
-        title: "Response sent to employee",
-        body: `${responseItem.title} was sent back to the employee and backed up to The Tower.`,
-        target: responseItem.id,
-      }));
-    }
-
-    setSelectedEmployeeRequest(null);
   }
 
   function markEmployeeRequest(id, status) {
@@ -654,7 +579,6 @@ export default function ManagerStandaloneWorkspace() {
       <ManagerEmployeeRequestDock
         requests={employeeRequests}
         onMark={markEmployeeRequest}
-        onOpen={openEmployeeRequest}
       />
 
       <ManagerFilterTabs
@@ -822,103 +746,6 @@ export default function ManagerStandaloneWorkspace() {
           )}
         </div>
       </section>
-      {selectedEmployeeRequest ? (
-        <div className="mgr-employee-detail-overlay" role="dialog" aria-modal="true">
-          <section className="mgr-employee-detail-modal">
-            <div className="mgr-section-head">
-              <div>
-                <p className="mgr-kicker">Employee request detail</p>
-                <h2>{selectedEmployeeRequest.title}</h2>
-                <p>{selectedEmployeeRequest.body}</p>
-              </div>
-              <button type="button" className="mgr-secondary" onClick={() => setSelectedEmployeeRequest(null)}>
-                Close
-              </button>
-            </div>
-
-            <div className="mgr-return-detail-grid">
-              <article>
-                <span>Employee</span>
-                <strong>{selectedEmployeeRequest.employeeName}</strong>
-              </article>
-              <article>
-                <span>Status</span>
-                <strong>{selectedEmployeeRequest.managerStatus}</strong>
-              </article>
-              <article>
-                <span>Proof</span>
-                <strong>{selectedEmployeeRequest.proofStatus}</strong>
-              </article>
-              <article>
-                <span>Tower</span>
-                <strong>{selectedEmployeeRequest.towerBackedUp ? "Backed up" : "Needs backup"}</strong>
-              </article>
-            </div>
-
-            <div className="mgr-response-form">
-              <label>
-                <span>Response status</span>
-                <select value={employeeResponseDraft.responseStatus} onChange={(event) => updateEmployeeResponseDraft("responseStatus", event.target.value)}>
-                  <option>Manager responded</option>
-                  <option>Need more proof</option>
-                  <option>Proof reviewed</option>
-                  <option>Ready for payroll review</option>
-                  <option>Resolved</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Proof status</span>
-                <select value={employeeResponseDraft.proofStatus} onChange={(event) => updateEmployeeResponseDraft("proofStatus", event.target.value)}>
-                  <option>Manager reviewed</option>
-                  <option>Proof accepted</option>
-                  <option>More proof needed</option>
-                  <option>No proof needed</option>
-                  <option>Sent upward</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Manager</span>
-                <input
-                  value={employeeResponseDraft.managerName}
-                  onChange={(event) => updateEmployeeResponseDraft("managerName", event.target.value)}
-                  placeholder="Manager Portal"
-                />
-              </label>
-
-              <label className="mgr-wide">
-                <span>Response title</span>
-                <input
-                  value={employeeResponseDraft.title}
-                  onChange={(event) => updateEmployeeResponseDraft("title", event.target.value)}
-                  placeholder="Response title"
-                />
-              </label>
-
-              <label className="mgr-wide">
-                <span>Response to employee</span>
-                <textarea
-                  value={employeeResponseDraft.body}
-                  onChange={(event) => updateEmployeeResponseDraft("body", event.target.value)}
-                  rows={5}
-                  placeholder="Write the response the employee should see..."
-                />
-              </label>
-            </div>
-
-            <div className="mgr-return-detail-actions">
-              <button type="button" className="mgr-primary" onClick={sendEmployeeResponse}>
-                Send response to employee + Tower backup
-              </button>
-              <button type="button" className="mgr-secondary" onClick={() => markEmployeeRequest(selectedEmployeeRequest.id, "Proof being reviewed")}>
-                Mark proof being reviewed
-              </button>
-            </div>
-          </section>
-        </div>
-      ) : null}
-
       {selectedReturnItem ? (
         <div className="mgr-return-detail-overlay" role="dialog" aria-modal="true">
           <section className="mgr-return-detail-modal">

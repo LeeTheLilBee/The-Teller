@@ -491,6 +491,20 @@
       ],
       "backup": "pack_backups/pack_050X_REPAIR_SIMPLIFY_EMPLOYEE_LANE_REMOVE_NAME_20260527_175014",
       "purpose": "Simplify employee portal to hours/pay card plus request form, remove employee name field, and reserve clock-in for The Tower."
+    },
+    "050Y_EMPLOYEE_REQUEST_DETAIL_MANAGER_RESPONSE": {
+      "name": "Employee Request Detail Manager Response Back To Employee",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:15:18.533040",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050Y_EMPLOYEE_REQUEST_DETAIL_MANAGER_RESPONSE_20260527_181517",
+      "purpose": "Add employee request detail popup on manager board, manager response back to employee, employee response queue, and Tower backup for manager responses."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

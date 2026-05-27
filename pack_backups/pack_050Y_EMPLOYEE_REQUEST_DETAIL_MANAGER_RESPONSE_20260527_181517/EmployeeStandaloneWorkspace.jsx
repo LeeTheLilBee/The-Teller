@@ -1,11 +1,10 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   createBridgeId,
   createTowerBackupItem,
   saveEmployeeManagerItem,
   saveTowerBackupItem,
-  readEmployeeResponseQueue,
 } from "./managerOwnerBridge";
 import "./employeeStandaloneWorkspace.css";
 
@@ -56,7 +55,6 @@ function createEmployeeRequest(form) {
 
 export default function EmployeeStandaloneWorkspace() {
   const [activity, setActivity] = useState([]);
-  const [managerResponses, setManagerResponses] = useState([]);
   const [form, setForm] = useState({
     requestType: "missing_punch",
     title: "",
@@ -64,30 +62,6 @@ export default function EmployeeStandaloneWorkspace() {
     proofStatus: "No proof attached yet",
     urgency: "Normal",
   });
-
-  function refreshEmployeeResponses() {
-    const responses = readEmployeeResponseQueue()
-      .filter((item) => item.employeeName === portalEmployee.name)
-      .slice(0, 10);
-
-    setManagerResponses(responses);
-  }
-
-  useEffect(() => {
-    refreshEmployeeResponses();
-
-    function handleBridgeUpdate() {
-      refreshEmployeeResponses();
-    }
-
-    window.addEventListener("the-teller-bridge-updated", handleBridgeUpdate);
-    window.addEventListener("storage", handleBridgeUpdate);
-
-    return () => {
-      window.removeEventListener("the-teller-bridge-updated", handleBridgeUpdate);
-      window.removeEventListener("storage", handleBridgeUpdate);
-    };
-  }, []);
 
   function updateForm(key, value) {
     setForm((current) => ({
@@ -264,30 +238,6 @@ export default function EmployeeStandaloneWorkspace() {
           </div>
         </aside>
       </section>
-
-      {managerResponses.length ? (
-        <section className="emp-activity-panel emp-manager-responses">
-          <div className="emp-section-head">
-            <div>
-              <p className="emp-kicker">Manager responses</p>
-              <h2>Replies from manager.</h2>
-            </div>
-            <EmployeeBadge tone="strong">{managerResponses.length}</EmployeeBadge>
-          </div>
-
-          <div className="emp-activity-grid">
-            {managerResponses.map((item) => (
-              <article key={item.id} className="emp-manager-response-card">
-                <span>{item.responseStatus}</span>
-                <strong>{item.title}</strong>
-                <p>{item.body}</p>
-                <small>Proof: {item.proofStatus}</small>
-                <small>Tower-backed: {item.towerBackedUp ? "Yes" : "No"}</small>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       {activity.length ? (
         <section className="emp-activity-panel">

@@ -306,28 +306,3 @@
     grid-column: auto;
   }
 }
-
-
-/* ================================
-   PACK 050Y — EMPLOYEE MANAGER RESPONSES
-   Shows manager replies back on the employee lane.
-   ================================ */
-
-.emp-manager-responses {
-  border-color: rgba(147,197,253,0.28);
-}
-
-.emp-manager-response-card {
-  border-color: rgba(147,197,253,0.32) !important;
-  background:
-    radial-gradient(circle at 92% 8%, rgba(147,197,253,0.12), transparent 34%),
-    rgba(255,255,255,0.07) !important;
-}
-
-.emp-manager-response-card small {
-  display: block;
-  margin-top: 8px;
-  color: #cbd7f5;
-  font-size: 11px;
-  font-weight: 800;
-}

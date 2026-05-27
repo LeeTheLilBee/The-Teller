@@ -162,38 +162,3 @@ export function createTowerBackupItem({ source = "unknown", action = "Recorded a
     deliveryMode: "local_handoff_until_tower_api",
   };
 }
-
-
-const EMPLOYEE_RESPONSE_QUEUE_KEY = "the_teller_employee_response_queue_v1";
-
-export function readEmployeeResponseQueue() {
-  if (typeof window === "undefined") return [];
-  return safeRead(EMPLOYEE_RESPONSE_QUEUE_KEY);
-}
-
-export function saveEmployeeResponseItem(item) {
-  if (typeof window === "undefined") return [];
-  const current = safeRead(EMPLOYEE_RESPONSE_QUEUE_KEY);
-  const next = [item, ...current].slice(0, 75);
-  safeWrite(EMPLOYEE_RESPONSE_QUEUE_KEY, next);
-  return next;
-}
-
-export function createEmployeeResponseItem(request, response) {
-  const id = createBridgeId("EMP-RESPONSE");
-  const createdAt = new Date().toISOString();
-
-  return {
-    id,
-    requestId: request.id,
-    employeeName: request.employeeName || "Employee",
-    businessKey: request.businessKey || "simpleepay",
-    title: response.title || `Manager response · ${request.title}`,
-    body: response.body || "Manager responded to your request.",
-    responseStatus: response.responseStatus || "Manager responded",
-    proofStatus: response.proofStatus || request.proofStatus || "Manager reviewed",
-    managerName: response.managerName || "Manager Portal",
-    towerBackedUp: true,
-    createdAt,
-  };
-}

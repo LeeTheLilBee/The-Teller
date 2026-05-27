@@ -570,6 +570,30 @@
       ],
       "backup": "pack_backups/pack_051A_REPAIR_FORCE_TOWER_ROUTE_BEFORE_DEV_LINKS_20260527_191339",
       "purpose": "Make teller_view=tower and tower_clearance=tower render TowerBackupWorkspace before dev/test links route can take over."
+    },
+    "051B_TOWER_REDIRECT_CLEARANCE_TOKEN_SIMULATION": {
+      "name": "Tower Redirect Clearance Token Simulation",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:29:40.983025",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051B_TOWER_REDIRECT_CLEARANCE_TOKEN_SIMULATION_20260527_192939",
+      "purpose": "Simulate real Tower redirect/clearance token flow from owner/manager dashboards into Tower Evidence."
+    },
+    "051B_REPAIR_OWNER_CLEARANCE_CANNOT_BE_REVOKED": {
+      "name": "Owner Tower Clearance Cannot Be Revoked",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:40:24.102909",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051B_REPAIR_OWNER_CLEARANCE_CANNOT_BE_REVOKED_20260527_194023",
+      "purpose": "Prevent owner-level Tower clearance from being revoked from local Tower Evidence UI while preserving revoke for non-owner local sessions."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

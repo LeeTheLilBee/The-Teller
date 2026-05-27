@@ -102,25 +102,8 @@ function clearTowerClearanceToken() {
   }
 }
 
-
-function isOwnerTowerClearance(token, accessRequest) {
-  const tokenLane = String(token?.sourceLane || "").toLowerCase();
-  const requestLane = String(accessRequest?.sourceLane || "").toLowerCase();
-  const requestedBy = String(token?.requestedBy || accessRequest?.requestedBy || "").toLowerCase();
-
-  return tokenLane === "owner" || requestLane === "owner" || requestedBy.includes("owner");
-}
-
 function getSoulaanaClearanceGuidance(accessRequest, token) {
   if (token) {
-    if (isOwnerTowerClearance(token, accessRequest)) {
-      return {
-        title: "Soulaana clearance read",
-        body: `Owner Tower clearance is active for ${token.requestedBy}. This is root authority and should not be revocable from a lower dashboard control.`,
-        next: "Review the evidence needed. Owner clearance remains locked until the real Tower authority system replaces this local simulation.",
-      };
-    }
-
     return {
       title: "Soulaana clearance read",
       body: `Tower clearance is active for ${token.requestedBy}. This should stay short-lived and specific to ${token.requestedAccess}.`,
@@ -366,15 +349,9 @@ export default function TowerBackupWorkspace() {
           <p>{towerClearanceToken?.reason || towerAccessRequest?.reason}</p>
           <small>Lane: {towerClearanceToken?.sourceLane || towerAccessRequest?.sourceLane}</small>
           <small>Expires: {towerClearanceToken?.expiresAt ? new Date(towerClearanceToken.expiresAt).toLocaleString() : "No active expiry"}</small>
-          {isOwnerTowerClearance(towerClearanceToken, towerAccessRequest) ? (
-            <div className="tower-owner-clearance-lock">
-              Owner clearance locked
-            </div>
-          ) : (
-            <button type="button" onClick={revokeTowerClearance}>
-              Revoke Tower clearance
-            </button>
-          )}
+          <button type="button" onClick={revokeTowerClearance}>
+            Revoke Tower clearance
+          </button>
         </div>
 
         <div className="tower-soulaana-clearance">

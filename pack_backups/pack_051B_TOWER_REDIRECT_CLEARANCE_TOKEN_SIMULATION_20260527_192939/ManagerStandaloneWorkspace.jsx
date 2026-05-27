@@ -417,21 +417,7 @@ export default function ManagerStandaloneWorkspace() {
 
   function openTowerEvidence() {
     try {
-      const now = new Date();
-      const request = {
-        id: `TOWER-ACCESS-${Math.floor(100000 + Math.random() * 900000)}`,
-        sourceApp: "The Teller",
-        sourceLane: "manager",
-        requestedBy: "Manager Dashboard",
-        requestedAccess: "Tower Evidence Viewer",
-        reason: "Open Teller backup/evidence queue from manager dashboard.",
-        createdAt: now.toISOString(),
-        status: "Pending Tower clearance",
-      };
-
       window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
-      window.sessionStorage.removeItem("the_teller_tower_clearance_token_v1");
-      window.sessionStorage.setItem("the_teller_tower_access_request_v1", JSON.stringify(request));
     } catch {
       // session storage is optional
     }

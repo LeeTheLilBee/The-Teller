@@ -701,27 +701,3 @@
     grid-template-columns: 1fr;
   }
 }
-
-
-/* ================================
-   PACK 051B REPAIR — OWNER CLEARANCE LOCK
-   Owner Tower clearance cannot be revoked from the local viewer.
-   ================================ */
-
-.tower-owner-clearance-lock {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  border: 1px solid rgba(252,211,77,0.38);
-  background:
-    radial-gradient(circle at 85% 10%, rgba(252,211,77,0.18), transparent 38%),
-    rgba(252,211,77,0.10);
-  color: #fde68a;
-  border-radius: 999px;
-  padding: 10px 12px;
-  font-size: 10px;
-  font-weight: 950;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top: 12px;
-}

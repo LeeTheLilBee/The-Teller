@@ -548,6 +548,28 @@
       ],
       "backup": "pack_backups/pack_050Z_REPAIR_V3_FORCE_TOWER_BUTTON_ROUTE_20260527_184259",
       "purpose": "Force owner/manager Tower Evidence button to open teller_view=tower and ensure App renders TowerBackupWorkspace for tower route."
+    },
+    "051A_FORMAL_TOWER_HANDOFF_PACKETS_SOULAANA": {
+      "name": "Formal Tower Handoff Packets Soulaana",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:04:30.872669",
+      "files_patched": [
+        "src/teller/towerBackupPlugin.js",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051A_FORMAL_TOWER_HANDOFF_PACKETS_SOULAANA_20260527_190429",
+      "purpose": "Add formal Tower handoff packets and Soulaana plain-language evidence guidance to Tower Backup Viewer."
+    },
+    "051A_REPAIR_FORCE_TOWER_ROUTE_BEFORE_DEV_LINKS": {
+      "name": "Force Tower Route Before Dev Links",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:13:40.724279",
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_051A_REPAIR_FORCE_TOWER_ROUTE_BEFORE_DEV_LINKS_20260527_191339",
+      "purpose": "Make teller_view=tower and tower_clearance=tower render TowerBackupWorkspace before dev/test links route can take over."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

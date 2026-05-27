@@ -5,10 +5,6 @@ import {
   getTowerBackupItems,
   getTowerBackupSummary,
   markTowerBackupItemReviewed,
-  getFormalTowerHandoffPackets,
-  updateFormalTowerHandoffPacket,
-  getSoulaanaTowerGuidance,
-  TOWER_HANDOFF_STATUSES,
 } from "./towerBackupPlugin";
 import "./towerBackupWorkspace.css";
 
@@ -104,7 +100,6 @@ export default function TowerBackupWorkspace() {
     }
   });
   const [items, setItems] = useState([]);
-  const [handoffPackets, setHandoffPackets] = useState([]);
   const [summary, setSummary] = useState(getTowerBackupSummary());
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedItem, setSelectedItem] = useState(null);
@@ -112,7 +107,6 @@ export default function TowerBackupWorkspace() {
 
   function refreshTowerItems() {
     setItems(getTowerBackupItems());
-    setHandoffPackets(getFormalTowerHandoffPackets());
     setSummary(getTowerBackupSummary());
   }
 
@@ -149,28 +143,9 @@ export default function TowerBackupWorkspace() {
     [items, activeFilter]
   );
 
-  const packetCounts = {
-    total: handoffPackets.length,
-    pending: handoffPackets.filter((packet) => packet.packetStatus === TOWER_HANDOFF_STATUSES.PENDING).length,
-    ready: handoffPackets.filter((packet) => packet.packetStatus === TOWER_HANDOFF_STATUSES.READY).length,
-    needsInfo: handoffPackets.filter((packet) => packet.packetStatus === TOWER_HANDOFF_STATUSES.NEEDS_INFO).length,
-    reviewed: handoffPackets.filter((packet) => packet.packetStatus === TOWER_HANDOFF_STATUSES.REVIEWED).length,
-    denied: handoffPackets.filter((packet) => packet.packetStatus === TOWER_HANDOFF_STATUSES.DENIED).length,
-  };
-
   function openItem(item) {
     setSelectedItem(item);
     setPluginNotes(item.pluginNotes || "");
-  }
-
-  function updatePacketStatus(packetId, packetStatus, notes = "") {
-    updateFormalTowerHandoffPacket(packetId, {
-      packetStatus,
-      notes,
-      reviewedBy: "Tower Backup Viewer",
-    });
-
-    refreshTowerItems();
   }
 
   function markReviewed() {
@@ -252,100 +227,6 @@ export default function TowerBackupWorkspace() {
               </button>
             );
           })}
-        </div>
-      </section>
-
-      <section className="tower-soulaana-panel">
-        <div>
-          <p className="tower-kicker">Soulaana · Tower guidance</p>
-          <h2>Evidence needs a plain-language brain.</h2>
-          <p>
-            Soulaana reads the handoff packets in human language: what it is, why it matters,
-            whether it needs more proof, and what the Tower should do next.
-          </p>
-        </div>
-
-        <div className="tower-soulaana-stats">
-          <article>
-            <span>Packets</span>
-            <strong>{packetCounts.total}</strong>
-          </article>
-          <article>
-            <span>Ready</span>
-            <strong>{packetCounts.ready}</strong>
-          </article>
-          <article>
-            <span>Needs info</span>
-            <strong>{packetCounts.needsInfo}</strong>
-          </article>
-          <article>
-            <span>Blocked</span>
-            <strong>{packetCounts.denied}</strong>
-          </article>
-        </div>
-      </section>
-
-      <section className="tower-handoff-packets">
-        <div className="tower-section-head">
-          <div>
-            <p className="tower-kicker">Formal Tower handoff packets</p>
-            <h2>Prepared evidence packets for the future Tower API.</h2>
-            <p>These are structured from the raw local backups below.</p>
-          </div>
-          <TowerBadge tone="strong">{handoffPackets.length} packets</TowerBadge>
-        </div>
-
-        <div className="tower-packet-grid">
-          {handoffPackets.length ? handoffPackets.map((packet) => {
-            const guidance = getSoulaanaTowerGuidance(packet);
-
-            return (
-              <article key={packet.packetId} className={`tower-packet-card risk-${String(packet.riskLevel || "low").toLowerCase()}`}>
-                <div className="tower-card-top">
-                  <span>{packet.evidenceType}</span>
-                  <small>{packet.packetStatus}</small>
-                </div>
-
-                <strong>{packet.target}</strong>
-                <p>{packet.summary}</p>
-
-                <div className="tower-packet-facts">
-                  <small>{packet.packetId}</small>
-                  <small>Risk: {packet.riskLevel}</small>
-                  <small>Action: {packet.actionNeeded}</small>
-                  <small>Lane: {packet.sourceLane}</small>
-                </div>
-
-                <div className="tower-soulaana-card">
-                  <span>Soulaana says</span>
-                  <p>{guidance.plainSummary}</p>
-                  <p>{guidance.riskRead}</p>
-                  <strong>{guidance.nextStep}</strong>
-                </div>
-
-                <div className="tower-packet-actions">
-                  <button type="button" onClick={() => updatePacketStatus(packet.packetId, TOWER_HANDOFF_STATUSES.READY, "Marked ready for future Tower API.")}>
-                    Ready for Tower API
-                  </button>
-                  <button type="button" onClick={() => updatePacketStatus(packet.packetId, TOWER_HANDOFF_STATUSES.NEEDS_INFO, "Needs more information before Tower handoff.")}>
-                    Needs more info
-                  </button>
-                  <button type="button" onClick={() => updatePacketStatus(packet.packetId, TOWER_HANDOFF_STATUSES.REVIEWED, "Reviewed locally inside Tower Backup Viewer.")}>
-                    Reviewed locally
-                  </button>
-                  <button type="button" onClick={() => updatePacketStatus(packet.packetId, TOWER_HANDOFF_STATUSES.DENIED, "Denied or blocked locally.")}>
-                    Deny / block
-                  </button>
-                </div>
-              </article>
-            );
-          }) : (
-            <article className="tower-empty-card">
-              <p className="tower-kicker">No packets yet</p>
-              <strong>Create employee/manager activity first.</strong>
-              <p>Formal packets appear once Tower backup records exist.</p>
-            </article>
-          )}
         </div>
       </section>
 

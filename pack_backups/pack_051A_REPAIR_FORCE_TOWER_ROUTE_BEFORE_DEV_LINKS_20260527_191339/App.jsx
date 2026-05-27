@@ -106,16 +106,6 @@ function OwnerComingSoon() {
 }
 
 export default function App() {
-  // PACK_051A_FORCE_TOWER_ROUTE_GUARD
-  const __towerRouteParams = new URLSearchParams(window.location.search);
-  const __towerRouteView = __towerRouteParams.get("teller_view") || "";
-  const __towerRouteClearance = __towerRouteParams.get("tower_clearance") || "";
-
-  if (__towerRouteView === "tower" || __towerRouteClearance === "tower") {
-    return <TowerBackupWorkspace />;
-  }
-
-
   const __tellerView = new URLSearchParams(window.location.search).get("teller_view") || "";
 
   const clearance = readTowerClearance();
@@ -137,7 +127,8 @@ export default function App() {
           <section className="teller-screen-card">
             {clearance === "employee" ? <EmployeeDocumentVaultPanel /> : null}
             {clearance === "tower" || __tellerView === "tower" ? <TowerBackupWorkspace /> : null}
-{clearance === "employee" || __tellerView === "employee" ? <EmployeeStandaloneWorkspace /> : null}
+      {(__tellerView === "tower" || clearance === "tower") ? <TowerBackupWorkspace /> : null}
+      {clearance === "employee" || __tellerView === "employee" ? <EmployeeStandaloneWorkspace /> : null}
       {clearance === "manager" || __tellerView === "manager" ? <ManagerStandaloneWorkspace /> : null}
             {clearance === "owner" ? <OwnerMoneyWorkspace /> : null}
           </section>

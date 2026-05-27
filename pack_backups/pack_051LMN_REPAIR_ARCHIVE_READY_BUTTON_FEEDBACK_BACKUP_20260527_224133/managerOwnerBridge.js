@@ -355,27 +355,11 @@ export function createFinalResolutionPacket(item, resolution = {}) {
 
 export function updateFinalResolutionPacket(id, patch = {}) {
   if (typeof window === "undefined") return [];
-
   const current = readFinalResolutionPackets();
   const next = current.map((packet) =>
-    packet.id === id
-      ? {
-          ...packet,
-          ...patch,
-          updatedAt: new Date().toISOString(),
-        }
-      : packet
+    packet.id === id ? { ...packet, ...patch, updatedAt: new Date().toISOString() } : packet
   );
-
   safeWrite("the_teller_final_resolution_packets_v1", next);
-
-  try {
-    window.dispatchEvent(new CustomEvent("the-teller-receipts-updated", { detail: { id, patch } }));
-    window.dispatchEvent(new CustomEvent("the-teller-bridge-updated", { detail: { key: "the_teller_final_resolution_packets_v1" } }));
-  } catch {
-    // events are optional
-  }
-
   return next;
 }
 

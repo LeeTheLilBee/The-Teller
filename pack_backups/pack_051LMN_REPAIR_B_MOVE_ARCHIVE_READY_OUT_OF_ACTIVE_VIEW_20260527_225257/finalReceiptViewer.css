@@ -1,0 +1,301 @@
+
+.final-receipt-viewer {
+  border: 1px solid rgba(255,255,255,0.14);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(196,181,253,0.12), transparent 34%),
+    linear-gradient(145deg, rgba(15,23,42,0.82), rgba(30,41,59,0.78));
+  box-shadow: 0 24px 80px rgba(0,0,0,0.24);
+  border-radius: 34px;
+  padding: clamp(18px, 3vw, 30px);
+  margin: 22px;
+  color: #f8fbff;
+}
+
+.final-receipt-viewer-employee {
+  margin: 22px 0;
+}
+
+.receipt-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.receipt-kicker {
+  margin: 0;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.receipt-head h2 {
+  margin: 8px 0;
+  font-size: clamp(34px, 6vw, 74px);
+  line-height: 0.9;
+  letter-spacing: -0.08em;
+}
+
+.receipt-head p,
+.receipt-card p,
+.receipt-empty-card p,
+.receipt-source-box p {
+  color: #cbd5e1;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.receipt-badge-row,
+.receipt-filter-row,
+.receipt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.receipt-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.075);
+  color: #cbd5e1;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.receipt-badge-strong {
+  background: #93c5fd;
+  color: #020617;
+  border-color: transparent;
+}
+
+.receipt-badge-ready {
+  background: #fcd34d;
+  color: #160e07;
+  border-color: transparent;
+}
+
+.receipt-filter-row {
+  margin-top: 18px;
+}
+
+.receipt-filter-row button,
+.receipt-actions button,
+.receipt-secondary {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.075);
+  color: #f8fbff;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 9px 10px;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.receipt-filter-row button.is-active,
+.receipt-actions button:first-child {
+  background: #93c5fd;
+  color: #020617;
+  border-color: transparent;
+}
+
+.receipt-grid,
+.receipt-detail-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.receipt-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.receipt-detail-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.receipt-card,
+.receipt-empty-card,
+.receipt-detail-grid article,
+.receipt-source-box {
+  border: 1px solid rgba(255,255,255,0.13);
+  background: rgba(255,255,255,0.07);
+  border-radius: 24px;
+  padding: 16px;
+}
+
+.receipt-card.receipt-ready {
+  border-color: rgba(252,211,77,0.38);
+}
+
+.receipt-card.receipt-pending {
+  border-color: rgba(147,197,253,0.28);
+}
+
+.receipt-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.receipt-card-top span,
+.receipt-card-top small,
+.receipt-facts small,
+.receipt-detail-grid span,
+.receipt-empty-card span {
+  color: #93c5fd;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+}
+
+.receipt-card strong,
+.receipt-empty-card strong,
+.receipt-detail-grid strong {
+  display: block;
+  color: #f8fbff;
+  font-size: 21px;
+  line-height: 1.05;
+  margin-top: 8px;
+}
+
+.receipt-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.receipt-facts small {
+  border: 1px solid rgba(255,255,255,0.11);
+  background: rgba(255,255,255,0.055);
+  border-radius: 999px;
+  color: #cbd5e1;
+  padding: 6px 8px;
+}
+
+.receipt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(2, 6, 23, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.receipt-modal {
+  width: min(1100px, 100%);
+  max-height: calc(100vh - 44px);
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,0.16);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(196,181,253,0.16), transparent 34%),
+    linear-gradient(145deg, rgba(31,45,82,0.96), rgba(20,29,55,0.94));
+  box-shadow: 0 40px 120px rgba(0,0,0,0.55);
+  border-radius: 34px;
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.receipt-source-box {
+  margin-top: 14px;
+}
+
+.receipt-source-box pre {
+  color: #dbeafe;
+  white-space: pre-wrap;
+  max-height: 280px;
+  overflow: auto;
+  font-size: 12px;
+}
+
+@media (max-width: 1080px) {
+  .receipt-grid,
+  .receipt-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ================================
+   PACK 051L-M-N REPAIR — ARCHIVE READY FEEDBACK
+   Makes Mark Archive Ready visibly update card/modal state.
+   ================================ */
+
+.receipt-card.is-archive-ready {
+  border-color: rgba(252,211,77,0.55);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(252,211,77,0.16), transparent 34%),
+    rgba(255,255,255,0.085);
+}
+
+.receipt-card.is-flashing {
+  animation: receiptArchivePulse 900ms ease-in-out 0s 2;
+}
+
+@keyframes receiptArchivePulse {
+  0% {
+    box-shadow: 0 0 0 rgba(252,211,77,0);
+    transform: translateY(0);
+  }
+  45% {
+    box-shadow: 0 0 34px rgba(252,211,77,0.25);
+    transform: translateY(-2px);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(252,211,77,0);
+    transform: translateY(0);
+  }
+}
+
+.receipt-archive-ready-banner,
+.receipt-archive-flash {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 6px 0 8px;
+}
+
+.receipt-archive-ready-banner {
+  border: 1px solid rgba(252,211,77,0.42);
+  background: rgba(252,211,77,0.14);
+  color: #fde68a;
+}
+
+.receipt-archive-flash {
+  border: 1px solid rgba(147,197,253,0.42);
+  background: rgba(147,197,253,0.16);
+  color: #dbeafe;
+}
+
+.receipt-actions button.is-complete {
+  background: #fcd34d;
+  color: #160e07;
+  border-color: transparent;
+}
+
+.receipt-detail-grid small {
+  display: block;
+  margin-top: 7px;
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 750;
+}

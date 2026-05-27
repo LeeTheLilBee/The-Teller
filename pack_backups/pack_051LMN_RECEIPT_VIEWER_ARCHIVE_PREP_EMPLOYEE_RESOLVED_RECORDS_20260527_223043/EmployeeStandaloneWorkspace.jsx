@@ -10,7 +10,6 @@ import {
 import "./employeeStandaloneWorkspace.css";
 
 
-import FinalReceiptViewer from "./FinalReceiptViewer.jsx";
 const EMPLOYEE_SEEN_MANAGER_RESPONSES_KEY = "the_teller_employee_seen_manager_responses_v1";
 
 function readSeenEmployeeResponseIds() {
@@ -545,9 +544,6 @@ export default function EmployeeStandaloneWorkspace() {
           </div>
         </section>
       ) : null}
-      
-      <FinalReceiptViewer mode="employee" employeeName={portalEmployee.name} />
-
       {selectedManagerResponse ? (
         <div className="emp-response-detail-overlay" role="dialog" aria-modal="true">
           <section className="emp-response-detail-modal">

@@ -704,6 +704,68 @@
       ],
       "backup": "pack_backups/pack_051IJK_V3_MANAGER_LANES_OWNER_ESCALATION_FINAL_RECEIPTS_20260527_220248",
       "purpose": "Add manager request lanes, owner escalation queue, and final resolution receipt packets after repairing missing exports."
+    },
+    "051LMN_RECEIPT_VIEWER_ARCHIVE_PREP_EMPLOYEE_RESOLVED_RECORDS": {
+      "name": "Receipt Viewer Archive Prep Employee Resolved Records",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:30:44.463089",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "files_written": [
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css"
+      ],
+      "backup": "pack_backups/pack_051LMN_RECEIPT_VIEWER_ARCHIVE_PREP_EMPLOYEE_RESOLVED_RECORDS_20260527_223043",
+      "purpose": "Add final receipt packet viewer, owner archive prep dock, and employee resolved records view."
+    },
+    "051LMN_REPAIR_ARCHIVE_READY_BUTTON_FEEDBACK_BACKUP": {
+      "name": "Archive Ready Button Feedback Backup",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:41:34.852047",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_ARCHIVE_READY_BUTTON_FEEDBACK_BACKUP_20260527_224133",
+      "purpose": "Make Mark Archive Vault Ready visibly update receipt UI and create a Tower backup record."
+    },
+    "051LMN_REPAIR_B_MOVE_ARCHIVE_READY_OUT_OF_ACTIVE_VIEW": {
+      "name": "Move Archive Ready Receipts Out Of Active View",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:52:58.305387",
+      "files_patched": [
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_B_MOVE_ARCHIVE_READY_OUT_OF_ACTIVE_VIEW_20260527_225257",
+      "purpose": "Move archive-ready receipts out of active/default receipt list and into Archive Ready filter/drawer."
+    },
+    "051LMN_REPAIR_C_CLEAN_OWNER_ACTIVE_QUEUES_AFTER_COMPLETION": {
+      "name": "Clean Owner Active Queues After Completion",
+      "status": "complete",
+      "timestamp": "2026-05-27T23:00:38.935089",
+      "files_patched": [
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/FinalReceiptViewer.jsx"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_C_CLEAN_OWNER_ACTIVE_QUEUES_AFTER_COMPLETION_20260527_230037",
+      "purpose": "Move completed owner escalations and archive-ready receipts out of active owner work queues."
+    },
+    "051LMN_REPAIR_D_HIDE_OWNER_WORK_INTERFACES_WHEN_EMPTY": {
+      "name": "Hide Owner Work Interfaces When Empty",
+      "status": "complete",
+      "timestamp": "2026-05-27T23:07:06.287520",
+      "files_patched": [
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/FinalReceiptViewer.jsx"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_D_HIDE_OWNER_WORK_INTERFACES_WHEN_EMPTY_20260527_230705",
+      "purpose": "Hide owner oversight and receipt/archive-prep interfaces when no active work remains, then reappear when new work exists."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

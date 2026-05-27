@@ -645,13 +645,3 @@
     grid-template-columns: 1fr;
   }
 }
-
-
-/* ================================
-   PACK 051N — EMPLOYEE RESOLVED RECORDS INTEGRATION
-   Keeps FinalReceiptViewer aligned inside employee lane.
-   ================================ */
-
-.final-receipt-viewer-employee {
-  border-color: rgba(147,197,253,0.26);
-}

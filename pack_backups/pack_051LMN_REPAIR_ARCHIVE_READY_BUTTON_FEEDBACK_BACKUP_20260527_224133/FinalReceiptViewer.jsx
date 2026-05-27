@@ -1,0 +1,223 @@
+
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  getFinalReceiptArchiveStatus,
+  readFinalResolutionPackets,
+  updateFinalResolutionPacket,
+} from "./managerOwnerBridge";
+import "./finalReceiptViewer.css";
+
+function ReceiptBadge({ children, tone = "quiet" }) {
+  return <span className={`receipt-badge receipt-badge-${tone}`}>{children}</span>;
+}
+
+function receiptMatches(packet, filter) {
+  if (filter === "all") return true;
+
+  const status = String(packet.resolutionStatus || packet.title || "").toLowerCase();
+
+  if (filter === "approved") return status.includes("approved");
+  if (filter === "rejected") return status.includes("rejected");
+  if (filter === "returned") return status.includes("returned");
+  if (filter === "resolved") return status.includes("resolved");
+  if (filter === "archive") return Boolean(packet.archiveReady);
+
+  return true;
+}
+
+export default function FinalReceiptViewer({ mode = "owner", employeeName = "" }) {
+  const [packets, setPackets] = useState([]);
+  const [filter, setFilter] = useState("all");
+  const [selectedPacket, setSelectedPacket] = useState(null);
+
+  function refresh() {
+    setPackets(readFinalResolutionPackets());
+  }
+
+  useEffect(() => {
+    refresh();
+
+    function handleUpdate() {
+      refresh();
+    }
+
+    window.addEventListener("the-teller-bridge-updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+
+    return () => {
+      window.removeEventListener("the-teller-bridge-updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
+  const visiblePackets = useMemo(() => {
+    let next = packets;
+
+    if (mode === "employee" && employeeName) {
+      next = next.filter((packet) => packet.employeeName === employeeName);
+    }
+
+    return next.filter((packet) => receiptMatches(packet, filter));
+  }, [packets, filter, mode, employeeName]);
+
+  const counts = {
+    total: visiblePackets.length,
+    archiveReady: visiblePackets.filter((packet) => packet.archiveReady).length,
+    towerBacked: visiblePackets.filter((packet) => packet.towerBackedUp).length,
+  };
+
+  function markArchiveReady(packet) {
+    updateFinalResolutionPacket(packet.id, {
+      archiveReady: true,
+      archiveReadyAt: new Date().toISOString(),
+      archiveStatus: "Archive Vault ready",
+    });
+
+    refresh();
+
+    const updated = readFinalResolutionPackets().find((item) => item.id === packet.id);
+    if (updated) setSelectedPacket(updated);
+  }
+
+  const filters = [
+    ["all", "All"],
+    ["approved", "Approved"],
+    ["rejected", "Rejected"],
+    ["returned", "Returned"],
+    ["resolved", "Resolved"],
+    ["archive", "Archive Ready"],
+  ];
+
+  return (
+    <section className={`final-receipt-viewer final-receipt-viewer-${mode}`}>
+      <div className="receipt-head">
+        <div>
+          <p className="receipt-kicker">
+            {mode === "employee" ? "Resolved records" : "Final receipt packets"}
+          </p>
+          <h2>{mode === "employee" ? "Your resolved decisions." : "Receipt / Archive Prep Dock."}</h2>
+          <p>
+            {mode === "employee"
+              ? "Resolved manager and owner decisions appear here as receipt-style records."
+              : "Final packets collect the owner decision, source request, Tower backup state, and Archive Vault readiness."}
+          </p>
+        </div>
+
+        <div className="receipt-badge-row">
+          <ReceiptBadge tone="strong">{counts.total} visible</ReceiptBadge>
+          <ReceiptBadge tone="ready">{counts.archiveReady} archive ready</ReceiptBadge>
+          <ReceiptBadge>{counts.towerBacked} Tower-backed</ReceiptBadge>
+        </div>
+      </div>
+
+      <div className="receipt-filter-row">
+        {filters.map(([key, label]) => (
+          <button
+            key={key}
+            type="button"
+            className={filter === key ? "is-active" : ""}
+            onClick={() => setFilter(key)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="receipt-grid">
+        {visiblePackets.length ? visiblePackets.map((packet) => {
+          const archive = getFinalReceiptArchiveStatus(packet);
+
+          return (
+            <article key={packet.id} className={`receipt-card receipt-${archive.tone}`}>
+              <div className="receipt-card-top">
+                <span>{packet.employeeName}</span>
+                <small>{packet.resolutionStatus}</small>
+              </div>
+
+              <strong>{packet.title}</strong>
+              <p>{packet.body}</p>
+
+              <div className="receipt-facts">
+                <small>{packet.id}</small>
+                <small>{packet.businessKey}</small>
+                <small>{packet.towerBackedUp ? "Tower-backed" : "Needs Tower backup"}</small>
+                <small>{archive.status}</small>
+              </div>
+
+              <div className="receipt-actions">
+                <button type="button" onClick={() => setSelectedPacket(packet)}>
+                  Open receipt
+                </button>
+                {mode !== "employee" ? (
+                  <button type="button" onClick={() => markArchiveReady(packet)}>
+                    Mark Archive Ready
+                  </button>
+                ) : null}
+              </div>
+            </article>
+          );
+        }) : (
+          <article className="receipt-empty-card">
+            <span>Clear</span>
+            <strong>No final receipts yet.</strong>
+            <p>Receipts appear after owner decisions or resolved escalations.</p>
+          </article>
+        )}
+      </div>
+
+      {selectedPacket ? (
+        <div className="receipt-overlay" role="dialog" aria-modal="true">
+          <section className="receipt-modal">
+            <div className="receipt-head">
+              <div>
+                <p className="receipt-kicker">Receipt detail</p>
+                <h2>{selectedPacket.title}</h2>
+                <p>{selectedPacket.body}</p>
+              </div>
+              <button type="button" className="receipt-secondary" onClick={() => setSelectedPacket(null)}>
+                Close
+              </button>
+            </div>
+
+            <div className="receipt-detail-grid">
+              <article>
+                <span>Employee</span>
+                <strong>{selectedPacket.employeeName}</strong>
+              </article>
+              <article>
+                <span>Status</span>
+                <strong>{selectedPacket.resolutionStatus}</strong>
+              </article>
+              <article>
+                <span>Business</span>
+                <strong>{selectedPacket.businessKey}</strong>
+              </article>
+              <article>
+                <span>Archive</span>
+                <strong>{getFinalReceiptArchiveStatus(selectedPacket).status}</strong>
+              </article>
+            </div>
+
+            <section className="receipt-source-box">
+              <p className="receipt-kicker">Owner note</p>
+              <p>{selectedPacket.ownerNote || selectedPacket.body}</p>
+            </section>
+
+            <section className="receipt-source-box">
+              <p className="receipt-kicker">Packet payload preview</p>
+              <pre>{JSON.stringify(selectedPacket.payload || {}, null, 2)}</pre>
+            </section>
+
+            {mode !== "employee" ? (
+              <div className="receipt-actions">
+                <button type="button" onClick={() => markArchiveReady(selectedPacket)}>
+                  Mark Archive Vault Ready
+                </button>
+              </div>
+            ) : null}
+          </section>
+        </div>
+      ) : null}
+    </section>
+  );
+}

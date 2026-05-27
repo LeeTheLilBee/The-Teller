@@ -112,13 +112,6 @@ export default function OwnerEscalationDock() {
   const activeItems = items.filter((item) => isActiveOwnerEscalation(item));
   const completedItems = items.filter((item) => !isActiveOwnerEscalation(item));
 
-  // PACK_051LMN_HIDE_EMPTY_OWNER_ESCALATION_DOCK
-  // Owner oversight is an active-work queue. If there is nothing active,
-  // the whole dock disappears until a manager sends something upward again.
-  if (!activeItems.length) {
-    return null;
-  }
-
   return (
     <section className="owner-escalation-dock">
       <div className="owner-dock-head">

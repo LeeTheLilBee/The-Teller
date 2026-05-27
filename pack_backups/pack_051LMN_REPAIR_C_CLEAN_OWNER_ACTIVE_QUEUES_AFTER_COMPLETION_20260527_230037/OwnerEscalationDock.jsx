@@ -94,30 +94,12 @@ export default function OwnerEscalationDock() {
     refresh();
   }
 
-  function isActiveOwnerEscalation(item) {
+  const activeItems = items.filter((item) => {
     const status = String(item.ownerStatus || "").toLowerCase();
+    return !status.includes("resolved") && !status.includes("approved") && !status.includes("rejected");
+  });
 
-    if (!status || status.includes("needs owner review")) return true;
-
-    return !(
-      status.includes("resolved") ||
-      status.includes("approved") ||
-      status.includes("rejected") ||
-      status.includes("returned") ||
-      status.includes("closed") ||
-      status.includes("complete")
-    );
-  }
-
-  const activeItems = items.filter((item) => isActiveOwnerEscalation(item));
-  const completedItems = items.filter((item) => !isActiveOwnerEscalation(item));
-
-  // PACK_051LMN_HIDE_EMPTY_OWNER_ESCALATION_DOCK
-  // Owner oversight is an active-work queue. If there is nothing active,
-  // the whole dock disappears until a manager sends something upward again.
-  if (!activeItems.length) {
-    return null;
-  }
+  const completedItems = items.filter((item) => !activeItems.includes(item));
 
   return (
     <section className="owner-escalation-dock">
@@ -172,7 +154,7 @@ export default function OwnerEscalationDock() {
 
       {completedItems.length ? (
         <details className="owner-completed-escalations">
-          <summary>Completed / returned owner decisions ({completedItems.length})</summary>
+          <summary>Completed owner decisions ({completedItems.length})</summary>
           <div className="owner-completed-grid">
             {completedItems.slice(0, 8).map((item) => (
               <article key={item.id}>

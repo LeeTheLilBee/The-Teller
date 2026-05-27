@@ -14,7 +14,6 @@ import "./ownerMoneyWorkspace.css";
 
 import { saveTowerAccessRequest } from "./towerBackupPlugin";
 import OwnerEscalationDock from "./OwnerEscalationDock.jsx";
-import FinalReceiptViewer from "./FinalReceiptViewer.jsx";
 function statusLabel(status = "") {
   const map = {
     needs_review: "Needs review",
@@ -2442,7 +2441,6 @@ export default function OwnerMoneyWorkspace() {
       }}
     >
       <OwnerEscalationDock />
-      <FinalReceiptViewer mode="owner" />
 
       <div className="fb-tower-evidence-entry">
         <button type="button" onClick={openTowerEvidence}>

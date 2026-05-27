@@ -6,7 +6,6 @@ import {
   readManagerSubmissions,
   saveManagerSubmission,
   updateManagerReturnItem,
-  createManagerReReviewSubmission,
 } from "./managerOwnerBridge";
 import "./managerStandaloneWorkspace.css";
 
@@ -66,15 +65,6 @@ function ManagerBadge({ children, tone = "quiet" }) {
 export default function ManagerStandaloneWorkspace() {
   const [submissions, setSubmissions] = useState([]);
   const [returnQueue, setReturnQueue] = useState([]);
-  const [selectedReturnItem, setSelectedReturnItem] = useState(null);
-  const [managerResponse, setManagerResponse] = useState({
-    proofStatus: "Ready for owner re-review",
-    correctionStatus: "Corrected / explained",
-    risk: "Medium",
-    recommendation: "",
-    managerResponse: "",
-    towerSensitive: false,
-  });
   const [form, setForm] = useState({
     businessKey: "simpleepay",
     issueType: "clock",
@@ -145,33 +135,6 @@ export default function ManagerStandaloneWorkspace() {
       managerStatus: status,
       managerUpdatedAt: new Date().toISOString(),
     });
-    refreshBridgeData();
-  }
-
-  function openReturnItem(item) {
-    setSelectedReturnItem(item);
-    setManagerResponse({
-      proofStatus: item.proofStatus || "Ready for owner re-review",
-      correctionStatus: item.correctionStatus || "Corrected / explained",
-      risk: item.risk || "Medium",
-      recommendation: item.managerContext?.managerRecommendation || "",
-      managerResponse: item.managerResponse || "",
-      towerSensitive: Boolean(item.tower),
-    });
-  }
-
-  function updateManagerResponse(key, value) {
-    setManagerResponse((current) => ({
-      ...current,
-      [key]: value,
-    }));
-  }
-
-  function sendReturnBackToOwner() {
-    if (!selectedReturnItem) return;
-
-    createManagerReReviewSubmission(selectedReturnItem, managerResponse);
-    setSelectedReturnItem(null);
     refreshBridgeData();
   }
 
@@ -300,7 +263,6 @@ export default function ManagerStandaloneWorkspace() {
                 <p>{item.reason}</p>
                 {item.ownerNote ? <p className="mgr-note">Owner note: {item.ownerNote}</p> : null}
                 <div className="mgr-card-actions">
-                  <button type="button" onClick={() => openReturnItem(item)}>Open details</button>
                   <button type="button" onClick={() => markReturnItem(item.id, "Manager acknowledged")}>Acknowledge</button>
                   <button type="button" onClick={() => markReturnItem(item.id, "Proof being gathered")}>Gather proof</button>
                   <button type="button" onClick={() => markReturnItem(item.id, "Ready for owner re-review")}>Ready for re-review</button>
@@ -343,111 +305,6 @@ export default function ManagerStandaloneWorkspace() {
           )}
         </div>
       </section>
-      {selectedReturnItem ? (
-        <div className="mgr-return-detail-overlay" role="dialog" aria-modal="true">
-          <section className="mgr-return-detail-modal">
-            <div className="mgr-section-head">
-              <div>
-                <p className="mgr-kicker">Returned by owner</p>
-                <h2>{selectedReturnItem.title}</h2>
-                <p>{selectedReturnItem.reason}</p>
-              </div>
-              <button type="button" className="mgr-secondary" onClick={() => setSelectedReturnItem(null)}>
-                Close
-              </button>
-            </div>
-
-            <div className="mgr-return-detail-grid">
-              <article>
-                <span>Owner note</span>
-                <strong>{selectedReturnItem.ownerNote || "No owner note provided."}</strong>
-              </article>
-              <article>
-                <span>Manager status</span>
-                <strong>{selectedReturnItem.managerStatus || "Needs manager action"}</strong>
-              </article>
-              <article>
-                <span>Business</span>
-                <strong>{selectedReturnItem.business || "Owner Review Desk"}</strong>
-              </article>
-              <article>
-                <span>Returned at</span>
-                <strong>{selectedReturnItem.createdAt ? new Date(selectedReturnItem.createdAt).toLocaleString() : "Recently"}</strong>
-              </article>
-            </div>
-
-            <div className="mgr-response-form">
-              <label>
-                <span>Proof status</span>
-                <select value={managerResponse.proofStatus} onChange={(event) => updateManagerResponse("proofStatus", event.target.value)}>
-                  <option>Ready for owner re-review</option>
-                  <option>Proof attached</option>
-                  <option>Proof still missing</option>
-                  <option>Needs more time</option>
-                  <option>Tower required</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Correction status</span>
-                <select value={managerResponse.correctionStatus} onChange={(event) => updateManagerResponse("correctionStatus", event.target.value)}>
-                  <option>Corrected / explained</option>
-                  <option>Proof gathered</option>
-                  <option>Manager disagrees</option>
-                  <option>Unable to resolve</option>
-                  <option>Escalate to Tower</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Risk</span>
-                <select value={managerResponse.risk} onChange={(event) => updateManagerResponse("risk", event.target.value)}>
-                  <option>Low</option>
-                  <option>Medium</option>
-                  <option>High</option>
-                </select>
-              </label>
-
-              <label className="mgr-wide">
-                <span>Recommendation</span>
-                <input
-                  value={managerResponse.recommendation}
-                  onChange={(event) => updateManagerResponse("recommendation", event.target.value)}
-                  placeholder="Example: Owner can approve after reviewing attached proof"
-                />
-              </label>
-
-              <label className="mgr-wide">
-                <span>Manager response</span>
-                <textarea
-                  value={managerResponse.managerResponse}
-                  onChange={(event) => updateManagerResponse("managerResponse", event.target.value)}
-                  rows={5}
-                  placeholder="Explain what was corrected, what proof was found, or why this needs escalation..."
-                />
-              </label>
-
-              <label className="mgr-check">
-                <input
-                  type="checkbox"
-                  checked={managerResponse.towerSensitive}
-                  onChange={(event) => updateManagerResponse("towerSensitive", event.target.checked)}
-                />
-                <span>Tower-sensitive / needs protected re-review</span>
-              </label>
-            </div>
-
-            <div className="mgr-return-detail-actions">
-              <button type="button" className="mgr-primary" onClick={sendReturnBackToOwner}>
-                Send back to owner
-              </button>
-              <button type="button" className="mgr-secondary" onClick={() => markReturnItem(selectedReturnItem.id, "Proof being gathered")}>
-                Mark proof being gathered
-              </button>
-            </div>
-          </section>
-        </div>
-      ) : null}
     </main>
   );
 }

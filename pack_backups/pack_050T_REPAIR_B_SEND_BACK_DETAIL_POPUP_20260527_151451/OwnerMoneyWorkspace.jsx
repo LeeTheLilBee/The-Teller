@@ -935,7 +935,7 @@ function buildManagerContext(card, ownerDecision) {
 }
 
 
-function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision, onSendBackToManager }) {
+function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
   if (!selectedReview?.card) return null;
 
   const card = selectedReview.card;
@@ -1047,19 +1047,6 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
           >
             {tower ? "Send to Tower" : "Request Proof"}
           </button>
-          <button
-            type="button"
-            className="fb-send-back-button"
-            onClick={() => {
-              if (onSendBackToManager) {
-                onSendBackToManager(card, selectedReview.deskTitle || "Review Desk");
-              }
-              onClose();
-            }}
-          >
-            Send back to manager
-          </button>
-
         </div>
       </section>
     </div>

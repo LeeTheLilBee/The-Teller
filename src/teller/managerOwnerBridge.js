@@ -60,3 +60,50 @@ export function createBridgeId(prefix) {
   const random = Math.floor(100000 + Math.random() * 900000);
   return `${prefix}-${random}`;
 }
+
+
+export function createManagerReReviewSubmission(returnItem, response) {
+  const id = createBridgeId("MGR-REREVIEW");
+  const createdAt = new Date().toISOString();
+
+  const item = {
+    id,
+    key: id,
+    businessKey: returnItem.businessKey || returnItem.activeBusiness || "simpleepay",
+    source: "manager_return_response",
+    label: "Manager re-review response",
+    title: `Re-review · ${returnItem.title || "Returned manager item"}`,
+    detail: response.managerResponse || "Manager responded to an owner send-back.",
+    money: returnItem.money || "Needs owner re-review",
+    status: response.proofStatus || "Ready for owner re-review",
+    risk: response.risk || returnItem.risk || "Medium",
+    proof: response.proofStatus || "Manager response proof",
+    tower: Boolean(returnItem.tower || response.towerSensitive),
+    person: returnItem.person || "Manager return item",
+    submittedAt: createdAt,
+    returnItemId: returnItem.id,
+    managerBridge: {
+      submittedBy: "Manager return queue",
+      submittedAt: new Date(createdAt).toLocaleString(),
+      managerDecision: response.correctionStatus || "Ready for owner re-review",
+      managerRiskFlag: response.risk || returnItem.risk || "Medium",
+      managerNote: response.managerResponse || "Manager responded and sent this item back to owner.",
+      recommendation: response.recommendation || "Owner should re-review the manager response.",
+      ownerDefault: "Owner re-review",
+      disagreementRisk: Boolean(response.risk === "High" || response.towerSensitive),
+      towerRequired: Boolean(returnItem.tower || response.towerSensitive),
+    },
+  };
+
+  saveManagerSubmission(item);
+  updateManagerReturnItem(returnItem.id, {
+    managerStatus: "Sent back to owner",
+    managerResponse: response.managerResponse,
+    proofStatus: response.proofStatus,
+    correctionStatus: response.correctionStatus,
+    managerUpdatedAt: createdAt,
+    reReviewSubmissionId: id,
+  });
+
+  return item;
+}

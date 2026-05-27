@@ -360,6 +360,41 @@
       ],
       "backup": "pack_backups/pack_050S_REPAIR_FIX_TELLER_VIEW_RUNTIME_20260525_232915",
       "purpose": "Define manager route query variable inside App render scope so owner and manager views do not crash."
+    },
+    "050T_MANAGER_RETURN_DETAIL_SEND_BACK_TO_OWNER": {
+      "name": "Manager Return Detail and Send Back To Owner",
+      "status": "complete",
+      "timestamp": "2026-05-27T14:31:29.934369",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_050T_MANAGER_RETURN_DETAIL_SEND_BACK_TO_OWNER_20260527_143129",
+      "purpose": "Add manager return-item popup, manager response/proof/correction flow, and send-back-to-owner re-review submissions."
+    },
+    "050T_REPAIR_FORCE_SEND_BACK_VISIBLE": {
+      "name": "Force Send Back Button Visible",
+      "status": "complete",
+      "timestamp": "2026-05-27T14:54:19.887508",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050T_REPAIR_FORCE_SEND_BACK_VISIBLE_20260527_145418",
+      "purpose": "Force owner Send back to manager button into Review Desk cards and Review Detail popup."
+    },
+    "050T_REPAIR_C_SEND_BACK_DETAIL_ACTION_ROW": {
+      "name": "Force Send Back Into Detail Action Row",
+      "status": "complete",
+      "timestamp": "2026-05-27T15:15:52.044734",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050T_REPAIR_C_SEND_BACK_DETAIL_ACTION_ROW_20260527_151551",
+      "purpose": "Inject Send back to manager into ReviewDetailPanel action row without relying on Archive button text."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

@@ -935,7 +935,7 @@ function buildManagerContext(card, ownerDecision) {
 }
 
 
-function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision, onSendBackToManager }) {
+function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision }) {
   if (!selectedReview?.card) return null;
 
   const card = selectedReview.card;
@@ -1047,19 +1047,6 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
           >
             {tower ? "Send to Tower" : "Request Proof"}
           </button>
-          <button
-            type="button"
-            className="fb-send-back-button"
-            onClick={() => {
-              if (onSendBackToManager) {
-                onSendBackToManager(card, selectedReview.deskTitle || "Review Desk");
-              }
-              onClose();
-            }}
-          >
-            Send back to manager
-          </button>
-
         </div>
       </section>
     </div>
@@ -1876,7 +1863,7 @@ function ManagerSubmissionBridge({ activeBusiness, lane, submissions, onSubmit }
 }
 
 
-function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions, onOpenReviewCard, managerSubmissions = [], onSendBackToManager }) {
+function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions, onOpenReviewCard, managerSubmissions = [] }) {
   const [reviewFilter, setReviewFilter] = useState("all");
   const desk = getReviewDeskData(activeBusiness);
   const submittedCards = managerSubmissions.filter((card) => card.businessKey === activeBusiness);
@@ -2012,7 +1999,7 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
                 <div className="fb-review-decision-row">
                   <Badge tone={decisionTone(decision)}>{decisionLabel(decision)}</Badge>
                   {card.tower ? <Badge tone="warn">Tower item</Badge> : null}
-                  {managerSubmitted ? <Badge tone="strong">{card.source === "manager_return_response" ? "Manager re-review" : "Manager submitted"}</Badge> : null}
+                  {managerSubmitted ? <Badge tone="strong">Manager submitted</Badge> : null}
                 </div>
 
                 <h3>{card.title}</h3>
@@ -2079,13 +2066,6 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
                     )}
                   >
                     {card.tower ? "Send to Tower" : "Request proof"}
-                  </button>
-                  <button
-                    type="button"
-                    className="fb-send-back-button"
-                    onClick={() => onSendBackToManager && onSendBackToManager(card, desk.title)}
-                  >
-                    Send back to manager
                   </button>
                 </div>
               </article>
@@ -2470,7 +2450,6 @@ export default function OwnerMoneyWorkspace() {
         onClose={() => setSelectedReview(null)}
         onAutoReceipt={autoCreateReceipt}
         onArchiveHandoff={createArchiveHandoff}
-        onSendBackToManager={sendBackToManager}
         reviewDecisions={reviewDecisions}
         onDetailDecision={(key, decision) => setReviewDecisions((current) => ({
           ...current,

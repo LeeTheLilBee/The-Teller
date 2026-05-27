@@ -2693,39 +2693,3 @@
 .fb-review-actions button:last-child {
   border-color: color-mix(in srgb, var(--fb-third) 38%, rgba(255,255,255,0.14));
 }
-
-
-/* ================================
-   PACK 050T REPAIR — FORCE SEND BACK BUTTON VISIBLE
-   Makes owner send-back obvious in card and popup action rows.
-   ================================ */
-
-.fb-review-actions .fb-send-back-button,
-.fb-review-detail-actions .fb-send-back-button {
-  border-color: color-mix(in srgb, var(--fb-third) 46%, rgba(255,255,255,0.14)) !important;
-  background:
-    radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--fb-third) 18%, transparent), transparent 36%),
-    rgba(255,255,255,0.10) !important;
-}
-
-.fb-review-actions .fb-send-back-button::after,
-.fb-review-detail-actions .fb-send-back-button::after {
-  content: " ↩";
-}
-
-
-/* ================================
-   PACK 050T REPAIR C — SEND BACK DETAIL ACTION ROW
-   Ensures popup send-back button is visible in the detail action row.
-   ================================ */
-
-.fb-review-detail-actions .fb-send-back-button {
-  border-color: color-mix(in srgb, var(--fb-third) 52%, rgba(255,255,255,0.14)) !important;
-  background:
-    radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--fb-third) 22%, transparent), transparent 36%),
-    rgba(255,255,255,0.12) !important;
-}
-
-.fb-review-detail-actions .fb-send-back-button::after {
-  content: " ↩";
-}

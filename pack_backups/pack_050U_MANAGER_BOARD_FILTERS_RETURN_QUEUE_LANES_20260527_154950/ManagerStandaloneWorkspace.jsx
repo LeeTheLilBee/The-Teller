@@ -63,163 +63,10 @@ function ManagerBadge({ children, tone = "quiet" }) {
   return <span className={`mgr-badge mgr-badge-${tone}`}>{children}</span>;
 }
 
-
-function normalizeManagerStatus(value = "") {
-  return String(value || "").toLowerCase();
-}
-
-function getManagerWorkItems(returnQueue, submissions) {
-  const returnedItems = returnQueue.map((item) => ({
-    ...item,
-    workType: "returned",
-    displayTitle: item.title,
-    displayBody: item.reason || item.ownerNote || "Owner returned this item for manager action.",
-    displayStatus: item.managerStatus || "Needs manager action",
-    displayRisk: item.risk || item.managerContext?.managerRiskFlag || "Medium",
-    displayBusiness: item.business || item.businessKey || "Owner Review Desk",
-    createdAt: item.createdAt,
-  }));
-
-  const submittedItems = submissions.map((item) => ({
-    ...item,
-    workType: "submitted",
-    displayTitle: item.title,
-    displayBody: item.detail || item.managerBridge?.managerNote || "Manager submitted this item upward.",
-    displayStatus: item.status || "Submitted upward",
-    displayRisk: item.risk || item.managerBridge?.managerRiskFlag || "Medium",
-    displayBusiness: item.businessKey || "Manager submission",
-    createdAt: item.submittedAt,
-  }));
-
-  return [...returnedItems, ...submittedItems].sort((a, b) => {
-    const left = new Date(a.createdAt || 0).getTime();
-    const right = new Date(b.createdAt || 0).getTime();
-    return right - left;
-  });
-}
-
-function managerFilterMatches(item, filter) {
-  const status = normalizeManagerStatus(item.displayStatus);
-  const risk = normalizeManagerStatus(item.displayRisk);
-  const workType = item.workType;
-  const tower = Boolean(item.tower || item.towerSensitive || item.managerContext?.towerRequired || item.managerBridge?.towerRequired);
-
-  if (filter === "all") return true;
-  if (filter === "returned") return workType === "returned";
-  if (filter === "needs_action") return workType === "returned" && (status.includes("needs") || status.includes("action"));
-  if (filter === "proof_gathering") return status.includes("proof") || status.includes("gather");
-  if (filter === "ready_review") return status.includes("ready") || status.includes("re-review");
-  if (filter === "submitted") return workType === "submitted";
-  if (filter === "tower") return tower || risk === "high";
-  if (filter === "completed") return status.includes("acknowledged") || status.includes("sent back") || status.includes("complete");
-
-  return true;
-}
-
-function ManagerFilterTabs({ activeFilter, setActiveFilter, workItems }) {
-  const filters = [
-    ["all", "All"],
-    ["returned", "Returned by Owner"],
-    ["needs_action", "Needs Manager Action"],
-    ["proof_gathering", "Proof Being Gathered"],
-    ["ready_review", "Ready for Owner"],
-    ["submitted", "Submitted Upward"],
-    ["tower", "Tower-sensitive"],
-    ["completed", "Completed"],
-  ];
-
-  return (
-    <section className="mgr-filter-panel">
-      <div className="mgr-section-head">
-        <div>
-          <p className="mgr-kicker">Manager work lanes</p>
-          <h2>Filter the board by what needs doing.</h2>
-        </div>
-        <ManagerBadge tone="strong">{workItems.length} total</ManagerBadge>
-      </div>
-
-      <div className="mgr-filter-tabs">
-        {filters.map(([key, label]) => {
-          const count = workItems.filter((item) => managerFilterMatches(item, key)).length;
-
-          return (
-            <button
-              key={key}
-              type="button"
-              className={activeFilter === key ? "is-active" : ""}
-              onClick={() => setActiveFilter(key)}
-            >
-              {label}
-              <span>{count}</span>
-            </button>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function ManagerUnifiedWorkBoard({ workItems, activeFilter, onOpenReturn, onMarkReturn }) {
-  const filtered = workItems.filter((item) => managerFilterMatches(item, activeFilter));
-
-  return (
-    <section className="mgr-panel">
-      <div className="mgr-section-head">
-        <div>
-          <p className="mgr-kicker">Manager work queue</p>
-          <h2>One board for returned items and submitted work.</h2>
-          <p>Use the lanes above to move through manager tasks without hunting around the page.</p>
-        </div>
-        <ManagerBadge tone="warn">{filtered.length} showing</ManagerBadge>
-      </div>
-
-      <div className="mgr-work-grid">
-        {filtered.length ? filtered.map((item) => (
-          <article key={`${item.workType}-${item.id || item.key}`} className={`mgr-work-card is-${item.workType} ${item.tower || item.managerContext?.towerRequired || item.managerBridge?.towerRequired ? "is-tower" : ""}`}>
-            <div className="mgr-card-top">
-              <span>{item.workType === "returned" ? "Returned by owner" : "Submitted upward"}</span>
-              <small>{item.displayStatus}</small>
-            </div>
-
-            <strong>{item.displayTitle}</strong>
-            <p>{item.displayBody}</p>
-
-            <div className="mgr-work-meta">
-              <small>{item.displayBusiness}</small>
-              <small>Risk: {item.displayRisk}</small>
-              {item.tower || item.managerContext?.towerRequired || item.managerBridge?.towerRequired ? <small>Tower-sensitive</small> : null}
-            </div>
-
-            {item.workType === "returned" ? (
-              <div className="mgr-card-actions">
-                <button type="button" onClick={() => onOpenReturn(item)}>Open details</button>
-                <button type="button" onClick={() => onMarkReturn(item.id, "Manager acknowledged")}>Acknowledge</button>
-                <button type="button" onClick={() => onMarkReturn(item.id, "Proof being gathered")}>Gather proof</button>
-                <button type="button" onClick={() => onMarkReturn(item.id, "Ready for owner re-review")}>Ready</button>
-              </div>
-            ) : (
-              <div className="mgr-card-actions">
-                <button type="button" disabled>Owner review pending</button>
-              </div>
-            )}
-          </article>
-        )) : (
-          <article className="mgr-empty">
-            <p className="mgr-kicker">Nothing in this lane</p>
-            <strong>No manager work matches this filter.</strong>
-            <p>Switch lanes or wait for an owner send-back/submission update.</p>
-          </article>
-        )}
-      </div>
-    </section>
-  );
-}
-
 export default function ManagerStandaloneWorkspace() {
   const [submissions, setSubmissions] = useState([]);
   const [returnQueue, setReturnQueue] = useState([]);
   const [selectedReturnItem, setSelectedReturnItem] = useState(null);
-  const [activeManagerFilter, setActiveManagerFilter] = useState("all");
   const [managerResponse, setManagerResponse] = useState({
     proofStatus: "Ready for owner re-review",
     correctionStatus: "Corrected / explained",
@@ -263,8 +110,6 @@ export default function ManagerStandaloneWorkspace() {
       window.removeEventListener("storage", handleUpdate);
     };
   }, []);
-
-  const managerWorkItems = getManagerWorkItems(returnQueue, submissions);
 
   function updateForm(key, value) {
     setForm((current) => ({
@@ -347,19 +192,6 @@ export default function ManagerStandaloneWorkspace() {
           </div>
         </div>
       </section>
-
-      <ManagerFilterTabs
-        activeFilter={activeManagerFilter}
-        setActiveFilter={setActiveManagerFilter}
-        workItems={managerWorkItems}
-      />
-
-      <ManagerUnifiedWorkBoard
-        workItems={managerWorkItems}
-        activeFilter={activeManagerFilter}
-        onOpenReturn={openReturnItem}
-        onMarkReturn={markReturnItem}
-      />
 
       <section className="mgr-board-grid">
         <article className="mgr-panel mgr-submit-panel">
@@ -448,11 +280,11 @@ export default function ManagerStandaloneWorkspace() {
           </button>
         </article>
 
-        <article className="mgr-panel mgr-secondary-panel">
+        <article className="mgr-panel">
           <div className="mgr-section-head">
             <div>
-              <p className="mgr-kicker">Returned by owner · detail list</p>
-              <h2>Original returned-item list.</h2>
+              <p className="mgr-kicker">Returned by owner</p>
+              <h2>Items sent back for manager action.</h2>
             </div>
             <ManagerBadge tone="warn">{returnQueue.length}</ManagerBadge>
           </div>

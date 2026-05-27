@@ -395,6 +395,17 @@
       ],
       "backup": "pack_backups/pack_050T_REPAIR_C_SEND_BACK_DETAIL_ACTION_ROW_20260527_151551",
       "purpose": "Inject Send back to manager into ReviewDetailPanel action row without relying on Archive button text."
+    },
+    "050U_MANAGER_BOARD_FILTERS_RETURN_QUEUE_LANES": {
+      "name": "Manager Board Filters and Return Queue Lanes",
+      "status": "complete",
+      "timestamp": "2026-05-27T16:09:36.295580",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050U_MANAGER_BOARD_FILTERS_RETURN_QUEUE_LANES_20260527_160935",
+      "purpose": "Add manager filter tabs, unified work queue, return/submission lanes, filter counts, and clearer manager work order."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

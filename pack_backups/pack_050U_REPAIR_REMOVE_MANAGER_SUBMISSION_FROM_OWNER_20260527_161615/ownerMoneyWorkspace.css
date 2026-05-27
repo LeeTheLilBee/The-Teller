@@ -2729,15 +2729,3 @@
 .fb-review-detail-actions .fb-send-back-button::after {
   content: " ↩";
 }
-
-
-/* ================================
-   PACK 050U REPAIR — REMOVE MANAGER SUBMISSION FROM OWNER
-   Owner keeps review/decision flow only; manager submission lives on manager board.
-   ================================ */
-
-.fb-owner-role-note {
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.055);
-  border-radius: 20px;
-}

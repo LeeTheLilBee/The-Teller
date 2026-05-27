@@ -406,6 +406,17 @@
       ],
       "backup": "pack_backups/pack_050U_MANAGER_BOARD_FILTERS_RETURN_QUEUE_LANES_20260527_160935",
       "purpose": "Add manager filter tabs, unified work queue, return/submission lanes, filter counts, and clearer manager work order."
+    },
+    "050U_REPAIR_REMOVE_MANAGER_SUBMISSION_FROM_OWNER": {
+      "name": "Remove Manager Submission Bridge From Owner Dashboard",
+      "status": "complete",
+      "timestamp": "2026-05-27T16:16:16.730002",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050U_REPAIR_REMOVE_MANAGER_SUBMISSION_FROM_OWNER_20260527_161615",
+      "purpose": "Remove manager submission form from owner dashboard while keeping manager submissions, owner send-back, and re-review flow working."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

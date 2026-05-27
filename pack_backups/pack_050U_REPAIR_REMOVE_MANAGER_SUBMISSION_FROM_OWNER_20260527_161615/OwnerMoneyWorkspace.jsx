@@ -2507,8 +2507,12 @@ export default function OwnerMoneyWorkspace() {
         <>
           <BusinessOrbit lanes={ownerBusinessLanes} activeBusiness={activeBusiness} setActiveBusiness={setActiveBusiness} />
           <BusinessSpecificWorkspace activeBusiness={activeBusiness} lane={activeLane} onAction={openAction} />
-          
-
+          <ManagerSubmissionBridge
+            activeBusiness={activeBusiness}
+            lane={activeLane}
+            submissions={managerSubmissions}
+            onSubmit={createManagerReviewSubmission}
+          />
           <OwnerReviewDesk
             activeBusiness={activeBusiness}
             lane={activeLane}

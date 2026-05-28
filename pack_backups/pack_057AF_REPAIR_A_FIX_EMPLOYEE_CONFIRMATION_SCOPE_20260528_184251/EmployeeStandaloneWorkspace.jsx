@@ -165,6 +165,8 @@ function EmployeeStreamlinePanel({
     }
   });
   const [whyOpen, setWhyOpen] = useState(false);
+  
+  const [requestSubmitConfirmation, setRequestSubmitConfirmation] = useState(null);
 const [streamlineChoice, setStreamlineChoice] = useState(() => {
     try {
       return window.sessionStorage.getItem("the_teller_employee_streamline_choice_v1") || "ask";
@@ -413,9 +415,7 @@ function createEmployeeRequest(form) {
 }
 
 export default function EmployeeStandaloneWorkspace() {
-  
-  const [requestSubmitConfirmation, setRequestSubmitConfirmation] = useState(null);
-const [activity, setActivity] = useState([]);
+  const [activity, setActivity] = useState([]);
   const [managerResponses, setManagerResponses] = useState([]);
   const [employeeNotificationsOpen, setEmployeeNotificationsOpen] = useState(false);
   const [employeeNotifications, setEmployeeNotifications] = useState([]);

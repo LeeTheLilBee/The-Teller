@@ -578,9 +578,9 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
 
         <div className="mgr-card-actions mgr-streamline-actions">
           <button type="button" onClick={() => onOpen(task)}>Open details</button>
-          <button type="button" className="mgr-approve" onClick={() => onDecision(task, "Approved", "Approved. Your request has been reviewed and accepted by the manager.")}>Approve</button>
-          <button type="button" className="mgr-needs-proof" onClick={() => onDecision(task, "Needs Proof", "The manager needs more information before this can be approved. Please add the missing details or proof.")}>Needs proof</button>
-          <button type="button" className="mgr-reject" onClick={() => onDecision(task, "Rejected", "This request was not approved. Review the manager note before submitting again.")}>Reject</button>
+          <button type="button" className="mgr-approve" onClick={() => onDecision(task, "Approved", "Approved by manager. Your request has been reviewed.")}>Approve</button>
+          <button type="button" className="mgr-needs-proof" onClick={() => onDecision(task, "Needs Proof", "Manager needs more proof before this can be approved.")}>Needs proof</button>
+          <button type="button" className="mgr-reject" onClick={() => onDecision(task, "Rejected", "Rejected by manager. Please review the note or submit a clearer request.")}>Reject</button>
           <button type="button" className="mgr-send-upward" onClick={() => onEscalate(task)}>Send upward</button>
           <button type="button" className="mgr-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>Why this is next</button>
           <button type="button" className="mgr-streamline-secondary" onClick={showFullDashboard}>Show full dashboard</button>
@@ -636,16 +636,10 @@ function ManagerLane({ title, subtitle, items, tone, onOpen, onDecision, onEscal
 
       <div className="mgr-lane-cards">
         {items.length ? items.map((item) => (
-          <article key={item.id} className={`mgr-employee-request-card mgr-review-card mgr-fast-review-card ${item.urgency === "Payroll urgent" ? "is-urgent" : ""}`}>
+          <article key={item.id} className={`mgr-employee-request-card mgr-review-card ${item.urgency === "Payroll urgent" ? "is-urgent" : ""}`}>
             <div className="mgr-card-top">
               <span>{item.employeeName}</span>
               <small>{item.managerStatus}</small>
-            </div>
-
-            <div className="mgr-fast-review-strip">
-              <small>{item.urgency || "Normal"}</small>
-              <small>{item.proofStatus || "Proof status"}</small>
-              <small>{item.towerBackedUp ? "Tower-backed" : "Needs backup"}</small>
             </div>
 
             <strong>{item.title}</strong>
@@ -667,9 +661,9 @@ function ManagerLane({ title, subtitle, items, tone, onOpen, onDecision, onEscal
 
             <div className="mgr-card-actions mgr-decision-actions">
               <button type="button" onClick={() => onOpen(item)}>Open details</button>
-              <button type="button" className="mgr-approve" onClick={() => onDecision(item, "Approved", "Approved. Your request has been reviewed and accepted by the manager.")}>Approve</button>
-              <button type="button" className="mgr-needs-proof" onClick={() => onDecision(item, "Needs Proof", "The manager needs more information before this can be approved. Please add the missing details or proof.")}>Needs proof</button>
-              <button type="button" className="mgr-reject" onClick={() => onDecision(item, "Rejected", "This request was not approved. Review the manager note before submitting again.")}>Reject</button>
+              <button type="button" className="mgr-approve" onClick={() => onDecision(item, "Approved", "Approved by manager. Your request has been reviewed.")}>Approve</button>
+              <button type="button" className="mgr-needs-proof" onClick={() => onDecision(item, "Needs Proof", "Manager needs more proof before this can be approved.")}>Needs proof</button>
+              <button type="button" className="mgr-reject" onClick={() => onDecision(item, "Rejected", "Rejected by manager. Please review the note or submit a clearer request.")}>Reject</button>
               <button type="button" className="mgr-send-upward" onClick={() => onEscalate(item)}>Send upward</button>
             </div>
           </article>
@@ -860,7 +854,7 @@ export default function ManagerStandaloneWorkspace() {
     }));
   }
 
-  function escalateEmployeeRequestToOwner(item, reason = "This request was sent upward for owner or Tower review.") {
+  function escalateEmployeeRequestToOwner(item, reason = "Manager sent this item upward for owner/Tower review.") {
     const escalation = createOwnerEscalationItem(item, {
       reason,
       managerNote: "Manager escalated this item from the employee request center.",
@@ -884,7 +878,7 @@ export default function ManagerStandaloneWorkspace() {
 
     updateEmployeeManagerItem(item.id, {
       managerStatus: "Sent Upward",
-      managerResponse: "This request was sent upward for owner or Tower review.",
+      managerResponse: "Manager sent this item upward for owner/Tower review.",
       proofStatus: item.proofStatus || "Escalated upward",
       ownerEscalationId: escalation.id,
       towerBackupId: towerBackup.id,
@@ -893,7 +887,7 @@ export default function ManagerStandaloneWorkspace() {
 
     const responseItem = createEmployeeDecisionResponseItem(item, {
       decisionStatus: "Sent Upward",
-      managerNote: "Your request was sent upward for owner or Tower review. No extra action is needed unless someone asks for more information.",
+      managerNote: "Your request was sent upward for owner/Tower review.",
       proofStatus: "Escalated upward",
       managerName: "Manager Portal",
     });

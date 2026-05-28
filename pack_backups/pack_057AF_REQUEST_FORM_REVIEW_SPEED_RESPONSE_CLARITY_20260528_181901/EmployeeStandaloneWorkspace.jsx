@@ -165,7 +165,7 @@ function EmployeeStreamlinePanel({
     }
   });
   const [whyOpen, setWhyOpen] = useState(false);
-const [streamlineChoice, setStreamlineChoice] = useState(() => {
+  const [streamlineChoice, setStreamlineChoice] = useState(() => {
     try {
       return window.sessionStorage.getItem("the_teller_employee_streamline_choice_v1") || "ask";
     } catch {
@@ -413,9 +413,7 @@ function createEmployeeRequest(form) {
 }
 
 export default function EmployeeStandaloneWorkspace() {
-  
-  const [requestSubmitConfirmation, setRequestSubmitConfirmation] = useState(null);
-const [activity, setActivity] = useState([]);
+  const [activity, setActivity] = useState([]);
   const [managerResponses, setManagerResponses] = useState([]);
   const [employeeNotificationsOpen, setEmployeeNotificationsOpen] = useState(false);
   const [employeeNotifications, setEmployeeNotifications] = useState([]);
@@ -546,13 +544,7 @@ const [activity, setActivity] = useState([]);
     });
 
     saveEmployeeManagerItem(followUp);
-    
-    setRequestSubmitConfirmation({
-      title: "Sent to manager",
-      body: "Your request was sent to the manager lane and backed up for the workflow trail.",
-      timestamp: new Date().toISOString(),
-    });
-saveTowerBackupItem(towerBackup);
+    saveTowerBackupItem(towerBackup);
 
     pushEmployeeNotice(createEmployeeNotice({
       type: followUp.requestType === "tower_record" ? "tower" : "sent",
@@ -833,20 +825,6 @@ saveTowerBackupItem(towerBackup);
         </section>
       ) : null}
       
-      
-      {requestSubmitConfirmation ? (
-        <article className="emp-submit-confirmation-card">
-          <div>
-            <span>{requestSubmitConfirmation.title}</span>
-            <strong>Request sent.</strong>
-            <p>{requestSubmitConfirmation.body}</p>
-          </div>
-          <button type="button" onClick={() => setRequestSubmitConfirmation(null)}>
-            Dismiss
-          </button>
-        </article>
-      ) : null}
-
       <FinalReceiptViewer mode="employee" employeeName={portalEmployee.name} />
 
       {selectedManagerResponse ? (
@@ -890,7 +868,7 @@ saveTowerBackupItem(towerBackup);
             />
 
             <section className="emp-followup-card">
-              <p className="emp-kicker">Add missing info</p>
+              <p className="emp-kicker">Add more information</p>
               <h3>Send a follow-up back to manager.</h3>
               <p>
                 Use this when the manager needs more proof, you need to correct something,

@@ -9,6 +9,7 @@ import {
 } from "./managerOwnerBridge";
 import "./employeeStandaloneWorkspace.css";
 
+
 import FinalReceiptViewer from "./FinalReceiptViewer.jsx";
 const EMPLOYEE_SEEN_MANAGER_RESPONSES_KEY = "the_teller_employee_seen_manager_responses_v1";
 
@@ -59,6 +60,7 @@ function EmployeeBadge({ children, tone = "quiet" }) {
   return <span className={`emp-badge emp-badge-${tone}`}>{children}</span>;
 }
 
+
 function createEmployeeNotice({ type = "info", title, body, target }) {
   return {
     id: `EMP-NOTICE-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -69,6 +71,7 @@ function createEmployeeNotice({ type = "info", title, body, target }) {
     createdAt: new Date().toISOString(),
   };
 }
+
 
 function getEmployeeStreamlineTask({ managerResponses = [], notifications = [], activity = [] }) {
   const needsInfoResponse = managerResponses.find((item) => {
@@ -623,7 +626,7 @@ export default function EmployeeStandaloneWorkspace() {
 
   return (
     <main className="employee-workspace">
-<EmployeeStreamlinePanel
+      <EmployeeStreamlinePanel
         managerResponses={managerResponses}
         notifications={employeeNotifications}
         activity={activity}

@@ -24,7 +24,6 @@ import {
 } from "./managerOwnerBridge";
 import "./towerBackupWorkspace.css";
 
-import WorkflowLifecyclePanel from "./WorkflowLifecyclePanel.jsx";
 function TowerBadge({ children, tone = "quiet" }) {
   return <span className={`tower-badge tower-badge-${tone}`}>{children}</span>;
 }
@@ -309,8 +308,6 @@ function TowerClearanceGate({ accessRequest, onGrant }) {
 
   return (
     <main className="tower-backup-workspace">
-      <WorkflowLifecyclePanel role="tower" compact />
-
       <section className="tower-clearance-gate">
         <div>
           <p className="tower-kicker">The Tower · Clearance Gate</p>

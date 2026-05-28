@@ -15,6 +15,7 @@ import "./ownerMoneyWorkspace.css";
 import { saveTowerAccessRequest } from "./towerBackupPlugin";
 import OwnerEscalationDock from "./OwnerEscalationDock.jsx";
 import FinalReceiptViewer from "./FinalReceiptViewer.jsx";
+import WorkflowLifecyclePanel from "./WorkflowLifecyclePanel.jsx";
 function statusLabel(status = "") {
   const map = {
     needs_review: "Needs review",
@@ -42,6 +43,9 @@ function confidenceLabel(confidence = "") {
   };
   return map[confidence] || String(confidence || "Estimated");
 }
+
+
+
 
 function makeOwnerReceipt(action) {
   const stamp = new Date().toISOString();
@@ -137,6 +141,7 @@ function makeOwnerNotification({ type = "info", title, body, receiptId, towerRec
   };
 }
 
+
 function notificationTone(type = "info") {
   const map = {
     owner_receipt: "strong",
@@ -206,6 +211,7 @@ function NotificationsDropdown({ notifications, open, setOpen, onClear }) {
     </div>
   );
 }
+
 
 function Badge({ children, tone = "quiet" }) {
   return <span className={`fb-badge fb-badge-${tone}`}>{children}</span>;
@@ -296,6 +302,7 @@ function businessSpecificCopy(activeBusiness) {
 
   return map[activeBusiness] || map.simpleepay;
 }
+
 
 function OwnerFlowGuide({ activeBusiness, pendingAction, receipts }) {
   return (
@@ -401,6 +408,7 @@ function ThemeCloset({ themeKey, setThemeKey, theme, calmMode, setCalmMode, onCl
     </aside>
   );
 }
+
 
 function getReviewCardDetails(card) {
   const key = String(card?.key || "").toLowerCase();
@@ -510,6 +518,9 @@ function getReviewCardDetails(card) {
 
   return base;
 }
+
+
+
 
 function getEvidenceSlots(card) {
   const key = String(card?.key || "").toLowerCase();
@@ -686,6 +697,7 @@ function EvidenceSlots({ card }) {
   );
 }
 
+
 function makeArchiveHandoffPacket({ card, selectedReview, evidenceSlots }) {
   const random = Math.floor(100000 + Math.random() * 900000);
   const createdAt = new Date().toISOString();
@@ -743,6 +755,8 @@ function ArchiveHandoffDock({ archivePackets }) {
     </section>
   );
 }
+
+
 
 function getManagerBridgeData(card) {
   if (card?.managerBridge) {
@@ -924,6 +938,7 @@ function buildManagerContext(card, ownerDecision) {
   };
 }
 
+
 function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDecision, onSendBackToManager }) {
   if (!selectedReview?.card) return null;
 
@@ -1055,6 +1070,7 @@ function ReviewDetailPanel({ selectedReview, onClose, onAutoReceipt, onDetailDec
   );
 }
 
+
 function FinalActionPreview({ action, onCancel, onConfirm }) {
   if (!action) return null;
 
@@ -1090,6 +1106,7 @@ function FinalActionPreview({ action, onCancel, onConfirm }) {
   );
 }
 
+
 function TowerReceiptDock({ towerReceipts }) {
   if (!towerReceipts.length) return null;
 
@@ -1123,6 +1140,7 @@ function TowerReceiptDock({ towerReceipts }) {
   );
 }
 
+
 function ReceiptDock({ receipts }) {
   if (!receipts.length) return null;
 
@@ -1151,6 +1169,7 @@ function ReceiptDock({ receipts }) {
     </section>
   );
 }
+
 
 function PriorityFocus({ focus, onAction }) {
   return (
@@ -1346,6 +1365,7 @@ function BusinessSpecificWorkspace({ activeBusiness, lane, onAction }) {
     </section>
   );
 }
+
 
 function getCardDecisionState(card, reviewDecisions) {
   return reviewDecisions[card.key] || "open";
@@ -1572,6 +1592,7 @@ function getReviewDeskData(activeBusiness) {
 
   return map[activeBusiness] || map.simpleepay;
 }
+
 
 function createManagerSubmissionCard({ activeBusiness, lane, kind, payload = {} }) {
   const random = Math.floor(100000 + Math.random() * 900000);
@@ -1858,6 +1879,7 @@ function ManagerSubmissionBridge({ activeBusiness, lane, submissions, onSubmit }
   );
 }
 
+
 function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, reviewDecisions, setReviewDecisions, onOpenReviewCard, managerSubmissions = [], onSendBackToManager }) {
   const [reviewFilter, setReviewFilter] = useState("all");
   const desk = getReviewDeskData(activeBusiness);
@@ -2085,6 +2107,7 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
   );
 }
 
+
 function MoneyConstellations({ queue, onAction }) {
   const grouped = {
     "Pay People": queue.filter((item) => item.lane === "Pay People"),
@@ -2203,6 +2226,7 @@ export default function OwnerMoneyWorkspace() {
       window.removeEventListener("storage", handleBridgeUpdate);
     };
   }, []);
+
 
   function openTowerEvidence() {
     try {
@@ -2418,7 +2442,9 @@ export default function OwnerMoneyWorkspace() {
         "--fb-good": theme.good,
       }}
     >
-<OwnerEscalationDock />
+      <WorkflowLifecyclePanel role="owner" compact />
+
+      <OwnerEscalationDock />
       <FinalReceiptViewer mode="owner" />
 
       <div className="fb-tower-evidence-entry">

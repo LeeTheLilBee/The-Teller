@@ -1380,13 +1380,3 @@
     justify-content: flex-start;
   }
 }
-
-
-/* ================================
-   PACK 053A-F — MANAGER LIFECYCLE FIT
-   Shared lifecycle timeline panel fit.
-   ================================ */
-
-.workflow-lifecycle-panel {
-  max-width: 100%;
-}

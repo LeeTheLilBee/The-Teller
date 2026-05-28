@@ -69,6 +69,7 @@ function buildManagerSubmission(form) {
   };
 }
 
+
 function createManagerNotice({ type = "info", title, body, target }) {
   const random = Math.floor(100000 + Math.random() * 900000);
 
@@ -178,6 +179,7 @@ function ManagerActivityTrail({ activity }) {
 function ManagerBadge({ children, tone = "quiet" }) {
   return <span className={`mgr-badge mgr-badge-${tone}`}>{children}</span>;
 }
+
 
 function normalizeManagerStatus(value = "") {
   return String(value || "").toLowerCase();
@@ -330,6 +332,9 @@ function ManagerUnifiedWorkBoard({ workItems, activeFilter, onOpenReturn, onMark
   );
 }
 
+
+
+
 function getEmployeeDecisionGuidance(item) {
   const urgency = String(item.urgency || "").toLowerCase();
   const proof = String(item.proofStatus || "").toLowerCase();
@@ -358,6 +363,9 @@ function getEmployeeDecisionGuidance(item) {
   return "Review the employee request, then approve, reject, or ask for proof.";
 }
 
+
+
+
 function getManagerStreamlinePriorityScore(item) {
   const lane = getManagerLaneForRequest(item);
   const text = JSON.stringify(item || {}).toLowerCase();
@@ -385,6 +393,7 @@ function getManagerStreamlineTask(requests) {
 
   return active[0] || null;
 }
+
 
 function getManagerStreamlineWhy(item) {
   const lane = getManagerLaneForRequest(item);
@@ -718,6 +727,7 @@ function ManagerEmployeeRequestDock({ requests, onMark, onOpen, onDecision, onEs
   );
 }
 
+
 export default function ManagerStandaloneWorkspace() {
   const [submissions, setSubmissions] = useState([]);
   const [returnQueue, setReturnQueue] = useState([]);
@@ -757,6 +767,7 @@ export default function ManagerStandaloneWorkspace() {
     recommendation: "",
     towerSensitive: false,
   });
+
 
   function openTowerEvidence() {
     try {
@@ -1087,7 +1098,7 @@ export default function ManagerStandaloneWorkspace() {
 
   return (
     <main className="manager-standalone-workspace">
-<div className="mgr-tower-evidence-entry">
+      <div className="mgr-tower-evidence-entry">
         <button type="button" onClick={openTowerEvidence}>
           Open Tower Evidence
         </button>

@@ -7,10 +7,6 @@ import {
   saveTowerBackupItem,
   updateFinalResolutionPacket,
 } from "./managerOwnerBridge";
-import {
-  getWorkflowStatusCopy,
-  humanProofRef,
-} from "./workflowLifecycle";
 import "./finalReceiptViewer.css";
 
 function ReceiptBadge({ children, tone = "quiet" }) {
@@ -32,137 +28,6 @@ function receiptMatches(packet, filter) {
 
   return true;
 }
-
-function getReceiptWorkflowBadges(packet = {}) {
-  const text = JSON.stringify(packet || {}).toLowerCase();
-  const status = String(packet.resolutionStatus || packet.title || "").toLowerCase();
-  const payload = packet.payload || {};
-  const escalation = payload.escalation || {};
-  const sourceRequest = escalation.sourceRequest || payload.sourceRequest || {};
-  const resolution = payload.resolution || {};
-
-  const badges = [
-    {
-      key: "submitted",
-      label: "Submitted",
-      complete: Boolean(sourceRequest.id || escalation.sourceRequestId || packet.sourceRequestId),
-      tone: "new",
-    },
-    {
-      key: "manager",
-      label: "Manager reviewed",
-      complete: Boolean(
-        escalation.managerStatus ||
-        sourceRequest.managerStatus ||
-        text.includes("manager")
-      ),
-      tone: "active",
-    },
-    {
-      key: "owner",
-      label: "Owner decided",
-      complete: Boolean(
-        packet.resolutionStatus ||
-        resolution.status ||
-        status.includes("owner") ||
-        status.includes("resolved")
-      ),
-      tone: "done",
-    },
-    {
-      key: "receipt",
-      label: "Receipt created",
-      complete: Boolean(packet.id),
-      tone: "receipt",
-    },
-    {
-      key: "tower",
-      label: "Tower-backed",
-      complete: Boolean(packet.towerBackedUp),
-      tone: "upward",
-    },
-    {
-      key: "archive",
-      label: "Archive ready",
-      complete: Boolean(packet.archiveReady),
-      tone: "archive",
-    },
-  ];
-
-  return badges;
-}
-
-function getReceiptLocation(packet = {}) {
-  if (packet.archiveReady) {
-    return {
-      label: "Archive-ready records",
-      tone: "archive",
-      summary: "This resolved record is ready for future Archive Vault handoff.",
-    };
-  }
-
-  if (packet.towerBackedUp) {
-    return {
-      label: "Receipt / archive prep",
-      tone: "receipt",
-      summary: "This resolved record has a final receipt and is waiting for archive prep.",
-    };
-  }
-
-  return {
-    label: "Needs Tower backup",
-    tone: "warn",
-    summary: "This resolved record still needs Tower backup before it is fully sealed.",
-  };
-}
-
-function getReceiptCompletionSummary(packet = {}) {
-  const badges = getReceiptWorkflowBadges(packet);
-  const complete = badges.filter((badge) => badge.complete).length;
-  const total = badges.length;
-
-  if (complete === total) {
-    return {
-      label: "Fully completed",
-      body: "Submitted, reviewed, decided, receipted, Tower-backed, and archive-ready.",
-      tone: "archive",
-    };
-  }
-
-  if (packet.towerBackedUp && packet.id) {
-    return {
-      label: "Resolved, archive prep pending",
-      body: "The decision and receipt exist. Archive readiness is the remaining completion step.",
-      tone: "receipt",
-    };
-  }
-
-  return {
-    label: "Resolved, proof still organizing",
-    body: "The record exists, but some proof or archive steps are not complete yet.",
-    tone: "warn",
-  };
-}
-
-function ReceiptWorkflowBadges({ packet }) {
-  const badges = getReceiptWorkflowBadges(packet);
-
-  return (
-    <div className="receipt-workflow-badge-grid">
-      {badges.map((badge) => (
-        <span
-          key={badge.key}
-          className={`receipt-workflow-badge receipt-workflow-${badge.tone} ${badge.complete ? "is-complete" : "is-pending"}`}
-        >
-          <b>{badge.complete ? "Done" : "Pending"}</b>
-          {badge.label}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-
 
 export default function FinalReceiptViewer({ mode = "owner", employeeName = "" }) {
   const [packets, setPackets] = useState([]);
@@ -330,9 +195,6 @@ export default function FinalReceiptViewer({ mode = "owner", employeeName = "" }
         {visiblePackets.length ? visiblePackets.map((packet) => {
           const archive = getFinalReceiptArchiveStatus(packet);
 
-          const location = getReceiptLocation(packet);
-          const completion = getReceiptCompletionSummary(packet);
-
           return (
             <article key={packet.id} className={`receipt-card receipt-${archive.tone} ${packet.archiveReady ? "is-archive-ready" : ""} ${archiveFlashId === packet.id ? "is-flashing" : ""}`}>
               <div className="receipt-card-top">
@@ -340,24 +202,11 @@ export default function FinalReceiptViewer({ mode = "owner", employeeName = "" }
                 <small>{packet.resolutionStatus}</small>
               </div>
 
-              <div className={`receipt-location-banner receipt-location-${location.tone}`}>
-                <span>Where it is</span>
-                <strong>{location.label}</strong>
-                <p>{location.summary}</p>
-              </div>
-
               <strong>{packet.title}</strong>
               <p>{packet.body}</p>
 
-              <ReceiptWorkflowBadges packet={packet} />
-
-              <div className={`receipt-completion-summary receipt-completion-${completion.tone}`}>
-                <span>{completion.label}</span>
-                <p>{completion.body}</p>
-              </div>
-
               <div className="receipt-facts">
-                <small>{humanProofRef(packet.id)}</small>
+                <small>{packet.id}</small>
                 <small>{packet.businessKey}</small>
                 <small>{packet.towerBackedUp ? "Tower-backed" : "Needs Tower backup"}</small>
                 <small>{archive.status}</small>
@@ -451,28 +300,11 @@ export default function FinalReceiptViewer({ mode = "owner", employeeName = "" }
                 <strong>{selectedPacket.businessKey}</strong>
               </article>
               <article>
-                <span>Proof ref</span>
-                <strong>{humanProofRef(selectedPacket.id)}</strong>
-              </article>
-              <article>
-                <span>Current location</span>
-                <strong>{getReceiptLocation(selectedPacket).label}</strong>
-              </article>
-              <article>
-                <span>Completion</span>
-                <strong>{getReceiptCompletionSummary(selectedPacket).label}</strong>
-              </article>
-              <article>
                 <span>Archive</span>
                 <strong>{getFinalReceiptArchiveStatus(selectedPacket).status}</strong>
                 {selectedPacket.archiveReadyAt ? <small>{new Date(selectedPacket.archiveReadyAt).toLocaleString()}</small> : null}
               </article>
             </div>
-
-            <section className="receipt-source-box">
-              <p className="receipt-kicker">Workflow completion badges</p>
-              <ReceiptWorkflowBadges packet={selectedPacket} />
-            </section>
 
             <section className="receipt-source-box">
               <p className="receipt-kicker">Owner note</p>

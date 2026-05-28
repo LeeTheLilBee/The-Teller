@@ -1118,13 +1118,3 @@
   background: rgba(196,181,253,0.14);
   border-color: rgba(196,181,253,0.34);
 }
-
-
-/* ================================
-   PACK 053A-F — TOWER LIFECYCLE FIT
-   Shared lifecycle timeline panel fit.
-   ================================ */
-
-.workflow-lifecycle-panel {
-  max-width: 100%;
-}

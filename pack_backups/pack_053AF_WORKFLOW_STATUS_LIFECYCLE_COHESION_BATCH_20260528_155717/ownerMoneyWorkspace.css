@@ -2790,13 +2790,3 @@
     top: 138px;
   }
 }
-
-
-/* ================================
-   PACK 053A-F — OWNER LIFECYCLE FIT
-   Shared lifecycle timeline panel fit.
-   ================================ */
-
-.workflow-lifecycle-panel {
-  max-width: 100%;
-}

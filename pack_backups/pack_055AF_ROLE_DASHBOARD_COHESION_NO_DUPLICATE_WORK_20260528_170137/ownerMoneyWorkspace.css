@@ -2800,29 +2800,3 @@
 .workflow-lifecycle-panel {
   max-width: 100%;
 }
-
-
-/* ================================
-   PACK 055A-F — OWNER ROLE COHESION FIT
-   Role cohesion panel fit.
-   ================================ */
-
-.role-cohesion-panel {
-  max-width: 100%;
-}
-
-
-/* ================================
-   PACK 056A-F — OWNER MONEY PRACTICAL USABILITY POLISH
-   Keeps owner view calmer without adding sections.
-   ================================ */
-
-.owner-money-workspace .owner-escalation-dock,
-.owner-money-workspace .final-receipt-viewer {
-  margin-top: 16px;
-  margin-bottom: 18px;
-}
-
-.owner-money-workspace button {
-  min-height: 36px;
-}

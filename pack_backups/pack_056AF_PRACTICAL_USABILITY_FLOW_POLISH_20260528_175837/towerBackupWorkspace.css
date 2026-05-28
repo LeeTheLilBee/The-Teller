@@ -1148,36 +1148,3 @@
 .role-cohesion-panel {
   max-width: 100%;
 }
-
-
-/* ================================
-   PACK 056A-F — TOWER CLEARANCE PRACTICAL USABILITY POLISH
-   Keeps Tower gate clean and usable. No proof content added here.
-   ================================ */
-
-.tower-clearance-card,
-.tower-gate-card,
-.tower-login-card {
-  max-width: 980px;
-}
-
-.tower-clearance-card button,
-.tower-gate-card button,
-.tower-login-card button,
-.tower-backup-workspace button {
-  min-height: 38px;
-}
-
-.tower-clearance-card input,
-.tower-gate-card input,
-.tower-login-card input {
-  min-height: 42px;
-}
-
-@media (max-width: 820px) {
-  .tower-clearance-card,
-  .tower-gate-card,
-  .tower-login-card {
-    border-radius: 24px;
-  }
-}

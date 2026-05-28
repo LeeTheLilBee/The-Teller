@@ -1,0 +1,136 @@
+
+.role-cohesion-panel {
+  border: 1px solid rgba(255,255,255,0.13);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(147,197,253,0.11), transparent 34%),
+    rgba(255,255,255,0.055);
+  border-radius: 30px;
+  padding: clamp(16px, 3vw, 24px);
+  margin: 18px 0 22px;
+  color: #f8fbff;
+  box-shadow: 0 20px 70px rgba(0,0,0,0.18);
+}
+
+.role-cohesion-panel.is-compact {
+  padding: clamp(14px, 2.4vw, 20px);
+}
+
+.role-cohesion-owner,
+.role-cohesion-tower {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(252,211,77,0.10), transparent 34%),
+    rgba(255,255,255,0.055);
+}
+
+.role-cohesion-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.role-cohesion-kicker {
+  margin: 0;
+  color: #93c5fd;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.role-cohesion-owner .role-cohesion-kicker,
+.role-cohesion-tower .role-cohesion-kicker {
+  color: #fde68a;
+}
+
+.role-cohesion-head h2 {
+  margin: 6px 0;
+  color: #f8fbff;
+  font-size: clamp(26px, 5vw, 58px);
+  line-height: 0.92;
+  letter-spacing: -0.075em;
+}
+
+.role-cohesion-head p,
+.role-cohesion-card p,
+.role-cohesion-empty-note p {
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.role-cohesion-mode-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(147,197,253,0.25);
+  background: rgba(147,197,253,0.10);
+  color: #dbeafe;
+  border-radius: 999px;
+  padding: 8px 11px;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.role-cohesion-owner .role-cohesion-mode-pill,
+.role-cohesion-tower .role-cohesion-mode-pill {
+  border-color: rgba(252,211,77,0.28);
+  background: rgba(252,211,77,0.10);
+  color: #fde68a;
+}
+
+.role-cohesion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.role-cohesion-card,
+.role-cohesion-empty-note {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.055);
+  border-radius: 18px;
+  padding: 12px;
+}
+
+.role-cohesion-card span,
+.role-cohesion-empty-note span {
+  display: block;
+  color: #93c5fd;
+  font-size: 9px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+}
+
+.role-cohesion-owner .role-cohesion-card span,
+.role-cohesion-tower .role-cohesion-card span,
+.role-cohesion-owner .role-cohesion-empty-note span,
+.role-cohesion-tower .role-cohesion-empty-note span {
+  color: #fde68a;
+}
+
+.role-cohesion-card strong {
+  display: block;
+  color: #f8fbff;
+  font-size: 16px;
+  line-height: 1.05;
+  margin-bottom: 5px;
+}
+
+.role-cohesion-empty-note {
+  margin-top: 10px;
+  border-style: dashed;
+}
+
+@media (max-width: 980px) {
+  .role-cohesion-grid {
+    grid-template-columns: 1fr;
+  }
+}

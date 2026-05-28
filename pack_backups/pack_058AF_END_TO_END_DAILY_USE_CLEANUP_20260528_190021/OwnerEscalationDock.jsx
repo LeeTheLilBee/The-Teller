@@ -19,10 +19,10 @@ function OwnerDockBadge({ children, tone = "quiet" }) {
 }
 
 function getOwnerDecisionNote(status) {
-  if (status === "Owner Approved") return "Owner approved this request.";
-  if (status === "Owner Rejected") return "Owner rejected this request.";
-  if (status === "Returned to Manager") return "Owner returned this request to manager.";
-  if (status === "Resolved") return "Owner resolved this request and created a final receipt.";
+  if (status === "Owner Approved") return "Owner approved this escalated request.";
+  if (status === "Owner Rejected") return "Owner rejected this escalated request.";
+  if (status === "Returned to Manager") return "Owner returned this request to manager for more work.";
+  if (status === "Resolved") return "Owner marked this request resolved and sealed a final receipt packet.";
   return "Owner reviewed this request.";
 }
 
@@ -226,11 +226,11 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
         </div>
 
         <div className="owner-escalation-actions owner-streamline-actions">
-          <button type="button" onClick={() => onOpen(task)}>Open</button>
+          <button type="button" onClick={() => onOpen(task)}>Open detail</button>
           <button type="button" className="owner-approve" onClick={() => onDecide(task, "Owner Approved")}>Approve</button>
           <button type="button" className="owner-return" onClick={() => onDecide(task, "Returned to Manager")}>Return</button>
           <button type="button" className="owner-reject" onClick={() => onDecide(task, "Owner Rejected")}>Reject</button>
-          <button type="button" className="owner-resolve" onClick={() => onDecide(task, "Resolved")}>Resolve</button>
+          <button type="button" className="owner-resolve" onClick={() => onDecide(task, "Resolved")}>Resolve + Receipt</button>
           <button type="button" className="owner-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>Why this is next</button>
           <button type="button" className="owner-streamline-secondary" onClick={showFullDashboard}>Show full dashboard</button>
           <button type="button" className="owner-streamline-ghost" onClick={dismissForNow}>Dismiss for now</button>
@@ -387,7 +387,7 @@ export default function OwnerEscalationDock() {
               <button type="button" className="owner-approve" onClick={() => ownerDecide(item, "Owner Approved")}>Approve</button>
               <button type="button" className="owner-return" onClick={() => ownerDecide(item, "Returned to Manager")}>Return</button>
               <button type="button" className="owner-reject" onClick={() => ownerDecide(item, "Owner Rejected")}>Reject</button>
-              <button type="button" className="owner-resolve" onClick={() => ownerDecide(item, "Resolved")}>Resolve</button>
+              <button type="button" className="owner-resolve" onClick={() => ownerDecide(item, "Resolved")}>Resolve + Receipt</button>
             </div>
           </article>
         )) : (
@@ -452,7 +452,7 @@ export default function OwnerEscalationDock() {
               <button type="button" className="owner-approve" onClick={() => ownerDecide(selectedItem, "Owner Approved")}>Approve</button>
               <button type="button" className="owner-return" onClick={() => ownerDecide(selectedItem, "Returned to Manager")}>Return to manager</button>
               <button type="button" className="owner-reject" onClick={() => ownerDecide(selectedItem, "Owner Rejected")}>Reject</button>
-              <button type="button" className="owner-resolve" onClick={() => ownerDecide(selectedItem, "Resolved")}>Resolve</button>
+              <button type="button" className="owner-resolve" onClick={() => ownerDecide(selectedItem, "Resolved")}>Resolve + seal receipt</button>
             </div>
           </section>
         </div>

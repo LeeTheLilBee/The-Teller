@@ -1026,6 +1026,27 @@
       ],
       "backup": "pack_backups/pack_057AF_REPAIR_A_FIX_EMPLOYEE_CONFIRMATION_SCOPE_20260528_184251",
       "purpose": "Fix requestSubmitConfirmation runtime error by placing the confirmation state hook inside EmployeeStandaloneWorkspace component scope."
+    },
+    "058AF_END_TO_END_DAILY_USE_CLEANUP": {
+      "name": "End To End Daily Use Cleanup",
+      "status": "complete",
+      "timestamp": "2026-05-28T19:00:22.795884",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css",
+        "src/teller/finalReceiptViewer.css",
+        "src/teller/requestThreadPanel.css",
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "files_written": [
+        "tools/teller_daily_use_smoke_test_058AF.py"
+      ],
+      "backup": "pack_backups/pack_058AF_END_TO_END_DAILY_USE_CLEANUP_20260528_190021",
+      "purpose": "Clean the end-to-end daily-use flow across employee requests, manager review, employee follow-up, owner decisions, resolved records, and Tower safety without adding redundant UI."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

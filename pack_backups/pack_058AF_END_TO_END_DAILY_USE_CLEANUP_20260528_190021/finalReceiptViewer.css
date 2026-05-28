@@ -607,39 +607,3 @@
     border-radius: 24px;
   }
 }
-
-
-/* ================================
-   PACK 058A-F — RESOLVED RECORDS DAILY USE CLEANUP
-   Keeps resolved records informative but not heavy.
-   ================================ */
-
-.receipt-card .receipt-location-banner,
-.receipt-card .receipt-completion-summary {
-  margin-block: 8px;
-}
-
-.receipt-card .receipt-workflow-badge-grid {
-  margin: 10px 0;
-}
-
-.receipt-workflow-badge {
-  font-size: 9px;
-}
-
-.receipt-workflow-badge b {
-  padding: 2px 5px;
-}
-
-.receipt-completion-summary p,
-.receipt-location-banner p {
-  font-size: 12px;
-}
-
-.receipt-card > p {
-  line-height: 1.42;
-}
-
-.receipt-modal .receipt-source-box {
-  margin-top: 12px;
-}

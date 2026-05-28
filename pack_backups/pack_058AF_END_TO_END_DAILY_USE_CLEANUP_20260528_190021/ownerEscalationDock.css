@@ -610,31 +610,3 @@
     border-radius: 24px;
   }
 }
-
-
-/* ================================
-   PACK 058A-F — OWNER DECISION RECEIPT CLEANUP
-   Keeps owner actions direct and receipt flow clean.
-   ================================ */
-
-.owner-escalation-actions button {
-  padding-inline: 10px;
-}
-
-.owner-escalation-actions .owner-approve,
-.owner-escalation-actions .owner-resolve {
-  font-weight: 950;
-}
-
-.owner-escalation-card p,
-.owner-streamline-task-card p {
-  line-height: 1.42;
-}
-
-.owner-source-box {
-  margin-top: 12px;
-}
-
-.owner-detail-grid article {
-  min-height: 88px;
-}

@@ -549,7 +549,7 @@ const [activity, setActivity] = useState([]);
     
     setRequestSubmitConfirmation({
       title: "Sent to manager",
-      body: "Your request was sent to the manager lane.",
+      body: "Your request was sent to the manager lane and backed up for the workflow trail.",
       timestamp: new Date().toISOString(),
     });
 saveTowerBackupItem(towerBackup);
@@ -837,9 +837,9 @@ saveTowerBackupItem(towerBackup);
       {requestSubmitConfirmation ? (
         <article className="emp-submit-confirmation-card">
           <div>
-            <span>{requestSubmitConfirmation.title || "Sent"}</span>
-            <strong>Sent to manager.</strong>
-            <p>{requestSubmitConfirmation.body || "Your update was saved."}</p>
+            <span>{requestSubmitConfirmation.title}</span>
+            <strong>Request sent.</strong>
+            <p>{requestSubmitConfirmation.body}</p>
           </div>
           <button type="button" onClick={() => setRequestSubmitConfirmation(null)}>
             Dismiss
@@ -890,7 +890,7 @@ saveTowerBackupItem(towerBackup);
             />
 
             <section className="emp-followup-card">
-              <p className="emp-kicker">Add info to this request</p>
+              <p className="emp-kicker">Add missing info</p>
               <h3>Send a follow-up back to manager.</h3>
               <p>
                 Use this when the manager needs more proof, you need to correct something,
@@ -944,7 +944,7 @@ saveTowerBackupItem(towerBackup);
               </div>
 
               <button type="button" className="emp-primary" onClick={sendManagerResponseFollowUp}>
-                Send update to manager + Tower backup
+                Send follow-up to manager + Tower backup
               </button>
             </section>
           </section>

@@ -307,7 +307,7 @@ function ManagerUnifiedWorkBoard({ workItems, activeFilter, onOpenReturn, onMark
 
             {item.workType === "returned" ? (
               <div className="mgr-card-actions">
-                <button type="button" onClick={() => onOpenReturn(item)}>Open</button>
+                <button type="button" onClick={() => onOpenReturn(item)}>Open details</button>
                 <button type="button" onClick={() => onMarkReturn(item.id, "Manager acknowledged")}>Acknowledge</button>
                 <button type="button" onClick={() => onMarkReturn(item.id, "Proof being gathered")}>Gather proof</button>
                 <button type="button" onClick={() => onMarkReturn(item.id, "Ready for owner re-review")}>Ready</button>
@@ -577,11 +577,11 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
         </div>
 
         <div className="mgr-card-actions mgr-streamline-actions">
-          <button type="button" onClick={() => onOpen(task)}>Open</button>
-          <button type="button" className="mgr-approve" onClick={() => onDecision(task, "Approved", "Approved. Your manager accepted this request.")}>Approve</button>
-          <button type="button" className="mgr-needs-proof" onClick={() => onDecision(task, "Needs Proof", "More information is needed before this can be approved.")}>Need info</button>
-          <button type="button" className="mgr-reject" onClick={() => onDecision(task, "Rejected", "This request was not approved. Review the note before submitting again.")}>Reject</button>
-          <button type="button" className="mgr-send-upward" onClick={() => onEscalate(task)}>Send up</button>
+          <button type="button" onClick={() => onOpen(task)}>Open details</button>
+          <button type="button" className="mgr-approve" onClick={() => onDecision(task, "Approved", "Approved. Your request has been reviewed and accepted by the manager.")}>Approve</button>
+          <button type="button" className="mgr-needs-proof" onClick={() => onDecision(task, "Needs Proof", "The manager needs more information before this can be approved. Please add the missing details or proof.")}>Needs proof</button>
+          <button type="button" className="mgr-reject" onClick={() => onDecision(task, "Rejected", "This request was not approved. Review the manager note before submitting again.")}>Reject</button>
+          <button type="button" className="mgr-send-upward" onClick={() => onEscalate(task)}>Send upward</button>
           <button type="button" className="mgr-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>Why this is next</button>
           <button type="button" className="mgr-streamline-secondary" onClick={showFullDashboard}>Show full dashboard</button>
           <button type="button" className="mgr-streamline-ghost" onClick={dismissForNow}>Dismiss for now</button>
@@ -666,11 +666,11 @@ function ManagerLane({ title, subtitle, items, tone, onOpen, onDecision, onEscal
             </div>
 
             <div className="mgr-card-actions mgr-decision-actions">
-              <button type="button" onClick={() => onOpen(item)}>Open</button>
-              <button type="button" className="mgr-approve" onClick={() => onDecision(item, "Approved", "Approved. Your manager accepted this request.")}>Approve</button>
-              <button type="button" className="mgr-needs-proof" onClick={() => onDecision(item, "Needs Proof", "More information is needed before this can be approved.")}>Need info</button>
-              <button type="button" className="mgr-reject" onClick={() => onDecision(item, "Rejected", "This request was not approved. Review the note before submitting again.")}>Reject</button>
-              <button type="button" className="mgr-send-upward" onClick={() => onEscalate(item)}>Send up</button>
+              <button type="button" onClick={() => onOpen(item)}>Open details</button>
+              <button type="button" className="mgr-approve" onClick={() => onDecision(item, "Approved", "Approved. Your request has been reviewed and accepted by the manager.")}>Approve</button>
+              <button type="button" className="mgr-needs-proof" onClick={() => onDecision(item, "Needs Proof", "The manager needs more information before this can be approved. Please add the missing details or proof.")}>Needs proof</button>
+              <button type="button" className="mgr-reject" onClick={() => onDecision(item, "Rejected", "This request was not approved. Review the manager note before submitting again.")}>Reject</button>
+              <button type="button" className="mgr-send-upward" onClick={() => onEscalate(item)}>Send upward</button>
             </div>
           </article>
         )) : (
@@ -893,7 +893,7 @@ export default function ManagerStandaloneWorkspace() {
 
     const responseItem = createEmployeeDecisionResponseItem(item, {
       decisionStatus: "Sent Upward",
-      managerNote: "Your request was sent upward for owner or Tower review.",
+      managerNote: "Your request was sent upward for owner or Tower review. No extra action is needed unless someone asks for more information.",
       proofStatus: "Escalated upward",
       managerName: "Manager Portal",
     });
@@ -1200,7 +1200,7 @@ export default function ManagerStandaloneWorkspace() {
               <span>Proof status</span>
               <select value={form.proofStatus} onChange={(event) => updateForm("proofStatus", event.target.value)}>
                 <option>Needs review</option>
-                <option>Need info</option>
+                <option>Needs proof</option>
                 <option>Proof attached</option>
                 <option>Tower required</option>
               </select>
@@ -1266,7 +1266,7 @@ export default function ManagerStandaloneWorkspace() {
                 <p>{item.reason}</p>
                 {item.ownerNote ? <p className="mgr-note">Owner note: {item.ownerNote}</p> : null}
                 <div className="mgr-card-actions">
-                  <button type="button" onClick={() => openReturnItem(item)}>Open</button>
+                  <button type="button" onClick={() => openReturnItem(item)}>Open details</button>
                   <button type="button" onClick={() => markReturnItem(item.id, "Manager acknowledged")}>Acknowledge</button>
                   <button type="button" onClick={() => markReturnItem(item.id, "Proof being gathered")}>Gather proof</button>
                   <button type="button" onClick={() => markReturnItem(item.id, "Ready for owner re-review")}>Ready for re-review</button>

@@ -271,29 +271,3 @@
     justify-content: center;
   }
 }
-
-
-/* ================================
-   PACK 058A-F — REQUEST THREAD DAILY USE CLEANUP
-   Makes connected threads easier to live with inside detail modals.
-   ================================ */
-
-.request-thread-panel {
-  margin-top: 12px;
-}
-
-.thread-summary-card {
-  margin-top: 10px;
-}
-
-.thread-row-body p {
-  line-height: 1.38;
-}
-
-.thread-next-card p {
-  font-size: 12px;
-}
-
-.thread-row-body strong {
-  margin-top: 8px;
-}

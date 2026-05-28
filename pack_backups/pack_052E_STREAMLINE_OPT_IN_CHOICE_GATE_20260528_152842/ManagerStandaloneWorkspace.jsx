@@ -431,13 +431,6 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
     }
   });
   const [whyOpen, setWhyOpen] = useState(false);
-  const [streamlineChoice, setStreamlineChoice] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("the_teller_manager_streamline_choice_v1") || "ask";
-    } catch {
-      return "ask";
-    }
-  });
   const task = getManagerStreamlineTask(requests);
 
   function dismissForNow() {
@@ -459,61 +452,17 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
   function restoreManagerStreamline() {
     try {
       window.sessionStorage.removeItem("the_teller_manager_streamline_hidden_v1");
-      window.sessionStorage.setItem("the_teller_manager_streamline_choice_v1", "streamline");
     } catch {
       // session storage is optional
     }
     setDismissed(false);
-    setStreamlineChoice("streamline");
-  }
-
-  function chooseManagerStreamline() {
-    try {
-      window.sessionStorage.setItem("the_teller_manager_streamline_choice_v1", "streamline");
-      window.sessionStorage.removeItem("the_teller_manager_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("streamline");
-    setDismissed(false);
-  }
-
-  function chooseManagerDashboard() {
-    try {
-      window.sessionStorage.setItem("the_teller_manager_streamline_choice_v1", "dashboard");
-      window.sessionStorage.setItem("the_teller_manager_streamline_hidden_v1", "yes");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("dashboard");
-    setDismissed(true);
   }
 
   if (!task) {
     return null;
   }
 
-  if (streamlineChoice === "ask") {
-    return (
-      <section className="mgr-streamline-choice-card">
-        <div>
-          <p className="mgr-kicker">Choose your work mode</p>
-          <h2>Streamline or full dashboard?</h2>
-          <p>Streamline gives the manager one priority request. Full dashboard shows the whole lane board.</p>
-        </div>
-        <div className="mgr-streamline-choice-actions">
-          <button type="button" onClick={chooseManagerStreamline}>
-            Enter Streamline
-          </button>
-          <button type="button" className="mgr-streamline-choice-secondary" onClick={chooseManagerDashboard}>
-            Stay in Full Dashboard
-          </button>
-        </div>
-      </section>
-    );
-  }
-
-  if (dismissed || streamlineChoice === "dashboard") {
+  if (dismissed) {
     return (
       <section className="mgr-streamline-reset-card">
         <div>

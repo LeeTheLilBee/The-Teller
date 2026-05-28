@@ -167,13 +167,6 @@ function EmployeeStreamlinePanel({
     }
   });
   const [whyOpen, setWhyOpen] = useState(false);
-  const [streamlineChoice, setStreamlineChoice] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("the_teller_employee_streamline_choice_v1") || "ask";
-    } catch {
-      return "ask";
-    }
-  });
   const task = getEmployeeStreamlineTask({ managerResponses, notifications, activity });
 
   function dismissForNow() {
@@ -195,57 +188,13 @@ function EmployeeStreamlinePanel({
   function restoreEmployeeStreamline() {
     try {
       window.sessionStorage.removeItem("the_teller_employee_streamline_hidden_v1");
-      window.sessionStorage.setItem("the_teller_employee_streamline_choice_v1", "streamline");
     } catch {
       // session storage is optional
     }
     setDismissed(false);
-    setStreamlineChoice("streamline");
   }
 
-  function chooseEmployeeStreamline() {
-    try {
-      window.sessionStorage.setItem("the_teller_employee_streamline_choice_v1", "streamline");
-      window.sessionStorage.removeItem("the_teller_employee_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("streamline");
-    setDismissed(false);
-  }
-
-  function chooseEmployeeDashboard() {
-    try {
-      window.sessionStorage.setItem("the_teller_employee_streamline_choice_v1", "dashboard");
-      window.sessionStorage.setItem("the_teller_employee_streamline_hidden_v1", "yes");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("dashboard");
-    setDismissed(true);
-  }
-
-  if (streamlineChoice === "ask") {
-    return (
-      <section className="emp-streamline-choice-card">
-        <div>
-          <p className="emp-kicker">Choose your work mode</p>
-          <h2>Streamline or full dashboard?</h2>
-          <p>Streamline walks you through one next action. Full dashboard lets you browse everything yourself.</p>
-        </div>
-        <div className="emp-streamline-choice-actions">
-          <button type="button" onClick={chooseEmployeeStreamline}>
-            Enter Streamline
-          </button>
-          <button type="button" className="emp-streamline-choice-secondary" onClick={chooseEmployeeDashboard}>
-            Stay in Full Dashboard
-          </button>
-        </div>
-      </section>
-    );
-  }
-
-  if (dismissed || streamlineChoice === "dashboard") {
+  if (dismissed) {
     return (
       <section className="emp-streamline-reset-card">
         <div>

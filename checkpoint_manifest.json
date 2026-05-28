@@ -831,6 +831,21 @@
       ],
       "backup": "pack_backups/pack_052D_STREAMLINE_RESET_CONTROLS_20260528_145441",
       "purpose": "Add Show Streamline reset controls after Streamline Mode is dismissed for Employee, Manager, and Owner lanes."
+    },
+    "052E_STREAMLINE_OPT_IN_CHOICE_GATE": {
+      "name": "Streamline Opt In Choice Gate",
+      "status": "complete",
+      "timestamp": "2026-05-28T15:28:44.757931",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052E_STREAMLINE_OPT_IN_CHOICE_GATE_20260528_152842",
+      "purpose": "Let Employee, Manager, and Owner choose whether to enter Streamline Mode or stay in the full dashboard."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

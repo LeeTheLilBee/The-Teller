@@ -77,13 +77,6 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
     }
   });
   const [whyOpen, setWhyOpen] = useState(false);
-  const [streamlineChoice, setStreamlineChoice] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("the_teller_owner_streamline_choice_v1") || "ask";
-    } catch {
-      return "ask";
-    }
-  });
   const task = getOwnerStreamlineTask(items);
 
   function dismissForNow() {
@@ -105,59 +98,15 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
   function restoreOwnerStreamline() {
     try {
       window.sessionStorage.removeItem("the_teller_owner_streamline_hidden_v1");
-      window.sessionStorage.setItem("the_teller_owner_streamline_choice_v1", "streamline");
     } catch {
       // session storage is optional
     }
     setDismissed(false);
-    setStreamlineChoice("streamline");
-  }
-
-  function chooseOwnerStreamline() {
-    try {
-      window.sessionStorage.setItem("the_teller_owner_streamline_choice_v1", "streamline");
-      window.sessionStorage.removeItem("the_teller_owner_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("streamline");
-    setDismissed(false);
-  }
-
-  function chooseOwnerDashboard() {
-    try {
-      window.sessionStorage.setItem("the_teller_owner_streamline_choice_v1", "dashboard");
-      window.sessionStorage.setItem("the_teller_owner_streamline_hidden_v1", "yes");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("dashboard");
-    setDismissed(true);
   }
 
   if (!task) return null;
 
-  if (streamlineChoice === "ask") {
-    return (
-      <section className="owner-streamline-choice-card">
-        <div>
-          <p className="owner-dock-kicker">Choose your work mode</p>
-          <h2>Streamline or full dashboard?</h2>
-          <p>Streamline gives the owner one priority escalation. Full dashboard shows the full oversight queue.</p>
-        </div>
-        <div className="owner-streamline-choice-actions">
-          <button type="button" onClick={chooseOwnerStreamline}>
-            Enter Streamline
-          </button>
-          <button type="button" className="owner-streamline-choice-secondary" onClick={chooseOwnerDashboard}>
-            Stay in Full Dashboard
-          </button>
-        </div>
-      </section>
-    );
-  }
-
-  if (dismissed || streamlineChoice === "dashboard") {
+  if (dismissed) {
     return (
       <section className="owner-streamline-reset-card">
         <div>

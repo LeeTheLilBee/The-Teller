@@ -489,17 +489,6 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
     setDismissed(true);
   }
 
-  function resetManagerStreamlineChoice() {
-    try {
-      window.sessionStorage.removeItem("the_teller_manager_streamline_choice_v1");
-      window.sessionStorage.removeItem("the_teller_manager_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("ask");
-    setDismissed(false);
-  }
-
   if (!task) {
     return null;
   }
@@ -511,7 +500,6 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
           <p className="mgr-kicker">Choose your work mode</p>
           <h2>Streamline or full dashboard?</h2>
           <p>Streamline gives the manager one priority request. Full dashboard shows the whole lane board.</p>
-          <div className="mgr-streamline-mode-chip">Current mode: asking you first</div>
         </div>
         <div className="mgr-streamline-choice-actions">
           <button type="button" onClick={chooseManagerStreamline}>
@@ -529,19 +517,13 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
     return (
       <section className="mgr-streamline-reset-card">
         <div>
-          <p className="mgr-kicker">Full dashboard mode</p>
+          <p className="mgr-kicker">Streamline hidden</p>
           <h2>Manager guidance is tucked away.</h2>
-          <p>You chose the full lane board. Bring Streamline back or make The Teller ask again.</p>
-          <div className="mgr-streamline-mode-chip">Current mode: full dashboard</div>
+          <p>Bring back the highest-priority task card when you want one decision at a time.</p>
         </div>
-        <div className="mgr-streamline-reset-actions">
-          <button type="button" onClick={restoreManagerStreamline}>
-            Show Streamline
-          </button>
-          <button type="button" className="mgr-streamline-reset-secondary" onClick={resetManagerStreamlineChoice}>
-            Ask me again
-          </button>
-        </div>
+        <button type="button" onClick={restoreManagerStreamline}>
+          Show Streamline
+        </button>
       </section>
     );
   }
@@ -594,7 +576,6 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
           <button type="button" className="mgr-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>Why this is next</button>
           <button type="button" className="mgr-streamline-secondary" onClick={showFullDashboard}>Show full dashboard</button>
           <button type="button" className="mgr-streamline-ghost" onClick={dismissForNow}>Dismiss for now</button>
-          <button type="button" className="mgr-streamline-ghost" onClick={resetManagerStreamlineChoice}>Change mode</button>
         </div>
 
         {whyOpen ? (

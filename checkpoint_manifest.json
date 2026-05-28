@@ -846,6 +846,21 @@
       ],
       "backup": "pack_backups/pack_052E_STREAMLINE_OPT_IN_CHOICE_GATE_20260528_152842",
       "purpose": "Let Employee, Manager, and Owner choose whether to enter Streamline Mode or stay in the full dashboard."
+    },
+    "052FH_STREAMLINE_WORKFLOW_COHESION_BATCH": {
+      "name": "Streamline Workflow Cohesion Batch",
+      "status": "complete",
+      "timestamp": "2026-05-28T15:45:11.796135",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052FH_STREAMLINE_WORKFLOW_COHESION_BATCH_20260528_154510",
+      "purpose": "Bundle Streamline choice controls, mode reset, mode chips, cleaner reset states, and cohesive language across Employee, Manager, and Owner lanes."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

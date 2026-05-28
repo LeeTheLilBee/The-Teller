@@ -225,17 +225,6 @@ function EmployeeStreamlinePanel({
     setDismissed(true);
   }
 
-  function resetEmployeeStreamlineChoice() {
-    try {
-      window.sessionStorage.removeItem("the_teller_employee_streamline_choice_v1");
-      window.sessionStorage.removeItem("the_teller_employee_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("ask");
-    setDismissed(false);
-  }
-
   if (streamlineChoice === "ask") {
     return (
       <section className="emp-streamline-choice-card">
@@ -243,7 +232,6 @@ function EmployeeStreamlinePanel({
           <p className="emp-kicker">Choose your work mode</p>
           <h2>Streamline or full dashboard?</h2>
           <p>Streamline walks you through one next action. Full dashboard lets you browse everything yourself.</p>
-          <div className="emp-streamline-mode-chip">Current mode: asking you first</div>
         </div>
         <div className="emp-streamline-choice-actions">
           <button type="button" onClick={chooseEmployeeStreamline}>
@@ -261,19 +249,13 @@ function EmployeeStreamlinePanel({
     return (
       <section className="emp-streamline-reset-card">
         <div>
-          <p className="emp-kicker">Full dashboard mode</p>
-          <h2>Streamline is tucked away.</h2>
-          <p>You chose the full dashboard. You can bring Streamline back or make The Teller ask again.</p>
-          <div className="emp-streamline-mode-chip">Current mode: full dashboard</div>
+          <p className="emp-kicker">Streamline hidden</p>
+          <h2>Guidance is tucked away.</h2>
+          <p>Bring back the one-next-action card whenever you want a simpler view.</p>
         </div>
-        <div className="emp-streamline-reset-actions">
-          <button type="button" onClick={restoreEmployeeStreamline}>
-            Show Streamline
-          </button>
-          <button type="button" className="emp-streamline-reset-secondary" onClick={resetEmployeeStreamlineChoice}>
-            Ask me again
-          </button>
-        </div>
+        <button type="button" onClick={restoreEmployeeStreamline}>
+          Show Streamline
+        </button>
       </section>
     );
   }
@@ -329,9 +311,6 @@ function EmployeeStreamlinePanel({
           </button>
           <button type="button" className="emp-streamline-ghost" onClick={dismissForNow}>
             Dismiss for now
-          </button>
-          <button type="button" className="emp-streamline-ghost" onClick={resetEmployeeStreamlineChoice}>
-            Change mode
           </button>
         </div>
 

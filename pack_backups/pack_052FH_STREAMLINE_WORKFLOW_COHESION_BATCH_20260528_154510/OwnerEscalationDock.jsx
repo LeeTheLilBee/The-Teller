@@ -135,17 +135,6 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
     setDismissed(true);
   }
 
-  function resetOwnerStreamlineChoice() {
-    try {
-      window.sessionStorage.removeItem("the_teller_owner_streamline_choice_v1");
-      window.sessionStorage.removeItem("the_teller_owner_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setStreamlineChoice("ask");
-    setDismissed(false);
-  }
-
   if (!task) return null;
 
   if (streamlineChoice === "ask") {
@@ -155,7 +144,6 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
           <p className="owner-dock-kicker">Choose your work mode</p>
           <h2>Streamline or full dashboard?</h2>
           <p>Streamline gives the owner one priority escalation. Full dashboard shows the full oversight queue.</p>
-          <div className="owner-streamline-mode-chip">Current mode: asking you first</div>
         </div>
         <div className="owner-streamline-choice-actions">
           <button type="button" onClick={chooseOwnerStreamline}>
@@ -173,19 +161,13 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
     return (
       <section className="owner-streamline-reset-card">
         <div>
-          <p className="owner-dock-kicker">Full dashboard mode</p>
+          <p className="owner-dock-kicker">Streamline hidden</p>
           <h2>Owner guidance is tucked away.</h2>
-          <p>You chose the full oversight queue. Bring Streamline back or make The Teller ask again.</p>
-          <div className="owner-streamline-mode-chip">Current mode: full dashboard</div>
+          <p>Bring back the highest-priority escalation card when you want one decision at a time.</p>
         </div>
-        <div className="owner-streamline-reset-actions">
-          <button type="button" onClick={restoreOwnerStreamline}>
-            Show Streamline
-          </button>
-          <button type="button" className="owner-streamline-reset-secondary" onClick={resetOwnerStreamlineChoice}>
-            Ask me again
-          </button>
-        </div>
+        <button type="button" onClick={restoreOwnerStreamline}>
+          Show Streamline
+        </button>
       </section>
     );
   }
@@ -233,7 +215,6 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
           <button type="button" className="owner-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>Why this is next</button>
           <button type="button" className="owner-streamline-secondary" onClick={showFullDashboard}>Show full dashboard</button>
           <button type="button" className="owner-streamline-ghost" onClick={dismissForNow}>Dismiss for now</button>
-          <button type="button" className="owner-streamline-ghost" onClick={resetOwnerStreamlineChoice}>Change mode</button>
         </div>
 
         {whyOpen ? (

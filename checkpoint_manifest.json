@@ -816,6 +816,21 @@
       ],
       "backup": "pack_backups/pack_052C_STREAMLINE_POLISH_DISMISS_WHY_NEXT_20260528_144636",
       "purpose": "Add dismiss, show full dashboard, and why-this-is-next controls to Employee, Manager, and Owner Streamline Mode."
+    },
+    "052D_STREAMLINE_RESET_CONTROLS": {
+      "name": "Streamline Reset Controls",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:54:42.952126",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052D_STREAMLINE_RESET_CONTROLS_20260528_145441",
+      "purpose": "Add Show Streamline reset controls after Streamline Mode is dismissed for Employee, Manager, and Owner lanes."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

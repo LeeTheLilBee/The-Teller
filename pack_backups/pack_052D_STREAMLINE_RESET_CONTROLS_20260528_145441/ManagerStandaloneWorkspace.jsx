@@ -449,32 +449,8 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
     }
   }
 
-  function restoreManagerStreamline() {
-    try {
-      window.sessionStorage.removeItem("the_teller_manager_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setDismissed(false);
-  }
-
-  if (!task) {
+  if (!task || dismissed) {
     return null;
-  }
-
-  if (dismissed) {
-    return (
-      <section className="mgr-streamline-reset-card">
-        <div>
-          <p className="mgr-kicker">Streamline hidden</p>
-          <h2>Manager guidance is tucked away.</h2>
-          <p>Bring back the highest-priority task card when you want one decision at a time.</p>
-        </div>
-        <button type="button" onClick={restoreManagerStreamline}>
-          Show Streamline
-        </button>
-      </section>
-    );
   }
 
   const lane = getManagerLaneForRequest(task);

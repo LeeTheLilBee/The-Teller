@@ -185,28 +185,8 @@ function EmployeeStreamlinePanel({
     }
   }
 
-  function restoreEmployeeStreamline() {
-    try {
-      window.sessionStorage.removeItem("the_teller_employee_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setDismissed(false);
-  }
-
   if (dismissed) {
-    return (
-      <section className="emp-streamline-reset-card">
-        <div>
-          <p className="emp-kicker">Streamline hidden</p>
-          <h2>Guidance is tucked away.</h2>
-          <p>Bring back the one-next-action card whenever you want a simpler view.</p>
-        </div>
-        <button type="button" onClick={restoreEmployeeStreamline}>
-          Show Streamline
-        </button>
-      </section>
-    );
+    return null;
   }
 
   function handlePrimaryAction() {

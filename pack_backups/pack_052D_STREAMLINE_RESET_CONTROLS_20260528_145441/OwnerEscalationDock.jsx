@@ -95,31 +95,7 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
     }
   }
 
-  function restoreOwnerStreamline() {
-    try {
-      window.sessionStorage.removeItem("the_teller_owner_streamline_hidden_v1");
-    } catch {
-      // session storage is optional
-    }
-    setDismissed(false);
-  }
-
-  if (!task) return null;
-
-  if (dismissed) {
-    return (
-      <section className="owner-streamline-reset-card">
-        <div>
-          <p className="owner-dock-kicker">Streamline hidden</p>
-          <h2>Owner guidance is tucked away.</h2>
-          <p>Bring back the highest-priority escalation card when you want one decision at a time.</p>
-        </div>
-        <button type="button" onClick={restoreOwnerStreamline}>
-          Show Streamline
-        </button>
-      </section>
-    );
-  }
+  if (!task || dismissed) return null;
 
   const score = getOwnerStreamlinePriorityScore(task);
 

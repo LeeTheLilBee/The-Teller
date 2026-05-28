@@ -779,6 +779,28 @@
       ],
       "backup": "pack_backups/pack_052A_STREAMLINE_MODE_MANAGER_OWNER_WORK_QUEUES_20260527_235158",
       "purpose": "Add Streamline Mode panels that surface one highest-priority manager/owner task at a time."
+    },
+    "052B_EMPLOYEE_STREAMLINE_MODE": {
+      "name": "Employee Streamline Mode",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:27:55.710557",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_052B_EMPLOYEE_STREAMLINE_MODE_20260528_142754",
+      "purpose": "Add employee Streamline Mode that surfaces one next-best employee action at a time."
+    },
+    "052B_REPAIR_FORCE_EMPLOYEE_STREAMLINE_VISIBLE": {
+      "name": "Force Employee Streamline Panel Visible",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:34:53.672566",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_052B_REPAIR_FORCE_EMPLOYEE_STREAMLINE_VISIBLE_20260528_143452",
+      "purpose": "Force Employee Streamline Mode panel to render directly under the employee main page opening."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

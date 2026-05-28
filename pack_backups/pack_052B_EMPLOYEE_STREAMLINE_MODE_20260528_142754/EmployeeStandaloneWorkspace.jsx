@@ -72,137 +72,6 @@ function createEmployeeNotice({ type = "info", title, body, target }) {
   };
 }
 
-
-function getEmployeeStreamlineTask({ managerResponses = [], notifications = [], activity = [] }) {
-  const needsInfoResponse = managerResponses.find((item) => {
-    const text = JSON.stringify(item || {}).toLowerCase();
-    return (
-      text.includes("needs proof") ||
-      text.includes("needs more info") ||
-      text.includes("more information") ||
-      text.includes("proof needed") ||
-      text.includes("returned to manager")
-    );
-  });
-
-  if (needsInfoResponse) {
-    return {
-      type: "needs_info",
-      tone: "urgent",
-      title: "Add the missing info first.",
-      body: "Your manager or owner needs more detail before this can move forward.",
-      actionLabel: "Open response",
-      target: needsInfoResponse,
-      priority: 1000,
-    };
-  }
-
-  const freshManagerResponse = managerResponses[0];
-  if (freshManagerResponse) {
-    return {
-      type: "review_response",
-      tone: "manager",
-      title: "Review your latest response.",
-      body: freshManagerResponse.body || "A manager or owner responded to your request.",
-      actionLabel: "Open response",
-      target: freshManagerResponse,
-      priority: 850,
-    };
-  }
-
-  const freshNotice = notifications[0];
-  if (freshNotice) {
-    return {
-      type: "notification",
-      tone: freshNotice.type || "info",
-      title: freshNotice.title || "Check your update.",
-      body: freshNotice.body || "You have a new employee-lane update.",
-      actionLabel: "Open notifications",
-      target: freshNotice,
-      priority: 700,
-    };
-  }
-
-  const freshActivity = activity[0];
-  if (freshActivity) {
-    return {
-      type: "activity",
-      tone: "steady",
-      title: "Latest activity is saved.",
-      body: freshActivity.body || "Your latest employee action was recorded.",
-      actionLabel: "Review activity",
-      target: freshActivity,
-      priority: 500,
-    };
-  }
-
-  return {
-    type: "caught_up",
-    tone: "clear",
-    title: "You’re caught up.",
-    body: "No manager response needs action right now. You can submit a new request when needed.",
-    actionLabel: "Start a request",
-    target: null,
-    priority: 100,
-  };
-}
-
-function EmployeeStreamlinePanel({
-  managerResponses,
-  notifications,
-  activity,
-  onOpenResponse,
-  onOpenNotifications,
-}) {
-  const task = getEmployeeStreamlineTask({ managerResponses, notifications, activity });
-
-  function handlePrimaryAction() {
-    if (task.type === "needs_info" || task.type === "review_response") {
-      onOpenResponse(task.target);
-      return;
-    }
-
-    if (task.type === "notification") {
-      onOpenNotifications();
-      return;
-    }
-
-    const form = document.querySelector(".emp-request-form, .employee-request-form, form");
-    if (form?.scrollIntoView) {
-      form.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }
-
-  return (
-    <section className={`emp-streamline-panel emp-streamline-${task.tone}`}>
-      <div>
-        <p className="emp-kicker">Streamline Mode</p>
-        <h2>{task.title}</h2>
-        <p>{task.body}</p>
-
-        <div className="emp-streamline-badges">
-          <span>{task.type.replaceAll("_", " ")}</span>
-          <span>Priority {task.priority}</span>
-        </div>
-      </div>
-
-      <article className="emp-streamline-task-card">
-        <span>Next employee action</span>
-        <strong>{task.actionLabel}</strong>
-        <p>
-          {task.type === "caught_up"
-            ? "Nothing is waiting on you. Keep it simple."
-            : "Handle this first so your request can keep moving."}
-        </p>
-
-        <button type="button" onClick={handlePrimaryAction}>
-          {task.actionLabel}
-        </button>
-      </article>
-    </section>
-  );
-}
-
 function EmployeeNotificationsDropdown({ notifications, open, setOpen, onClear }) {
   return (
     <div className="emp-notifications-shell">
@@ -483,14 +352,6 @@ export default function EmployeeStandaloneWorkspace() {
 
   return (
     <main className="employee-workspace">
-      <EmployeeStreamlinePanel
-        managerResponses={managerResponses}
-        notifications={employeeNotifications}
-        activity={activity}
-        onOpenResponse={openManagerResponseDetail}
-        onOpenNotifications={() => setEmployeeNotificationsOpen(true)}
-      />
-
       <div className="emp-corner-tools">
         <EmployeeNotificationsDropdown
           notifications={employeeNotifications}
@@ -499,7 +360,8 @@ export default function EmployeeStandaloneWorkspace() {
           onClear={clearEmployeeNotifications}
         />
       </div>
-<section className="emp-simple-hero">
+
+      <section className="emp-simple-hero">
         <div className="emp-hero-copy">
           <p className="emp-kicker">Employee lane · The Teller</p>
           <h1>Pay questions, proof, and manager help.</h1>

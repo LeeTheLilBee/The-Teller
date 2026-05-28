@@ -483,14 +483,6 @@ export default function EmployeeStandaloneWorkspace() {
 
   return (
     <main className="employee-workspace">
-      <EmployeeStreamlinePanel
-        managerResponses={managerResponses}
-        notifications={employeeNotifications}
-        activity={activity}
-        onOpenResponse={openManagerResponseDetail}
-        onOpenNotifications={() => setEmployeeNotificationsOpen(true)}
-      />
-
       <div className="emp-corner-tools">
         <EmployeeNotificationsDropdown
           notifications={employeeNotifications}
@@ -499,7 +491,16 @@ export default function EmployeeStandaloneWorkspace() {
           onClear={clearEmployeeNotifications}
         />
       </div>
-<section className="emp-simple-hero">
+
+      <EmployeeStreamlinePanel
+        managerResponses={managerResponses}
+        notifications={employeeNotifications}
+        activity={activity}
+        onOpenResponse={openManagerResponseDetail}
+        onOpenNotifications={() => setEmployeeNotificationsOpen(true)}
+      />
+
+      <section className="emp-simple-hero">
         <div className="emp-hero-copy">
           <p className="emp-kicker">Employee lane · The Teller</p>
           <h1>Pay questions, proof, and manager help.</h1>

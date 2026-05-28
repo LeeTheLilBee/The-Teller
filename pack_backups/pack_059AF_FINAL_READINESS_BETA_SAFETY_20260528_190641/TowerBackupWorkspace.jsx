@@ -24,8 +24,6 @@ import {
 } from "./managerOwnerBridge";
 import "./towerBackupWorkspace.css";
 
-// PACK_059AF_TOWER_CLEARANCE_SAFETY_GUARD: no proof/thread panels render before Tower clearance.
-
 // PACK_054AF_REPAIR_B_TOWER_CLEARANCE_CLEAN
 function TowerBadge({ children, tone = "quiet" }) {
   return <span className={`tower-badge tower-badge-${tone}`}>{children}</span>;

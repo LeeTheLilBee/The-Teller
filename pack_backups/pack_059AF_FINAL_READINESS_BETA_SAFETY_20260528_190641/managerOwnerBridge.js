@@ -1,4 +1,3 @@
-// PACK_059AF_DEMO_MODE_NOTE: Current Teller bridge data is demo/localStorage backed, not production payroll persistence.
 
 const MANAGER_SUBMISSIONS_KEY = "the_teller_manager_submissions_v1";
 const MANAGER_RETURN_QUEUE_KEY = "the_teller_manager_return_queue_v1";

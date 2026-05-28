@@ -1,0 +1,49 @@
+{
+  "pack": "059A-F",
+  "name": "Final Readiness + Beta Safety Batch",
+  "status": "demo_ready_not_production_ready",
+  "generated_at": "2026-05-28T19:06:41.764906",
+  "safe_for_demo": [
+    "Employee request submission flow",
+    "Manager review lanes",
+    "Employee follow-up loop",
+    "Owner escalation flow",
+    "Final receipt packet flow",
+    "Resolved records with workflow badges",
+    "Streamline opt-in controls",
+    "Tower clearance gate visual flow",
+    "Local smoke-test checks"
+  ],
+  "mock_or_local_storage": [
+    "Employee requests",
+    "Manager responses",
+    "Owner escalations",
+    "Final receipt packets",
+    "Tower backup records",
+    "Tester feedback",
+    "Beta readiness notes"
+  ],
+  "not_production_payroll_yet": [
+    "No real payroll processor integration",
+    "No real tax filing or withholding engine",
+    "No real bank/direct deposit integration",
+    "No production-grade authentication backend",
+    "No production database persistence",
+    "No legally final payroll compliance engine"
+  ],
+  "must_happen_before_real_users_or_payroll": [
+    "Replace localStorage with backend database",
+    "Connect Tower authentication to real identity/session backend",
+    "Add role-based server-side authorization",
+    "Add audit logs server-side",
+    "Add real payroll provider or payroll processing backend",
+    "Add legal/compliance review for payroll language and workflows",
+    "Add privacy/security review before collecting real employee data",
+    "Add data export/delete/retention policies"
+  ],
+  "tower_safety_rules": [
+    "Tower clearance page must not show proof/thread records before clearance",
+    "Owner authority should not be revocable by manager/employee flows",
+    "Tower proof/thread content can be re-added later only inside a cleared Tower workspace"
+  ]
+}

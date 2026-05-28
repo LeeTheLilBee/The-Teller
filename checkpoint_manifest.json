@@ -801,6 +801,21 @@
       ],
       "backup": "pack_backups/pack_052B_REPAIR_FORCE_EMPLOYEE_STREAMLINE_VISIBLE_20260528_143452",
       "purpose": "Force Employee Streamline Mode panel to render directly under the employee main page opening."
+    },
+    "052C_STREAMLINE_POLISH_DISMISS_WHY_NEXT": {
+      "name": "Streamline Mode Polish Dismiss Why Next",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:46:38.785512",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052C_STREAMLINE_POLISH_DISMISS_WHY_NEXT_20260528_144636",
+      "purpose": "Add dismiss, show full dashboard, and why-this-is-next controls to Employee, Manager, and Owner Streamline Mode."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

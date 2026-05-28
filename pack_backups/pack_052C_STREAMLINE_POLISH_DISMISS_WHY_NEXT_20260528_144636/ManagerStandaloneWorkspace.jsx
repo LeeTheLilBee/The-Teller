@@ -394,62 +394,10 @@ function getManagerStreamlineTask(requests) {
   return active[0] || null;
 }
 
-
-function getManagerStreamlineWhy(item) {
-  const lane = getManagerLaneForRequest(item);
-  const text = JSON.stringify(item || {}).toLowerCase();
-
-  if (String(item.urgency || "").toLowerCase().includes("payroll urgent")) {
-    return "This is first because payroll-urgent items can affect pay timing and need fast review.";
-  }
-
-  if (text.includes("direct deposit") || text.includes("bank") || text.includes("tax")) {
-    return "This is first because it may involve sensitive payment, bank, tax, or identity information.";
-  }
-
-  if (lane === "tower") {
-    return "This is next because Tower or secure-document requests should be handled carefully before normal requests.";
-  }
-
-  if (lane === "followups") {
-    return "This is next because the employee already replied, so the loop is ready for manager action.";
-  }
-
-  if (lane === "needsProof") {
-    return "This is next because it needs proof or clarification before it can move forward.";
-  }
-
-  return "This is next because it is the highest-priority active manager request.";
-}
-
 function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
-  const [dismissed, setDismissed] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("the_teller_manager_streamline_hidden_v1") === "yes";
-    } catch {
-      return false;
-    }
-  });
-  const [whyOpen, setWhyOpen] = useState(false);
   const task = getManagerStreamlineTask(requests);
 
-  function dismissForNow() {
-    try {
-      window.sessionStorage.setItem("the_teller_manager_streamline_hidden_v1", "yes");
-    } catch {
-      // session storage is optional
-    }
-    setDismissed(true);
-  }
-
-  function showFullDashboard() {
-    const lanes = document.querySelector(".mgr-lane-board, .mgr-employee-request-dock");
-    if (lanes?.scrollIntoView) {
-      lanes.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }
-
-  if (!task || dismissed) {
+  if (!task) {
     return null;
   }
 
@@ -498,17 +446,7 @@ function ManagerStreamlinePanel({ requests, onOpen, onDecision, onEscalate }) {
           <button type="button" className="mgr-needs-proof" onClick={() => onDecision(task, "Needs Proof", "Manager needs more proof before this can be approved.")}>Needs proof</button>
           <button type="button" className="mgr-reject" onClick={() => onDecision(task, "Rejected", "Rejected by manager. Please review the note or submit a clearer request.")}>Reject</button>
           <button type="button" className="mgr-send-upward" onClick={() => onEscalate(task)}>Send upward</button>
-          <button type="button" className="mgr-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>Why this is next</button>
-          <button type="button" className="mgr-streamline-secondary" onClick={showFullDashboard}>Show full dashboard</button>
-          <button type="button" className="mgr-streamline-ghost" onClick={dismissForNow}>Dismiss for now</button>
         </div>
-
-        {whyOpen ? (
-          <div className="mgr-streamline-why">
-            <span>Why this is next</span>
-            <p>{getManagerStreamlineWhy(task)}</p>
-          </div>
-        ) : null}
       </article>
     </section>
   );

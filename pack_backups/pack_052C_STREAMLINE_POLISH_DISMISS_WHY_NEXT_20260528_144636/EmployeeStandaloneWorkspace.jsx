@@ -94,7 +94,6 @@ function getEmployeeStreamlineTask({ managerResponses = [], notifications = [], 
       actionLabel: "Open response",
       target: needsInfoResponse,
       priority: 1000,
-      why: "This is first because the request cannot move until the missing proof or extra information is added.",
     };
   }
 
@@ -108,7 +107,6 @@ function getEmployeeStreamlineTask({ managerResponses = [], notifications = [], 
       actionLabel: "Open response",
       target: freshManagerResponse,
       priority: 850,
-      why: "This is next because a manager or owner response is waiting for your review.",
     };
   }
 
@@ -122,7 +120,6 @@ function getEmployeeStreamlineTask({ managerResponses = [], notifications = [], 
       actionLabel: "Open notifications",
       target: freshNotice,
       priority: 700,
-      why: "This is next because you have a new employee-lane notification.",
     };
   }
 
@@ -136,7 +133,6 @@ function getEmployeeStreamlineTask({ managerResponses = [], notifications = [], 
       actionLabel: "Review activity",
       target: freshActivity,
       priority: 500,
-      why: "This is next because it is your most recent saved activity.",
     };
   }
 
@@ -148,7 +144,6 @@ function getEmployeeStreamlineTask({ managerResponses = [], notifications = [], 
     actionLabel: "Start a request",
     target: null,
     priority: 100,
-    why: "Nothing is blocking you right now, so the next best action is optional.",
   };
 }
 
@@ -159,35 +154,7 @@ function EmployeeStreamlinePanel({
   onOpenResponse,
   onOpenNotifications,
 }) {
-  const [dismissed, setDismissed] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("the_teller_employee_streamline_hidden_v1") === "yes";
-    } catch {
-      return false;
-    }
-  });
-  const [whyOpen, setWhyOpen] = useState(false);
   const task = getEmployeeStreamlineTask({ managerResponses, notifications, activity });
-
-  function dismissForNow() {
-    try {
-      window.sessionStorage.setItem("the_teller_employee_streamline_hidden_v1", "yes");
-    } catch {
-      // session storage is optional
-    }
-    setDismissed(true);
-  }
-
-  function showFullDashboard() {
-    const nextSection = document.querySelector(".final-receipt-viewer-employee, .emp-manager-response-card, .emp-request-panel, .emp-request-form, form");
-    if (nextSection?.scrollIntoView) {
-      nextSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }
-
-  if (dismissed) {
-    return null;
-  }
 
   function handlePrimaryAction() {
     if (task.type === "needs_info" || task.type === "review_response") {
@@ -228,27 +195,9 @@ function EmployeeStreamlinePanel({
             : "Handle this first so your request can keep moving."}
         </p>
 
-        <div className="emp-streamline-actions">
-          <button type="button" onClick={handlePrimaryAction}>
-            {task.actionLabel}
-          </button>
-          <button type="button" className="emp-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>
-            Why this is next
-          </button>
-          <button type="button" className="emp-streamline-secondary" onClick={showFullDashboard}>
-            Show full dashboard
-          </button>
-          <button type="button" className="emp-streamline-ghost" onClick={dismissForNow}>
-            Dismiss for now
-          </button>
-        </div>
-
-        {whyOpen ? (
-          <div className="emp-streamline-why">
-            <span>Why this is next</span>
-            <p>{task.why}</p>
-          </div>
-        ) : null}
+        <button type="button" onClick={handlePrimaryAction}>
+          {task.actionLabel}
+        </button>
       </article>
     </section>
   );

@@ -49,53 +49,10 @@ function getOwnerStreamlineTask(items) {
   return active[0] || null;
 }
 
-
-function getOwnerStreamlineWhy(item) {
-  const text = JSON.stringify(item || {}).toLowerCase();
-
-  if (String(item.urgency || "").toLowerCase().includes("payroll urgent")) {
-    return "This is first because payroll-urgent escalations may affect pay timing or employee support.";
-  }
-
-  if (text.includes("direct deposit") || text.includes("bank") || text.includes("tax")) {
-    return "This is first because it may involve sensitive banking, tax, payment, or identity data.";
-  }
-
-  if (text.includes("tower") || text.includes("secure document")) {
-    return "This is next because Tower and secure-document escalations need owner-level oversight.";
-  }
-
-  return "This is next because it is the highest-priority active owner escalation.";
-}
-
 function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
-  const [dismissed, setDismissed] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("the_teller_owner_streamline_hidden_v1") === "yes";
-    } catch {
-      return false;
-    }
-  });
-  const [whyOpen, setWhyOpen] = useState(false);
   const task = getOwnerStreamlineTask(items);
 
-  function dismissForNow() {
-    try {
-      window.sessionStorage.setItem("the_teller_owner_streamline_hidden_v1", "yes");
-    } catch {
-      // session storage is optional
-    }
-    setDismissed(true);
-  }
-
-  function showFullDashboard() {
-    const queue = document.querySelector(".owner-escalation-grid, .owner-escalation-dock");
-    if (queue?.scrollIntoView) {
-      queue.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }
-
-  if (!task || dismissed) return null;
+  if (!task) return null;
 
   const score = getOwnerStreamlinePriorityScore(task);
 
@@ -137,17 +94,7 @@ function OwnerStreamlinePanel({ items, onOpen, onDecide }) {
           <button type="button" className="owner-return" onClick={() => onDecide(task, "Returned to Manager")}>Return</button>
           <button type="button" className="owner-reject" onClick={() => onDecide(task, "Owner Rejected")}>Reject</button>
           <button type="button" className="owner-resolve" onClick={() => onDecide(task, "Resolved")}>Resolve + Receipt</button>
-          <button type="button" className="owner-streamline-secondary" onClick={() => setWhyOpen((value) => !value)}>Why this is next</button>
-          <button type="button" className="owner-streamline-secondary" onClick={showFullDashboard}>Show full dashboard</button>
-          <button type="button" className="owner-streamline-ghost" onClick={dismissForNow}>Dismiss for now</button>
         </div>
-
-        {whyOpen ? (
-          <div className="owner-streamline-why">
-            <span>Why this is next</span>
-            <p>{getOwnerStreamlineWhy(task)}</p>
-          </div>
-        ) : null}
       </article>
     </section>
   );

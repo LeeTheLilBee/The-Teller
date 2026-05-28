@@ -507,13 +507,3 @@
   border-color: rgba(196,181,253,0.34);
   color: #ddd6fe;
 }
-
-
-/* ================================
-   PACK 054A-F — RECEIPT REQUEST THREAD FIT
-   Shared request thread panel fit.
-   ================================ */
-
-.request-thread-panel {
-  max-width: 100%;
-}

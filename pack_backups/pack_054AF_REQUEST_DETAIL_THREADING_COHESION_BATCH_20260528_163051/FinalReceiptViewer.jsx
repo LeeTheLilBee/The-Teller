@@ -13,7 +13,6 @@ import {
 } from "./workflowLifecycle";
 import "./finalReceiptViewer.css";
 
-import RequestThreadPanel from "./RequestThreadPanel.jsx";
 function ReceiptBadge({ children, tone = "quiet" }) {
   return <span className={`receipt-badge receipt-badge-${tone}`}>{children}</span>;
 }
@@ -479,13 +478,6 @@ export default function FinalReceiptViewer({ mode = "owner", employeeName = "" }
               <p className="receipt-kicker">Owner note</p>
               <p>{selectedPacket.ownerNote || selectedPacket.body}</p>
             </section>
-
-            <RequestThreadPanel
-              seed={selectedPacket}
-              employeeName={selectedPacket.employeeName}
-              title="Resolved record thread"
-              compact
-            />
 
             <section className="receipt-source-box">
               <p className="receipt-kicker">Packet payload preview</p>

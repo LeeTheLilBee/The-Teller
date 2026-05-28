@@ -907,6 +907,50 @@
       ],
       "backup": "pack_backups/pack_053AF_REPAIR_B_EMPLOYEE_RESOLVED_RECORD_WORKFLOW_BADGES_20260528_160724",
       "purpose": "Upgrade Employee Resolved Records with workflow-style completion badges, current location, archive state, and human proof references."
+    },
+    "054AF_REQUEST_DETAIL_THREADING_COHESION_BATCH": {
+      "name": "Request Detail Threading Cohesion Batch",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:30:54.161385",
+      "files_written": [
+        "src/teller/requestThreading.js",
+        "src/teller/RequestThreadPanel.jsx",
+        "src/teller/requestThreadPanel.css"
+      ],
+      "files_patched": [
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_054AF_REQUEST_DETAIL_THREADING_COHESION_BATCH_20260528_163051",
+      "purpose": "Add shared request-threading utility and connected thread panels across resolved records, employee response detail, owner escalation detail, and Tower proof room."
+    },
+    "054AF_REPAIR_A_RESTORE_TOWER_CLEARANCE_GATE": {
+      "name": "Restore Tower Clearance Gate",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:39:32.682264",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_054AF_REPAIR_A_RESTORE_TOWER_CLEARANCE_GATE_20260528_163930",
+      "purpose": "Ensure Tower request thread/proof panels render only after Tower clearance gate, not before password/owner clearance."
+    },
+    "054AF_REPAIR_B_REMOVE_PROOF_TRAIL_FROM_TOWER_CLEARANCE_PAGE": {
+      "name": "Remove Proof Trail From Tower Clearance Page",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:43:55.849599",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_054AF_REPAIR_B_REMOVE_PROOF_TRAIL_FROM_TOWER_CLEARANCE_PAGE_20260528_164354",
+      "purpose": "Remove RequestThreadPanel and WorkflowLifecyclePanel from TowerBackupWorkspace so proof/thread content cannot appear on Tower clearance/login page."
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

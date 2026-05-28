@@ -10,7 +10,6 @@ import {
 import "./employeeStandaloneWorkspace.css";
 
 import FinalReceiptViewer from "./FinalReceiptViewer.jsx";
-import RequestThreadPanel from "./RequestThreadPanel.jsx";
 const EMPLOYEE_SEEN_MANAGER_RESPONSES_KEY = "the_teller_employee_seen_manager_responses_v1";
 
 function readSeenEmployeeResponseIds() {
@@ -859,13 +858,6 @@ export default function EmployeeStandaloneWorkspace() {
                 <strong>{selectedManagerResponse.towerBackedUp ? "Backed up" : "Not backed up"}</strong>
               </article>
             </div>
-
-            <RequestThreadPanel
-              seed={selectedManagerResponse}
-              employeeName={portalEmployee.name}
-              title="Manager response thread"
-              compact
-            />
 
             <section className="emp-followup-card">
               <p className="emp-kicker">Add more information</p>

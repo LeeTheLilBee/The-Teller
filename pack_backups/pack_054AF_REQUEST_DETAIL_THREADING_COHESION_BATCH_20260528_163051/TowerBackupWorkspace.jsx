@@ -24,7 +24,7 @@ import {
 } from "./managerOwnerBridge";
 import "./towerBackupWorkspace.css";
 
-// PACK_054AF_REPAIR_B_TOWER_CLEARANCE_CLEAN
+import WorkflowLifecyclePanel from "./WorkflowLifecyclePanel.jsx";
 function TowerBadge({ children, tone = "quiet" }) {
   return <span className={`tower-badge tower-badge-${tone}`}>{children}</span>;
 }
@@ -227,6 +227,7 @@ function getSoulaanaManagerTowerGuidance(items) {
   };
 }
 
+
 function getManagerTowerDecisionGuidance(item) {
   const text = JSON.stringify(item?.payload || {}).toLowerCase();
 
@@ -308,7 +309,9 @@ function TowerClearanceGate({ accessRequest, onGrant }) {
 
   return (
     <main className="tower-backup-workspace">
-<section className="tower-clearance-gate">
+      <WorkflowLifecyclePanel role="tower" compact />
+
+      <section className="tower-clearance-gate">
         <div>
           <p className="tower-kicker">The Tower · Clearance Gate</p>
           <h1>Evidence access requires Tower clearance.</h1>
@@ -688,7 +691,7 @@ export default function TowerBackupWorkspace() {
 
   return (
     <main className="tower-backup-workspace">
-<section className="tower-hero">
+      <section className="tower-hero">
         <div>
           <p className="tower-kicker">The Tower · Backup Viewer</p>
           <h1>Local evidence queue for Teller activity.</h1>

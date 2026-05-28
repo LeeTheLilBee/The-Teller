@@ -503,13 +503,3 @@
     justify-content: flex-start;
   }
 }
-
-
-/* ================================
-   PACK 054A-F — OWNER REQUEST THREAD FIT
-   Shared request thread panel fit.
-   ================================ */
-
-.request-thread-panel {
-  max-width: 100%;
-}

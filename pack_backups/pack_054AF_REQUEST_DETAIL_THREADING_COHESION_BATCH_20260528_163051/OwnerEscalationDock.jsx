@@ -13,7 +13,6 @@ import {
 } from "./managerOwnerBridge";
 import "./ownerEscalationDock.css";
 
-import RequestThreadPanel from "./RequestThreadPanel.jsx";
 function OwnerDockBadge({ children, tone = "quiet" }) {
   return <span className={`owner-dock-badge owner-dock-badge-${tone}`}>{children}</span>;
 }
@@ -440,13 +439,6 @@ export default function OwnerEscalationDock() {
               <p className="owner-dock-kicker">Escalation reason</p>
               <p>{selectedItem.escalationReason}</p>
             </section>
-
-            <RequestThreadPanel
-              seed={selectedItem}
-              employeeName={selectedItem.employeeName}
-              title="Owner escalation thread"
-              compact
-            />
 
             <div className="owner-escalation-actions">
               <button type="button" className="owner-approve" onClick={() => ownerDecide(selectedItem, "Owner Approved")}>Approve</button>

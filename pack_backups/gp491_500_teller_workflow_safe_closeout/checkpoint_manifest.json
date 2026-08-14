@@ -1141,22 +1141,6 @@
       "drawer_component_ready": true,
       "workflow_safe_status_only": true,
       "status": "built_local_not_saved"
-    },
-    {
-      "pack": "GP491-GP500",
-      "name": "TELLER \u2014 WORKFLOW-SAFE CLOSEOUT + SAVE",
-      "timestamp_utc": "2026-08-14T15:39:41.568212+00:00",
-      "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
-      "files": [
-        "data/teller_workflow_safe_closeout_gp491_500.json",
-        "tools/teller_workflow_safe_closeout_smoke_test_491_500.py",
-        "docs/teller/TELLER_WORKFLOW_SAFE_CLOSEOUT_GP491_500.md"
-      ],
-      "direct_tower_call_allowed": false,
-      "direct_vault_access_allowed": false,
-      "visible_ui_mounted": false,
-      "workflow_safe_status_only": true,
-      "closeout_status": "ready_to_save_and_push"
     }
   ]
 }

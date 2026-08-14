@@ -1,0 +1,50 @@
+{
+  "pack_id": "GP481-GP490",
+  "title": "TELLER \u2014 WORKFLOW-SAFE STATUS DRAWER WIRING",
+  "source_app": "teller",
+  "target_app": "tower",
+  "doctrine": {
+    "tower": "face and permission authority",
+    "teller": "workflow request source and workflow operator",
+    "vault": "sealed memory that answers Tower only",
+    "key_rule": "Teller can ask. Tower must decide. Vault only answers Tower."
+  },
+  "purpose": [
+    "create reusable workflow-safe Tower request status drawer component",
+    "keep drawer unmounted from live pages for now",
+    "display only safe status cards from Teller status wiring",
+    "support employee/manager/owner/payroll_admin/vendor/tenant role policies",
+    "prevent raw Vault links/files/download URLs"
+  ],
+  "built": [
+    "TellerTowerRequestStatusDrawer component",
+    "drawer prop builder",
+    "drawer readiness marker",
+    "drawer CSS",
+    "smoke test"
+  ],
+  "not_built_here": [
+    "live Employee page mount",
+    "live Manager page mount",
+    "live Owner page mount",
+    "Tower API call",
+    "Vault API call",
+    "raw Vault preview",
+    "raw Vault download",
+    "public links",
+    "shared folders",
+    "download links"
+  ],
+  "safe_display_only": [
+    "safe subject label",
+    "display label",
+    "tone",
+    "priority",
+    "safe summary",
+    "next Teller action",
+    "safe receipt IDs where role allows",
+    "safe Vault reference label"
+  ],
+  "status": "workflow_safe_status_drawer_ready_unmounted",
+  "next_corridor": "TELLER GP491-GP500 \u2014 Workflow-Safe Closeout + Save"
+}

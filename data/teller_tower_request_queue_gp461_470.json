@@ -1,0 +1,65 @@
+{
+  "pack_id": "GP461-GP470",
+  "title": "TELLER \u2014 TOWER REQUEST QUEUE + SAFE RESULT INTAKE",
+  "source_app": "teller",
+  "target_app": "tower",
+  "doctrine": {
+    "tower": "face and permission authority",
+    "teller": "workflow request source and workflow operator",
+    "vault": "sealed memory that answers Tower only",
+    "key_rule": "Teller can ask. Tower must decide. Vault only answers Tower."
+  },
+  "purpose": [
+    "track Teller-created request packets",
+    "queue workflow requests for Tower review",
+    "track waiting-on-Tower state",
+    "accept only workflow-safe Tower results",
+    "reject raw Vault links/files",
+    "prepare later UI wire-up without adding clutter now"
+  ],
+  "queue_statuses": [
+    "created",
+    "queued_for_tower",
+    "waiting_on_tower",
+    "needs_step_up",
+    "needs_owner_approval",
+    "tower_blocked",
+    "tower_returned_safe_result",
+    "closed"
+  ],
+  "teller_may_store": [
+    "request id",
+    "workflow type",
+    "requester role/entity",
+    "business context",
+    "sensitivity level",
+    "requested output type",
+    "Teller workflow receipt hash",
+    "Teller queue receipt hash",
+    "workflow-safe Tower status",
+    "Tower receipt ids",
+    "safe Vault reference label"
+  ],
+  "teller_must_not_store_or_display": [
+    "raw Vault files",
+    "raw Vault links",
+    "download URLs",
+    "preview URLs",
+    "signed URLs",
+    "temporary URLs",
+    "public links",
+    "shared folders",
+    "Vault tokens",
+    "Vault secrets",
+    "Vault object keys"
+  ],
+  "not_built_here": [
+    "Tower API call",
+    "Vault API call",
+    "visible UI panel",
+    "download flow",
+    "preview flow",
+    "public sharing"
+  ],
+  "status": "teller_queue_and_safe_result_intake_ready"
+}

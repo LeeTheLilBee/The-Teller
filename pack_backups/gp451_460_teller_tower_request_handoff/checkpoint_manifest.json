@@ -1074,22 +1074,5 @@
     ],
     "backup": "pack_backups/pack_050C_REPAIR_PRIMARY_VIEW_20260525_033954",
     "purpose": "Stop showing the old brown app first and make the new secure Employee/Manager Teller views the primary visible app."
-  },
-  "checkpoints": [
-    {
-      "pack": "GP451-GP460",
-      "name": "ARCHIVE VAULT \u2014 TELLER TO TOWER REQUEST HANDOFF LAYER",
-      "timestamp_utc": "2026-08-14T14:55:42.338114+00:00",
-      "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
-      "files": [
-        "src/teller/tellerTowerRequestHandoff.js",
-        "src/teller/tellerTowerRequestHandoffFixtures.js",
-        "data/teller_tower_request_handoff_gp451_460.json",
-        "tools/teller_tower_request_handoff_smoke_test_451_460.py"
-      ],
-      "direct_vault_access_allowed": false,
-      "tower_approval_required": true,
-      "status": "built_local_not_saved"
-    }
-  ]
+  }
 }

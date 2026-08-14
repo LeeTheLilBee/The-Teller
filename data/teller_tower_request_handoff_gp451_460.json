@@ -1,0 +1,81 @@
+{
+  "pack_id": "GP451-GP460",
+  "title": "ARCHIVE VAULT \u2014 TELLER TO TOWER REQUEST HANDOFF LAYER",
+  "source_app": "teller",
+  "target_app": "tower",
+  "vault_direct_access_allowed": false,
+  "tower_approval_required": true,
+  "doctrine": {
+    "tower": "face and permission authority",
+    "teller": "workflow request source and workflow operator",
+    "vault": "sealed memory that answers Tower only",
+    "key_rule": "Teller can ask. Tower must decide. Vault only answers Tower."
+  },
+  "correct_flow": [
+    "Employee/vendor/customer/workflow need appears in Teller",
+    "Teller creates a structured workflow request packet",
+    "Teller sends request packet to Tower",
+    "Tower checks permission, identity, clearance, step-up, owner/admin approval, and redaction rules",
+    "Tower requests the allowed output from Vault",
+    "Vault answers Tower only",
+    "Tower returns allowed workflow result/status/proof to Teller",
+    "Teller displays only the workflow-safe result"
+  ],
+  "teller_owns": [
+    "employee document requests",
+    "vendor document requests",
+    "payroll proof requests",
+    "onboarding packet requests",
+    "agreement proof requests",
+    "payment receipt requests",
+    "rent payment receipt requests",
+    "workflow state",
+    "workflow notes",
+    "request reason",
+    "requester role context",
+    "business/entity context",
+    "deadline/status",
+    "final workflow-safe output received from Tower"
+  ],
+  "teller_does_not_own": [
+    "Vault identity clearance",
+    "Vault permission enforcement",
+    "Vault direct calls",
+    "Vault preview protocol",
+    "Vault download protocol",
+    "Vault raw files",
+    "Vault raw links",
+    "Vault shared folders",
+    "Vault external collaborator access",
+    "Vault owner/admin override",
+    "Vault redaction protocol"
+  ],
+  "required_packet_fields": [
+    "request_id",
+    "workflow_type",
+    "requester_role",
+    "requester_entity",
+    "subject_person_or_vendor",
+    "document_or_proof_type",
+    "reason_for_request",
+    "deadline",
+    "sensitivity_level",
+    "requested_output_type",
+    "business_context",
+    "teller_workflow_receipt_hash",
+    "tower_approval_required"
+  ],
+  "prevented_behaviors": [
+    "direct Vault browsing",
+    "direct Vault download",
+    "direct Vault preview",
+    "direct Vault upload",
+    "direct Vault restore/delete",
+    "public links",
+    "raw file URLs",
+    "shared folders",
+    "employee/vendor/customer access to Vault"
+  ],
+  "next_corridor": "GP461-GP470 \u2014 Tower Vault Request Protocol Gate",
+  "status": "teller_handoff_contract_ready"
+}

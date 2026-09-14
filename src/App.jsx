@@ -1,31 +1,36 @@
-import React, { Component } from "react";
+import React, {
+  Component,
+  useEffect,
+  useState,
+} from "react";
+
 import EmployeeDocumentVaultPanel from "./teller/EmployeeDocumentVaultPanel.jsx";
-import ManagerMeldPanel from "./teller/ManagerMeldPanel.jsx";
-import OwnerMoneyWorkspace from "./teller/OwnerMoneyWorkspace.jsx";
 import ManagerStandaloneWorkspace from "./teller/ManagerStandaloneWorkspace.jsx";
 import EmployeeStandaloneWorkspace from "./teller/EmployeeStandaloneWorkspace.jsx";
+import OwnerMoneyWorkspace from "./teller/OwnerMoneyWorkspace.jsx";
 import TowerBackupWorkspace from "./teller/TowerBackupWorkspace.jsx";
+
+import {
+  resolveTellerAccess,
+  tellerDevShortcutsEnabled,
+} from "./teller/towerAccess.js";
+
 import "./teller/tellerShell.css";
 
-function readTowerClearance() {
-  const params = new URLSearchParams(window.location.search);
-  const clearance = String(params.get("tower_clearance") || "").toLowerCase().trim();
-
-  if (["employee", "manager", "owner"].includes(clearance)) {
-    return clearance;
-  }
-
-  return "";
-}
 
 class TellerErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { error: null };
+
+    this.state = {
+      error: null,
+    };
   }
 
   static getDerivedStateFromError(error) {
-    return { error };
+    return {
+      error,
+    };
   }
 
   render() {
@@ -33,9 +38,20 @@ class TellerErrorBoundary extends Component {
       return (
         <main className="teller-error">
           <section className="teller-error-card">
-            <p className="teller-kicker">The Teller caught a screen error</p>
-            <h1>The screen did not crash silently.</h1>
-            <pre>{String(this.state.error?.message || this.state.error)}</pre>
+            <p className="teller-kicker">
+              The Teller caught a screen error
+            </p>
+
+            <h1>
+              The screen did not crash silently.
+            </h1>
+
+            <pre>
+              {String(
+                this.state.error?.message ||
+                this.state.error
+              )}
+            </pre>
           </section>
         </main>
       );
@@ -45,101 +61,305 @@ class TellerErrorBoundary extends Component {
   }
 }
 
-function TowerLockedScreen() {
+
+function TellerOpeningScreen() {
   return (
     <main className="teller-shell">
       <div className="teller-lock-wrap">
         <section className="teller-lock-card">
-          <p className="teller-kicker">Tower clearance required</p>
-          <h1>The Teller opens from The Tower.</h1>
-          <p>
-            This workspace is not a public doorway. Employee, manager, and owner access
-            must be opened by The Tower with the correct clearance.
+          <p className="teller-kicker">
+            Tower handoff
           </p>
 
-          <div className="teller-dev-box">
-            <strong>Dev test links</strong>
-            <p>
-              Use these only while building, so we can test the screens before the real
-              Tower backend exists.
-            </p>
-            <div className="teller-dev-links">
-              <a href="?tower_clearance=employee">Open as Employee</a>
-              <a href="?tower_clearance=manager">Open as Manager</a>
-              <a href="?tower_clearance=owner">Open as Owner</a>
-            </div>
-          </div>
+          <h1>
+            Opening The Teller…
+          </h1>
+
+          <p>
+            The Teller is checking the protected
+            Tower handoff before opening your
+            money workspace.
+          </p>
         </section>
       </div>
     </main>
   );
 }
 
-function TellerHeader({ clearance }) {
+
+function TowerLockedScreen({
+  reason,
+  devShortcuts,
+}) {
+  return (
+    <main className="teller-shell">
+      <div className="teller-lock-wrap">
+        <section className="teller-lock-card">
+          <p className="teller-kicker">
+            Tower clearance required
+          </p>
+
+          <h1>
+            The Teller opens from The Tower.
+          </h1>
+
+          <p>
+            This workspace is not a public doorway.
+            Hosted employee, manager, and owner access
+            must be issued and verified by The Tower.
+          </p>
+
+          {reason ? (
+            <p>
+              Access status · {reason}
+            </p>
+          ) : null}
+
+          {devShortcuts ? (
+            <div className="teller-dev-box">
+              <strong>
+                Local development shortcuts
+              </strong>
+
+              <p>
+                These links work only when Vite is
+                running in development mode and
+                VITE_TELLER_DEV_CLEARANCE_ENABLED=1.
+              </p>
+
+              <div className="teller-dev-links">
+                <a href="?tower_clearance=employee">
+                  Open as Employee
+                </a>
+
+                <a href="?tower_clearance=manager">
+                  Open as Manager
+                </a>
+
+                <a href="?tower_clearance=owner">
+                  Open as Owner
+                </a>
+              </div>
+            </div>
+          ) : null}
+        </section>
+      </div>
+    </main>
+  );
+}
+
+
+function TellerHeader({
+  clearance,
+  source,
+}) {
   return (
     <nav className="teller-topbar">
       <div className="teller-topbar-inner">
         <div>
-          <p className="teller-kicker">Opened by The Tower</p>
-          <h1 className="teller-title">The Teller</h1>
+          <p className="teller-kicker">
+            Opened by The Tower
+          </p>
+
+          <h1 className="teller-title">
+            The Teller
+          </h1>
         </div>
 
         <div className="teller-clearance-chip">
           Tower clearance · {clearance}
+          {source === "explicit_local_development"
+            ? " · local dev"
+            : ""}
         </div>
       </div>
     </nav>
   );
 }
 
-function OwnerComingSoon() {
-  return (
-    <section className="teller-lock-card">
-      <p className="teller-kicker">Owner money workspace</p>
-      <h1>Owner Money Queue is next.</h1>
-      <p>
-        Pack 050D will add Today’s Money Focus, business money snapshots, trust snapshot,
-        MrkTrade protected paperwork, source confidence, final action previews, and Calm Money Mode.
-      </p>
-    </section>
-  );
-}
 
-export default function App() {
-  // PACK_051A_FORCE_TOWER_ROUTE_GUARD
-  const __towerRouteParams = new URLSearchParams(window.location.search);
-  const __towerRouteView = __towerRouteParams.get("teller_view") || "";
-  const __towerRouteClearance = __towerRouteParams.get("tower_clearance") || "";
+function workspaceFor({
+  clearance,
+  devShortcuts,
+  navigationContext,
+}) {
 
-  if (__towerRouteView === "tower" || __towerRouteClearance === "tower") {
+  if (
+    clearance === "owner"
+  ) {
+    return (
+      <OwnerMoneyWorkspace
+        navigationContext={
+          navigationContext
+        }
+      />
+    );
+  }
+
+  if (
+    devShortcuts &&
+    clearance === "manager"
+  ) {
+    return (
+      <ManagerStandaloneWorkspace />
+    );
+  }
+
+  if (
+    devShortcuts &&
+    clearance === "employee"
+  ) {
+    return (
+      <>
+        <EmployeeDocumentVaultPanel />
+        <EmployeeStandaloneWorkspace />
+      </>
+    );
+  }
+
+  if (
+    devShortcuts &&
+    clearance === "tower"
+  ) {
     return <TowerBackupWorkspace />;
   }
 
+  return null;
+}
 
-  const __tellerView = new URLSearchParams(window.location.search).get("teller_view") || "";
 
-  const clearance = readTowerClearance();
+export default function App() {
+  const devShortcuts =
+    tellerDevShortcutsEnabled(
+      import.meta.env
+    );
 
-  if (!clearance) {
+  const [
+    access,
+    setAccess,
+  ] = useState({
+    status: "checking",
+    clearance: "",
+    source: "none",
+    reason: "",
+    navigationContext: null,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    resolveTellerAccess({
+      locationLike:
+        window.location,
+
+      historyLike:
+        window.history,
+
+      fetchImpl:
+        window.fetch.bind(
+          window
+        ),
+
+      env:
+        import.meta.env,
+    })
+      .then((result) => {
+        if (!cancelled) {
+          setAccess(
+            result
+          );
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAccess({
+            status: "locked",
+            clearance: "",
+            source: "none",
+            reason:
+              "tower_access_bootstrap_failed",
+          });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+
+  if (
+    access.status
+    === "checking"
+  ) {
     return (
       <TellerErrorBoundary>
-        <TowerLockedScreen />
+        <TellerOpeningScreen />
       </TellerErrorBoundary>
     );
   }
 
+
+  if (
+    access.status
+    !== "granted"
+  ) {
+    return (
+      <TellerErrorBoundary>
+        <TowerLockedScreen
+          reason={
+            access.reason
+          }
+          devShortcuts={
+            devShortcuts
+          }
+        />
+      </TellerErrorBoundary>
+    );
+  }
+
+
+  const workspace =
+    workspaceFor({
+      clearance:
+        access.clearance,
+
+      devShortcuts,
+
+      navigationContext:
+        access.navigationContext,
+    });
+
+
+  if (!workspace) {
+    return (
+      <TellerErrorBoundary>
+        <TowerLockedScreen
+          reason="unsupported_clearance"
+          devShortcuts={
+            devShortcuts
+          }
+        />
+      </TellerErrorBoundary>
+    );
+  }
+
+
   return (
     <TellerErrorBoundary>
       <div className="teller-shell">
-        <TellerHeader clearance={clearance} />
+        <TellerHeader
+          clearance={
+            access.clearance
+          }
+          source={
+            access.source
+          }
+        />
 
         <main className="teller-main">
           <section className="teller-screen-card">
-            {clearance === "employee" ? <EmployeeDocumentVaultPanel /> : null}
-            {clearance === "tower" || __tellerView === "tower" ? <TowerBackupWorkspace /> : null}
-{clearance === "employee" || __tellerView === "employee" ? <EmployeeStandaloneWorkspace /> : null}
-      {clearance === "manager" || __tellerView === "manager" ? <ManagerStandaloneWorkspace /> : null}
-            {clearance === "owner" ? <OwnerMoneyWorkspace /> : null}
+            {workspace}
           </section>
         </main>
       </div>

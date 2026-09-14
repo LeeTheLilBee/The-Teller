@@ -1919,7 +1919,11 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
   };
 
   return (
-    <section className="fb-review-desk" style={{ "--review-color": lane.color }}>
+    <section
+      id="teller-owner-payroll-review"
+      className="fb-review-desk"
+      style={{ "--review-color": lane.color }}
+    >
       <div className="fb-section-head">
         <div>
           <p className="fb-kicker">Big picture + small picture</p>
@@ -2160,7 +2164,51 @@ function SnapshotRibbon({ cards }) {
   );
 }
 
-export default function OwnerMoneyWorkspace() {
+function towerNavigationSourceLabel(
+  navigationContext
+) {
+  if (
+    navigationContext?.source_app
+    === "clouds"
+  ) {
+    return "The Clouds";
+  }
+
+  return "The Tower";
+}
+
+
+function towerNavigationDestinationLabel(
+  navigationContext
+) {
+  if (
+    navigationContext?.destination
+    === "payroll_review"
+  ) {
+    return "Payroll Review";
+  }
+
+  return "Owner Money Workspace";
+}
+
+
+function towerNavigationReturnLabel(
+  navigationContext
+) {
+  if (
+    navigationContext?.return_app
+    === "clouds"
+  ) {
+    return "The Clouds";
+  }
+
+  return "The Tower";
+}
+
+
+export default function OwnerMoneyWorkspace({
+  navigationContext = null,
+}) {
   const [themeKey, setThemeKey] = useState(ownerProfile.defaultTheme);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [calmMode, setCalmMode] = useState(false);
@@ -2178,6 +2226,121 @@ export default function OwnerMoneyWorkspace() {
   const theme = getOwnerTheme(themeKey);
   const focus = useMemo(() => getTodayOwnerFocus(ownerMoneyQueue), []);
   const activeLane = ownerBusinessLanes.find((lane) => lane.key === activeBusiness) || ownerBusinessLanes[0];
+
+  /*
+   * Tower already authenticated and signed the crossing.
+   *
+   * Teller only maps an allowed destination token
+   * to a real Teller-owned UI surface.
+   */
+  React.useEffect(() => {
+    const destination =
+      String(
+        navigationContext?.destination
+        || ""
+      );
+
+    const itemId =
+      String(
+        navigationContext?.item_id
+        || ""
+      );
+
+    if (!destination) {
+      return undefined;
+    }
+
+    let targetId =
+      "teller-owner-money-workspace";
+
+    if (
+      destination
+      === "payroll_review"
+    ) {
+      /*
+       * Payroll Review belongs to SimpleePay.
+       */
+      setActiveBusiness(
+        "simpleepay"
+      );
+
+      /*
+       * Calm mode hides the Review Desk,
+       * so reveal the actual destination.
+       */
+      setCalmMode(
+        false
+      );
+
+      targetId =
+        "teller-owner-payroll-review";
+
+      /*
+       * Only resolve item_id automatically
+       * when it already matches a native Teller
+       * review-card key.
+       *
+       * Never guess external IDs.
+       */
+      if (itemId) {
+        const desk =
+          getReviewDeskData(
+            "simpleepay"
+          );
+
+        const card =
+          desk.cards.find(
+            (candidate) =>
+              candidate.key
+              === itemId
+          );
+
+        if (card) {
+          setSelectedReview({
+            deskTitle:
+              desk.title,
+
+            card,
+          });
+        }
+      }
+    }
+
+    const timer =
+      window.setTimeout(
+        () => {
+          const target =
+            document.getElementById(
+              targetId
+            );
+
+          if (
+            target &&
+            typeof target.scrollIntoView
+            === "function"
+          ) {
+            target.scrollIntoView({
+              behavior:
+                "smooth",
+
+              block:
+                "start",
+            });
+          }
+        },
+        0,
+      );
+
+    return () => {
+      window.clearTimeout(
+        timer
+      );
+    };
+  }, [
+    navigationContext?.correlation_id,
+    navigationContext?.destination,
+    navigationContext?.item_id,
+  ]);
 
   function refreshManagerBridgeSubmissions() {
     const bridgeSubmissions = readManagerSubmissions();
@@ -2403,6 +2566,7 @@ export default function OwnerMoneyWorkspace() {
 
   return (
     <main
+      id="teller-owner-money-workspace"
       className={`focus-board ${calmMode ? "is-calm" : ""}`}
       style={{
         "--fb-bg": theme.bg,
@@ -2420,6 +2584,64 @@ export default function OwnerMoneyWorkspace() {
     >
 <OwnerEscalationDock />
       <FinalReceiptViewer mode="owner" />
+
+      {navigationContext ? (
+        <section
+          className="fb-final-preview"
+          data-tower-source-app={
+            navigationContext.source_app
+          }
+          data-tower-destination={
+            navigationContext.destination
+          }
+          data-tower-return-app={
+            navigationContext.return_app
+          }
+          data-tower-correlation-id={
+            navigationContext.correlation_id
+          }
+        >
+          <div>
+            <p className="fb-kicker">
+              Opened through The Tower
+            </p>
+
+            <h2>
+              {towerNavigationSourceLabel(
+                navigationContext
+              )} brought you to{" "}
+              {towerNavigationDestinationLabel(
+                navigationContext
+              )}.
+            </h2>
+
+            <p>
+              The Teller is using the protected
+              destination that came with this
+              Tower handoff.
+            </p>
+
+            <div className="fb-badge-row">
+              <Badge tone="strong">
+                Tower verified
+              </Badge>
+
+              {navigationContext.item_id ? (
+                <Badge>
+                  Item context attached
+                </Badge>
+              ) : null}
+
+              <Badge>
+                Return path ·{" "}
+                {towerNavigationReturnLabel(
+                  navigationContext
+                )}
+              </Badge>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <div className="fb-tower-evidence-entry">
         <button type="button" onClick={openTowerEvidence}>

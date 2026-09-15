@@ -1,3 +1,8 @@
+import {
+  normalizeTellerExtractionResult,
+} from "./tellerExtractionNormalize.js";
+
+
 export const TELLER_OCR_STATUS =
   Object.freeze({
     NOT_CONNECTED: "not_connected",
@@ -20,19 +25,17 @@ export function createTellerOcrRequest({
     mime_type,
     fingerprint,
 
-    requested_fields: [],
-
     provider:
       null,
 
     status:
       TELLER_OCR_STATUS.NOT_CONNECTED,
 
-    raw_text:
-      null,
-
     extracted_fields:
       [],
+
+    raw_text:
+      null,
 
     sent_to_provider:
       false,
@@ -48,23 +51,22 @@ export function createUnconfiguredTellerOcrAdapter() {
     configured:
       false,
 
-    async classifyDocument() {
-      return {
-        status:
-          TELLER_OCR_STATUS.NOT_CONNECTED,
-
-        result:
-          null,
-      };
-    },
-
     async extractFields() {
       return {
         status:
           TELLER_OCR_STATUS.NOT_CONNECTED,
 
+        provider_id:
+          "unconfigured",
+
         fields:
           [],
+
+        raw_text:
+          null,
+
+        sent_to_provider:
+          false,
       };
     },
   };
@@ -74,27 +76,86 @@ export function createUnconfiguredTellerOcrAdapter() {
 export async function runTellerOcr(
   request,
   adapter =
-    createUnconfiguredTellerOcrAdapter()
+    createUnconfiguredTellerOcrAdapter(),
+  file = null
 ) {
   if (!adapter?.configured) {
     return {
       ...request,
 
+      provider:
+        null,
+
       status:
         TELLER_OCR_STATUS.NOT_CONNECTED,
 
-      raw_text:
-        null,
-
       extracted_fields:
         [],
+
+      raw_text:
+        null,
 
       sent_to_provider:
         false,
     };
   }
 
-  throw new Error(
-    "A production OCR adapter has not been authorized in this Teller build."
-  );
+
+  if (
+    typeof adapter.extractFields !==
+    "function"
+  ) {
+    throw new Error(
+      "Configured Teller OCR adapter must implement extractFields()."
+    );
+  }
+
+
+  const providerResult =
+    await adapter.extractFields({
+      request,
+      file,
+    });
+
+
+  const normalized =
+    normalizeTellerExtractionResult({
+      document_type:
+        request.document_type,
+
+      provider_id:
+        adapter.provider_id ||
+        providerResult?.provider_id ||
+        "configured_provider",
+
+      fields:
+        providerResult?.fields ||
+        [],
+    });
+
+
+  return {
+    ...request,
+
+    provider:
+      normalized.provider_id,
+
+    status:
+      TELLER_OCR_STATUS.COMPLETE,
+
+    extracted_fields:
+      normalized.fields,
+
+    raw_text:
+      null,
+
+    sent_to_provider:
+      true,
+
+    human_review_required:
+      true,
+
+    auto_accept_allowed:
+      false,
+  };
 }

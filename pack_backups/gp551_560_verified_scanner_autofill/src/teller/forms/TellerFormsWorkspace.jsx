@@ -1,5 +1,4 @@
 import React, {
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -20,10 +19,6 @@ import TellerPeopleIntakePanel
 
 import TellerPayrollPaymentPanel
   from "../money/TellerPayrollPaymentPanel.jsx";
-
-import {
-  isValidTellerAutofillHandoff,
-} from "../capture/tellerCaptureAutofill.js";
 
 import "./tellerForms.css";
 
@@ -70,64 +65,40 @@ export default function TellerFormsWorkspace({
   onClose,
   role,
   towerSession,
-  externalHandoff = null,
-  onHandoffConsumed,
 }) {
-  const [
-    selectedFormId,
-    setSelectedFormId,
-  ] = useState("");
+  const [selectedFormId, setSelectedFormId] =
+    useState("");
+
+  const [search, setSearch] =
+    useState("");
+
+  const [draftValues, setDraftValues] =
+    useState({});
+
+  const [preparedPackets, setPreparedPackets] =
+    useState([]);
 
 
-  const [
-    search,
-    setSearch,
-  ] = useState("");
+  const forms = useMemo(
+    () =>
+      listTellerFormsForRole(
+        role
+      ),
+    [role]
+  );
 
 
-  const [
-    draftValues,
-    setDraftValues,
-  ] = useState({});
-
-
-  const [
-    draftProvenance,
-    setDraftProvenance,
-  ] = useState({});
-
-
-  const [
-    preparedPackets,
-    setPreparedPackets,
-  ] = useState([]);
-
-
-  const forms =
-    useMemo(
-      () =>
-        listTellerFormsForRole(
-          role
-        ),
-      [role]
-    );
-
-
-  const visibleForms =
-    useMemo(
-      () =>
-        forms.filter(
-          (form) =>
-            formMatchesSearch(
-              form,
-              search
-            )
-        ),
-      [
-        forms,
-        search,
-      ]
-    );
+  const visibleForms = useMemo(
+    () =>
+      forms.filter(
+        (form) =>
+          formMatchesSearch(
+            form,
+            search
+          )
+      ),
+    [forms, search]
+  );
 
 
   const selectedForm =
@@ -138,86 +109,7 @@ export default function TellerFormsWorkspace({
     ) || null;
 
 
-  useEffect(
-    () => {
-      if (
-        !open ||
-        !externalHandoff ||
-        !isValidTellerAutofillHandoff(
-          externalHandoff
-        )
-      ) {
-        return;
-      }
-
-
-      const allowed =
-        forms.some(
-          (form) =>
-            form.form_id ===
-            externalHandoff.form_id
-        );
-
-
-      if (!allowed) {
-        onHandoffConsumed?.();
-        return;
-      }
-
-
-      setDraftValues(
-        (current) => ({
-          ...current,
-
-          [externalHandoff.form_id]: {
-            ...(
-              current[
-                externalHandoff.form_id
-              ] || {}
-            ),
-
-            ...externalHandoff.values,
-          },
-        })
-      );
-
-
-      setDraftProvenance(
-        (current) => ({
-          ...current,
-
-          [externalHandoff.form_id]: {
-            ...(
-              current[
-                externalHandoff.form_id
-              ] || {}
-            ),
-
-            ...externalHandoff.provenance,
-          },
-        })
-      );
-
-
-      setSelectedFormId(
-        externalHandoff.form_id
-      );
-
-
-      onHandoffConsumed?.();
-    },
-    [
-      open,
-      externalHandoff,
-      forms,
-      onHandoffConsumed,
-    ]
-  );
-
-
-  function openForm(
-    formId
-  ) {
+  function openForm(formId) {
     const allowed =
       forms.some(
         (form) =>
@@ -247,26 +139,10 @@ export default function TellerFormsWorkspace({
   }
 
 
-  function preparePacket(
-    packet
-  ) {
-    const provenance =
-      draftProvenance[
-        packet.form_id
-      ] || {};
-
-
-    const packetWithProvenance = {
-      ...packet,
-
-      verified_autofill_provenance:
-        provenance,
-    };
-
-
+  function preparePacket(packet) {
     setPreparedPackets(
       (current) => [
-        packetWithProvenance,
+        packet,
 
         ...current.filter(
           (item) =>
@@ -275,7 +151,6 @@ export default function TellerFormsWorkspace({
         ),
       ].slice(0, 25)
     );
-
 
     setSelectedFormId("");
   }
@@ -299,11 +174,9 @@ export default function TellerFormsWorkspace({
       aria-modal="true"
       aria-label="Forms and requests"
     >
-
       <section className="teller-forms-shell">
 
         <header className="teller-forms-header">
-
           <div>
             <p className="teller-form-kicker">
               The Teller
@@ -320,7 +193,6 @@ export default function TellerFormsWorkspace({
             </p>
           </div>
 
-
           <button
             type="button"
             className="teller-forms-close"
@@ -329,103 +201,51 @@ export default function TellerFormsWorkspace({
           >
             ×
           </button>
-
         </header>
 
 
         {selectedForm ? (
-          <>
+          <TellerFormRenderer
+            key={selectedForm.form_id}
 
-            {Object.keys(
-              draftProvenance[
+            form={selectedForm}
+
+            role={role}
+
+            actor={
+              towerSession?.actor || {}
+            }
+
+            business={
+              towerSession?.business || {}
+            }
+
+            initialValues={
+              draftValues[
                 selectedForm.form_id
               ] || {}
-            ).length ? (
-              <div className="teller-verified-autofill-note">
+            }
 
-                <strong>
-                  Verified document values added
-                </strong>
+            onDraftChange={
+              updateDraft
+            }
 
-                <span>
-                  Only fields you accepted during
-                  Capture review were added to this
-                  draft. Review the entire form
-                  before preparing the workflow.
-                </span>
+            onPrepared={
+              preparePacket
+            }
 
-              </div>
-            ) : null}
-
-
-            <TellerFormRenderer
-              key={
-                selectedForm.form_id
-              }
-
-              form={
-                selectedForm
-              }
-
-              role={
-                role
-              }
-
-              actor={
-                towerSession?.actor || {}
-              }
-
-              business={
-                towerSession?.business || {}
-              }
-
-              initialValues={
-                draftValues[
-                  selectedForm.form_id
-                ] || {}
-              }
-
-              onDraftChange={
-                updateDraft
-              }
-
-              onPrepared={
-                preparePacket
-              }
-
-              onBack={() =>
-                setSelectedFormId("")
-              }
-            />
-
-          </>
+            onBack={() =>
+              setSelectedFormId("")
+            }
+          />
         ) : (
           <>
 
             <TellerPeopleIntakePanel
-              role={
-                role
-              }
-
+              role={role}
               preparedPackets={
                 preparedPackets
               }
-
-              onOpenForm={
-                openForm
-              }
-            />
-
-
-            <TellerPayrollPaymentPanel
-              role={
-                role
-              }
-
-              preparedPackets={
-                preparedPackets
-              }
-
               onOpenForm={
                 openForm
               }
@@ -435,7 +255,6 @@ export default function TellerFormsWorkspace({
             <section className="teller-form-launcher">
 
               <div className="teller-form-launcher-top">
-
                 <div>
                   <p className="teller-form-kicker">
                     + New
@@ -446,9 +265,7 @@ export default function TellerFormsWorkspace({
                   </h2>
                 </div>
 
-
                 <label className="teller-form-search">
-
                   <span>
                     Find a form
                   </span>
@@ -456,9 +273,7 @@ export default function TellerFormsWorkspace({
                   <input
                     type="search"
 
-                    value={
-                      search
-                    }
+                    value={search}
 
                     onChange={(event) =>
                       setSearch(
@@ -468,14 +283,11 @@ export default function TellerFormsWorkspace({
 
                     placeholder="Search forms"
                   />
-
                 </label>
-
               </div>
 
 
               <div className="teller-form-card-grid">
-
                 {visibleForms.map(
                   (form) => {
                     const hasDraft =
@@ -487,7 +299,6 @@ export default function TellerFormsWorkspace({
                         ).length
                       );
 
-
                     const prepared =
                       preparedPackets.some(
                         (packet) =>
@@ -495,16 +306,13 @@ export default function TellerFormsWorkspace({
                           form.form_id
                       );
 
-
                     return (
                       <button
                         type="button"
 
                         className="teller-form-card"
 
-                        key={
-                          form.form_id
-                        }
+                        key={form.form_id}
 
                         onClick={() =>
                           openForm(
@@ -512,7 +320,6 @@ export default function TellerFormsWorkspace({
                           )
                         }
                       >
-
                         <span>
                           {
                             CATEGORY_LABELS[
@@ -522,20 +329,13 @@ export default function TellerFormsWorkspace({
                           }
                         </span>
 
-
                         <strong>
-                          {
-                            form.short_title
-                          }
+                          {form.short_title}
                         </strong>
 
-
                         <p>
-                          {
-                            form.description
-                          }
+                          {form.description}
                         </p>
-
 
                         <div className="teller-form-card-bottom">
 
@@ -543,18 +343,15 @@ export default function TellerFormsWorkspace({
                             <small>
                               Prepared this session
                             </small>
-
                           ) : hasDraft ? (
                             <small>
                               Draft in this session
                             </small>
-
                           ) : (
                             <small>
                               Blank form
                             </small>
                           )}
-
 
                           {form.tower_approval_required ? (
                             <small>
@@ -563,18 +360,15 @@ export default function TellerFormsWorkspace({
                           ) : null}
 
                         </div>
-
                       </button>
                     );
                   }
                 )}
-
               </div>
 
 
               {!visibleForms.length ? (
                 <article className="teller-form-empty">
-
                   <strong>
                     No forms match that search.
                   </strong>
@@ -583,7 +377,6 @@ export default function TellerFormsWorkspace({
                     Try another word or clear
                     the search.
                   </p>
-
                 </article>
               ) : null}
 
@@ -620,14 +413,12 @@ export default function TellerFormsWorkspace({
                           packet
                         );
 
-
                       return (
                         <article
                           key={
                             packet.submission_id
                           }
                         >
-
                           <strong>
                             {
                               packet.form_id
@@ -637,7 +428,6 @@ export default function TellerFormsWorkspace({
                                 )
                             }
                           </strong>
-
 
                           <span>
                             {
@@ -650,14 +440,12 @@ export default function TellerFormsWorkspace({
                             }
                           </span>
 
-
                           {summary
                             .owner_approval_required ? (
                             <small>
                               Owner approval required
                             </small>
                           ) : null}
-
 
                           {summary
                             .tower_approval_required ? (
@@ -674,7 +462,6 @@ export default function TellerFormsWorkspace({
                 </div>
               ) : (
                 <article className="teller-form-empty">
-
                   <strong>
                     Nothing prepared yet.
                   </strong>
@@ -682,7 +469,6 @@ export default function TellerFormsWorkspace({
                   <p>
                     Start a form above.
                   </p>
-
                 </article>
               )}
 

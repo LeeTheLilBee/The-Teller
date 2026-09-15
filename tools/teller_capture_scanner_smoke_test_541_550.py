@@ -245,7 +245,7 @@ for marker in [
     "Scan with camera",
     "Upload image or PDF",
     'capture="environment"',
-    "Prepare capture record",
+    "Prepare & check extraction",
     "OCR / extraction",
     "Not connected",
     "Teller suggestions are not accepted",

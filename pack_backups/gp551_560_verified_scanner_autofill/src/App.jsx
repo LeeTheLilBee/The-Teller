@@ -46,9 +46,7 @@ class TellerErrorBoundary extends Component {
     if (this.state.error) {
       return (
         <main className="teller-error">
-
           <section className="teller-error-card">
-
             <p className="teller-kicker">
               The Teller caught a screen error
             </p>
@@ -63,9 +61,7 @@ class TellerErrorBoundary extends Component {
                 this.state.error
               )}
             </pre>
-
           </section>
-
         </main>
       );
     }
@@ -78,11 +74,8 @@ class TellerErrorBoundary extends Component {
 function TowerLockedScreen() {
   return (
     <main className="teller-shell">
-
       <div className="teller-lock-wrap">
-
         <section className="teller-lock-card">
-
           <p className="teller-kicker">
             Tower clearance required
           </p>
@@ -96,11 +89,8 @@ function TowerLockedScreen() {
             manager, or owner Teller session
             before this workspace opens.
           </p>
-
         </section>
-
       </div>
-
     </main>
   );
 }
@@ -113,7 +103,6 @@ function TellerHeader({
 }) {
   return (
     <nav className="teller-topbar">
-
       <div className="teller-topbar-inner">
 
         <div>
@@ -154,7 +143,6 @@ function TellerHeader({
         </div>
 
       </div>
-
     </nav>
   );
 }
@@ -198,12 +186,6 @@ export default function App() {
   ] = useState(false);
 
 
-  const [
-    verifiedAutofillHandoff,
-    setVerifiedAutofillHandoff,
-  ] = useState(null);
-
-
   const towerSession =
     readTellerTowerSession();
 
@@ -229,98 +211,43 @@ export default function App() {
   }
 
 
-  function handleVerifiedAutofill(
-    handoff
-  ) {
-    setVerifiedAutofillHandoff(
-      handoff
-    );
-
-    setCaptureOpen(false);
-    setFormsOpen(true);
-  }
-
-
   return (
     <TellerErrorBoundary>
 
       <div className="teller-shell">
 
         <TellerHeader
-          role={
-            towerSession.role
-          }
-
-          onOpenForms={
-            openForms
-          }
-
-          onOpenCapture={
-            openCapture
-          }
+          role={towerSession.role}
+          onOpenForms={openForms}
+          onOpenCapture={openCapture}
         />
 
 
         <main className="teller-main">
-
           <section className="teller-screen-card">
-
             <TellerWorkspace
-              role={
-                towerSession.role
-              }
+              role={towerSession.role}
             />
-
           </section>
-
         </main>
 
 
         <TellerFormsWorkspace
-          open={
-            formsOpen
-          }
-
+          open={formsOpen}
           onClose={() =>
             setFormsOpen(false)
           }
-
-          role={
-            towerSession.role
-          }
-
-          towerSession={
-            towerSession
-          }
-
-          externalHandoff={
-            verifiedAutofillHandoff
-          }
-
-          onHandoffConsumed={() =>
-            setVerifiedAutofillHandoff(
-              null
-            )
-          }
+          role={towerSession.role}
+          towerSession={towerSession}
         />
 
 
         <TellerCaptureWorkspace
-          open={
-            captureOpen
-          }
-
+          open={captureOpen}
           onClose={() =>
             setCaptureOpen(false)
           }
-
-          role={
-            towerSession.role
-          }
-
-          onFormHandoff={
-            handleVerifiedAutofill
-          }
+          role={towerSession.role}
         />
 
       </div>

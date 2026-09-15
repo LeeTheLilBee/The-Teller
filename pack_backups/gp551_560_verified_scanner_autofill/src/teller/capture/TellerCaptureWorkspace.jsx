@@ -35,19 +35,6 @@ import {
   getTellerCaptureFormSuggestion,
 } from "./tellerCaptureMapping.js";
 
-import {
-  createTellerOcrRequest,
-  createUnconfiguredTellerOcrAdapter,
-  runTellerOcr,
-} from "./tellerOcrAdapter.js";
-
-import {
-  mapTellerExtractionToForm,
-} from "./tellerExtractionMapping.js";
-
-import TellerExtractionReview
-  from "./TellerExtractionReview.jsx";
-
 import "./tellerCapture.css";
 
 
@@ -70,9 +57,6 @@ export default function TellerCaptureWorkspace({
   open,
   onClose,
   role,
-  onFormHandoff,
-  ocrAdapter =
-    createUnconfiguredTellerOcrAdapter(),
 }) {
   const documentTypeOptions =
     useMemo(
@@ -147,12 +131,6 @@ export default function TellerCaptureWorkspace({
 
 
   const [
-    extracting,
-    setExtracting,
-  ] = useState(false);
-
-
-  const [
     error,
     setError,
   ] = useState("");
@@ -162,18 +140,6 @@ export default function TellerCaptureWorkspace({
     preparedCaptures,
     setPreparedCaptures,
   ] = useState([]);
-
-
-  const [
-    activePreparedCapture,
-    setActivePreparedCapture,
-  ] = useState(null);
-
-
-  const [
-    extractionResult,
-    setExtractionResult,
-  ] = useState(null);
 
 
   const fingerprints =
@@ -210,37 +176,6 @@ export default function TellerCaptureWorkspace({
     );
 
 
-  const extractionMapping =
-    useMemo(
-      () => {
-        if (
-          !activePreparedCapture ||
-          !extractionResult?.extracted_fields?.length
-        ) {
-          return null;
-        }
-
-
-        return mapTellerExtractionToForm({
-          document_type:
-            activePreparedCapture
-              .confirmed_document_type,
-
-          role,
-
-          extraction_fields:
-            extractionResult
-              .extracted_fields,
-        });
-      },
-      [
-        activePreparedCapture,
-        extractionResult,
-        role,
-      ]
-    );
-
-
   function resetCurrentCapture() {
     setSelectedFile(null);
     setSource("");
@@ -251,11 +186,7 @@ export default function TellerCaptureWorkspace({
     setReviewed(false);
     setDuplicate(false);
     setProcessing(false);
-    setExtracting(false);
     setError("");
-    setActivePreparedCapture(null);
-    setExtractionResult(null);
-
     setRequestedDocumentType(
       TELLER_DOCUMENT_TYPES.AUTO
     );
@@ -281,8 +212,6 @@ export default function TellerCaptureWorkspace({
     setConfirmedDocumentType("");
     setFingerprint("");
     setDuplicate(false);
-    setActivePreparedCapture(null);
-    setExtractionResult(null);
 
 
     const result =
@@ -370,8 +299,6 @@ export default function TellerCaptureWorkspace({
     );
 
     setReviewed(false);
-    setActivePreparedCapture(null);
-    setExtractionResult(null);
 
 
     if (!metadata) {
@@ -404,7 +331,7 @@ export default function TellerCaptureWorkspace({
   }
 
 
-  async function prepareCapture() {
+  function prepareCapture() {
     if (
       !selectedFile ||
       !validation?.valid ||
@@ -417,110 +344,49 @@ export default function TellerCaptureWorkspace({
     }
 
 
-    setError("");
-    setExtracting(true);
+    let review =
+      createTellerCaptureReview({
+        metadata,
+        fingerprint,
+        duplicate,
+        classification,
+      });
 
 
-    try {
-      let review =
-        createTellerCaptureReview({
-          metadata,
-          fingerprint,
-          duplicate,
-          classification,
-        });
-
-
-      review =
-        reviewTellerCaptureDocumentType(
-          review,
-          {
-            document_type:
-              confirmedDocumentType,
-
-            reviewer_role:
-              role,
-          }
-        );
-
-
-      const suggestion =
-        getTellerCaptureFormSuggestion(
-          confirmedDocumentType,
-          role
-        );
-
-
-      const prepared =
-        buildPreparedTellerCapture(
-          review,
-          suggestion
-        );
-
-
-      const ocrRequest =
-        createTellerOcrRequest({
-          capture_id:
-            prepared.capture_id,
-
+    review =
+      reviewTellerCaptureDocumentType(
+        review,
+        {
           document_type:
-            prepared
-              .confirmed_document_type,
+            confirmedDocumentType,
 
-          mime_type:
-            prepared
-              .metadata
-              .mime_type,
-
-          fingerprint:
-            prepared.fingerprint,
-        });
-
-
-      const result =
-        await runTellerOcr(
-          ocrRequest,
-          ocrAdapter,
-          selectedFile
-        );
-
-
-      setPreparedCaptures(
-        (current) => [
-          prepared,
-          ...current,
-        ].slice(0, 20)
+          reviewer_role:
+            role,
+        }
       );
 
 
-      setActivePreparedCapture(
-        prepared
+    const suggestion =
+      getTellerCaptureFormSuggestion(
+        confirmedDocumentType,
+        role
       );
 
 
-      setExtractionResult(
-        result
+    const prepared =
+      buildPreparedTellerCapture(
+        review,
+        suggestion
       );
 
-    } catch (captureError) {
-      setError(
-        String(
-          captureError?.message ||
-          captureError
-        )
-      );
-    } finally {
-      setExtracting(false);
-    }
-  }
 
-
-  function receiveAutofillHandoff(
-    handoff
-  ) {
-    onFormHandoff?.(
-      handoff
+    setPreparedCaptures(
+      (current) => [
+        prepared,
+        ...current,
+      ].slice(0, 20)
     );
+
 
     resetCurrentCapture();
   }
@@ -554,8 +420,8 @@ export default function TellerCaptureWorkspace({
 
             <p>
               Scan with your camera or choose
-              an image/PDF. Teller never accepts
-              extracted values without human review.
+              an image/PDF. Nothing leaves
+              this browser in this pack.
             </p>
           </div>
 
@@ -580,7 +446,6 @@ export default function TellerCaptureWorkspace({
               type="file"
               accept="image/*"
               capture="environment"
-
               onChange={(event) => {
                 const file =
                   event.target
@@ -613,7 +478,6 @@ export default function TellerCaptureWorkspace({
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp,application/pdf,.pdf"
-
               onChange={(event) => {
                 const file =
                   event.target
@@ -622,7 +486,6 @@ export default function TellerCaptureWorkspace({
                 if (file) {
                   processFile(
                     file,
-
                     file.type ===
                       "application/pdf"
                       ? "pdf_upload"
@@ -655,18 +518,13 @@ export default function TellerCaptureWorkspace({
 
           <select
             id="teller-capture-document-type"
-
-            value={
-              requestedDocumentType
-            }
-
+            value={requestedDocumentType}
             onChange={(event) =>
               changeDocumentType(
                 event.target.value
               )
             }
           >
-
             {documentTypeOptions.map(
               (item) => (
                 <option
@@ -677,7 +535,6 @@ export default function TellerCaptureWorkspace({
                 </option>
               )
             )}
-
           </select>
 
         </section>
@@ -729,153 +586,65 @@ export default function TellerCaptureWorkspace({
 
 
         {metadata &&
-        validation?.valid &&
-        !activePreparedCapture ? (
-          <section className="teller-capture-review">
+        validation?.valid ? (
+          <>
 
-            <div className="teller-capture-section-head">
+            <section className="teller-capture-review">
 
-              <div>
-                <p className="teller-capture-kicker">
-                  Review
-                </p>
+              <div className="teller-capture-section-head">
+                <div>
+                  <p className="teller-capture-kicker">
+                    Review
+                  </p>
 
-                <h2>
-                  Check this document
-                </h2>
+                  <h2>
+                    Check this document
+                  </h2>
+                </div>
+
+                <button
+                  type="button"
+                  className="teller-capture-clear"
+                  onClick={resetCurrentCapture}
+                >
+                  Clear
+                </button>
               </div>
 
 
-              <button
-                type="button"
-                className="teller-capture-clear"
-                onClick={resetCurrentCapture}
-              >
-                Clear
-              </button>
-
-            </div>
-
-
-            <div className="teller-capture-metadata">
-
-              <div>
-                <small>
-                  File
-                </small>
-
-                <strong>
-                  {metadata.name}
-                </strong>
-              </div>
-
-
-              <div>
-                <small>
-                  Type
-                </small>
-
-                <strong>
-                  {metadata.mime_type}
-                </strong>
-              </div>
-
-
-              <div>
-                <small>
-                  Size
-                </small>
-
-                <strong>
-                  {
-                    formatTellerCaptureSize(
-                      metadata.size_bytes
-                    )
-                  }
-                </strong>
-              </div>
-
-
-              <div>
-                <small>
-                  Source
-                </small>
-
-                <strong>
-                  {
-                    metadata.source
-                      .replaceAll(
-                        "_",
-                        " "
-                      )
-                  }
-                </strong>
-              </div>
-
-
-              <div>
-                <small>
-                  Fingerprint
-                </small>
-
-                <strong>
-                  {
-                    shortTellerFingerprint(
-                      fingerprint
-                    ) || "Calculating…"
-                  }
-                </strong>
-              </div>
-
-
-              <div>
-                <small>
-                  Duplicate
-                </small>
-
-                <strong>
-                  {
-                    duplicate
-                      ? "Yes — blocked"
-                      : "No match this session"
-                  }
-                </strong>
-              </div>
-
-            </div>
-
-
-            {classification ? (
-              <article className="teller-capture-classification">
+              <div className="teller-capture-metadata">
 
                 <div>
                   <small>
-                    Teller suggestion
+                    File
                   </small>
 
                   <strong>
-                    {
-                      labelForDocumentType(
-                        documentTypeOptions,
-
-                        classification
-                          .suggested_document_type
-                      )
-                    }
+                    {metadata.name}
                   </strong>
                 </div>
 
 
                 <div>
                   <small>
-                    Suggestion quality
+                    Type
+                  </small>
+
+                  <strong>
+                    {metadata.mime_type}
+                  </strong>
+                </div>
+
+
+                <div>
+                  <small>
+                    Size
                   </small>
 
                   <strong>
                     {
-                      tellerClassificationConfidenceLabel(
-                        classification
-                          .confidence
+                      formatTellerCaptureSize(
+                        metadata.size_bytes
                       )
                     }
                   </strong>
@@ -889,8 +658,7 @@ export default function TellerCaptureWorkspace({
 
                   <strong>
                     {
-                      classification
-                        .source
+                      metadata.source
                         .replaceAll(
                           "_",
                           " "
@@ -899,264 +667,235 @@ export default function TellerCaptureWorkspace({
                   </strong>
                 </div>
 
-              </article>
-            ) : null}
 
+                <div>
+                  <small>
+                    Fingerprint
+                  </small>
 
-            <label className="teller-capture-confirm-type">
-
-              <span>
-                Confirm document type
-              </span>
-
-              <select
-                value={
-                  confirmedDocumentType
-                }
-
-                onChange={(event) => {
-                  setConfirmedDocumentType(
-                    event.target.value
-                  );
-
-                  setReviewed(false);
-                }}
-              >
-
-                <option value="">
-                  Choose document type
-                </option>
-
-                {documentTypeOptions
-                  .filter(
-                    (item) =>
-                      item.value !==
-                      TELLER_DOCUMENT_TYPES.AUTO
-                  )
-                  .map(
-                    (item) => (
-                      <option
-                        key={item.value}
-                        value={item.value}
-                      >
-                        {item.label}
-                      </option>
-                    )
-                  )}
-
-              </select>
-
-            </label>
-
-
-            <label className="teller-capture-human-review">
-
-              <input
-                type="checkbox"
-
-                checked={
-                  reviewed
-                }
-
-                onChange={(event) =>
-                  setReviewed(
-                    event.target.checked
-                  )
-                }
-              />
-
-              <span>
-                I reviewed the document type.
-                Teller suggestions are not accepted
-                as truth automatically.
-              </span>
-
-            </label>
-
-
-            <section className="teller-capture-ocr">
-
-              <div>
-                <small>
-                  OCR / extraction
-                </small>
-
-                <strong>
-                  {
-                    ocrAdapter?.configured
-                      ? "Provider configured"
-                      : "Not connected"
-                  }
-                </strong>
-              </div>
-
-
-              <p>
-                Extraction can only create
-                suggestions. Every extracted field
-                must still be reviewed before it can
-                autofill a Teller form.
-              </p>
-
-            </section>
-
-
-            <section className="teller-capture-suggestion">
-
-              <small>
-                Suggested Teller workflow
-              </small>
-
-              {formSuggestion ? (
-                <>
                   <strong>
                     {
-                      formSuggestion
-                        .short_title
+                      shortTellerFingerprint(
+                        fingerprint
+                      ) || "Calculating…"
                     }
                   </strong>
+                </div>
 
-                  <p>
-                    Teller can map supported
-                    extracted fields into this form
-                    after human verification.
-                  </p>
-                </>
-              ) : (
-                <>
+
+                <div>
+                  <small>
+                    Duplicate
+                  </small>
+
                   <strong>
-                    No role-safe form suggestion
+                    {
+                      duplicate
+                        ? "Yes — blocked"
+                        : "No match this session"
+                    }
                   </strong>
+                </div>
 
-                  <p>
-                    You can still prepare the
-                    capture metadata after review.
-                  </p>
-                </>
-              )}
-
-            </section>
+              </div>
 
 
-            <button
-              type="button"
+              {classification ? (
+                <article className="teller-capture-classification">
 
-              className="teller-capture-prepare"
+                  <div>
+                    <small>
+                      Teller suggestion
+                    </small>
 
-              disabled={
-                !reviewed ||
-                !confirmedDocumentType ||
-                duplicate ||
-                !fingerprint ||
-                processing ||
-                extracting
-              }
-
-              onClick={
-                prepareCapture
-              }
-            >
-              {
-                extracting
-                  ? "Checking extraction…"
-                  : "Prepare & check extraction"
-              }
-            </button>
-
-          </section>
-        ) : null}
+                    <strong>
+                      {
+                        labelForDocumentType(
+                          documentTypeOptions,
+                          classification
+                            .suggested_document_type
+                        )
+                      }
+                    </strong>
+                  </div>
 
 
-        {activePreparedCapture ? (
-          <section className="teller-capture-extraction-stage">
+                  <div>
+                    <small>
+                      Suggestion quality
+                    </small>
 
-            <div className="teller-capture-section-head">
+                    <strong>
+                      {
+                        tellerClassificationConfidenceLabel(
+                          classification
+                            .confidence
+                        )
+                      }
+                    </strong>
+                  </div>
 
-              <div>
-                <p className="teller-capture-kicker">
-                  Extraction review
+
+                  <div>
+                    <small>
+                      Source
+                    </small>
+
+                    <strong>
+                      {
+                        classification
+                          .source
+                          .replaceAll(
+                            "_",
+                            " "
+                          )
+                      }
+                    </strong>
+                  </div>
+
+                </article>
+              ) : null}
+
+
+              <label className="teller-capture-confirm-type">
+
+                <span>
+                  Confirm document type
+                </span>
+
+                <select
+                  value={confirmedDocumentType}
+                  onChange={(event) => {
+                    setConfirmedDocumentType(
+                      event.target.value
+                    );
+
+                    setReviewed(false);
+                  }}
+                >
+                  <option value="">
+                    Choose document type
+                  </option>
+
+                  {documentTypeOptions
+                    .filter(
+                      (item) =>
+                        item.value !==
+                        TELLER_DOCUMENT_TYPES.AUTO
+                    )
+                    .map(
+                      (item) => (
+                        <option
+                          key={item.value}
+                          value={item.value}
+                        >
+                          {item.label}
+                        </option>
+                      )
+                    )}
+                </select>
+
+              </label>
+
+
+              <label className="teller-capture-human-review">
+
+                <input
+                  type="checkbox"
+                  checked={reviewed}
+                  onChange={(event) =>
+                    setReviewed(
+                      event.target.checked
+                    )
+                  }
+                />
+
+                <span>
+                  I reviewed the document type.
+                  Teller suggestions are not accepted
+                  as truth automatically.
+                </span>
+
+              </label>
+
+
+              <section className="teller-capture-ocr">
+
+                <div>
+                  <small>
+                    OCR / extraction
+                  </small>
+
+                  <strong>
+                    Not connected
+                  </strong>
+                </div>
+
+                <p>
+                  No text or fields have been
+                  extracted from this document.
+                  A production OCR adapter will
+                  plug into this boundary later.
                 </p>
 
-                <h2>
-                  {
-                    activePreparedCapture
-                      .metadata
-                      .name
-                  }
-                </h2>
-              </div>
+              </section>
+
+
+              <section className="teller-capture-suggestion">
+
+                <small>
+                  Suggested Teller workflow
+                </small>
+
+                {formSuggestion ? (
+                  <>
+                    <strong>
+                      {
+                        formSuggestion
+                          .short_title
+                      }
+                    </strong>
+
+                    <p>
+                      Teller can suggest the form,
+                      but this pack does not autofill
+                      it or attach the file.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <strong>
+                      No role-safe form suggestion
+                    </strong>
+
+                    <p>
+                      You can still prepare the
+                      capture metadata after review.
+                    </p>
+                  </>
+                )}
+
+              </section>
 
 
               <button
                 type="button"
-                className="teller-capture-clear"
-                onClick={resetCurrentCapture}
+                className="teller-capture-prepare"
+                disabled={
+                  !reviewed ||
+                  !confirmedDocumentType ||
+                  duplicate ||
+                  !fingerprint ||
+                  processing
+                }
+                onClick={prepareCapture}
               >
-                New capture
+                Prepare capture record
               </button>
 
-            </div>
+            </section>
 
-
-            {!ocrAdapter?.configured ? (
-              <article className="teller-extraction-provider-off">
-
-                <strong>
-                  OCR provider is not connected.
-                </strong>
-
-                <p>
-                  No document fields were extracted.
-                  Teller will not create fake values
-                  just to make autofill look active.
-                </p>
-
-              </article>
-            ) : null}
-
-
-            {extractionResult
-              ?.extracted_fields
-              ?.length ? (
-
-              <TellerExtractionReview
-                key={
-                  activePreparedCapture
-                    .capture_id
-                }
-
-                role={role}
-
-                capture={
-                  activePreparedCapture
-                }
-
-                mapping={
-                  extractionMapping
-                }
-
-                onAutofillReady={
-                  receiveAutofillHandoff
-                }
-              />
-
-            ) : (
-              <section className="teller-extraction-empty">
-
-                <strong>
-                  No extracted fields available.
-                </strong>
-
-                <p>
-                  Capture is prepared, but there are
-                  no provider-returned fields to
-                  verify or autofill.
-                </p>
-
-              </section>
-            )}
-
-          </section>
+          </>
         ) : null}
 
 
@@ -1172,9 +911,9 @@ export default function TellerCaptureWorkspace({
             </h2>
 
             <p>
-              Raw documents are not persisted.
-              Verified extraction can only hand
-              accepted field values into Forms.
+              These records contain metadata
+              and review status only. The raw
+              documents are not uploaded or saved.
             </p>
           </div>
 
@@ -1185,9 +924,7 @@ export default function TellerCaptureWorkspace({
               {preparedCaptures.map(
                 (capture) => (
                   <article
-                    key={
-                      capture.capture_id
-                    }
+                    key={capture.capture_id}
                   >
 
                     <div>
@@ -1203,7 +940,6 @@ export default function TellerCaptureWorkspace({
                         {
                           labelForDocumentType(
                             documentTypeOptions,
-
                             capture
                               .confirmed_document_type
                           )
@@ -1218,11 +954,7 @@ export default function TellerCaptureWorkspace({
                       </small>
 
                       <strong>
-                        {
-                          ocrAdapter?.configured
-                            ? "Provider configured"
-                            : "Not connected"
-                        }
+                        Not connected
                       </strong>
                     </div>
 
@@ -1260,7 +992,6 @@ export default function TellerCaptureWorkspace({
             </div>
           ) : (
             <article className="teller-capture-empty">
-
               <strong>
                 No documents prepared yet.
               </strong>
@@ -1268,7 +999,6 @@ export default function TellerCaptureWorkspace({
               <p>
                 Scan or choose a document above.
               </p>
-
             </article>
           )}
 

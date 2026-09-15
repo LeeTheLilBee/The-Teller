@@ -1,0 +1,55 @@
+{
+  "pack": "GP551-GP560",
+  "name": "Scanner \u2192 Verified Form Autofill",
+  "parent": "0912b7f9fa4e2fbe3d2446b33e474351444ea8f0",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T15:39:48.764213+00:00",
+  "completed": {
+    "GP551": "canonical extraction result schema",
+    "GP552": "document-specific extractable field vocabulary",
+    "GP553": "provider-neutral OCR/extraction normalization",
+    "GP554": "extraction to role-safe form field mapping",
+    "GP555": "confidence and verification policy",
+    "GP556": "human correction / accept / reject state",
+    "GP557": "verified autofill packet",
+    "GP558": "Capture to Forms verified handoff contract",
+    "GP559": "Extraction Review UI and verified form doorway",
+    "GP560": "regression wall and evidence"
+  },
+  "truth": {
+    "ocr_provider_connected": false,
+    "fake_extracted_values": false,
+    "auto_accept_extraction": false,
+    "human_verification_required": true,
+    "verified_autofill_supported": true,
+    "automatic_form_submission": false,
+    "raw_file_in_autofill_packet": false,
+    "file_attachment": false,
+    "raw_ssn_tin_allowed": false,
+    "raw_bank_credentials_allowed": false,
+    "raw_document_persistence": false,
+    "production_persistence": false,
+    "tower_api": false,
+    "direct_vault": false
+  },
+  "next": {
+    "pack": "GP561-GP570",
+    "name": "Vendor + Document Intake"
+  },
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false
+  },
+  "repairs": [
+    {
+      "repair": "A",
+      "timestamp_utc": "2026-09-15T15:45:37.380177+00:00",
+      "reason": "GP541-GP550 historical Capture UI regression wall still asserted the old 'Prepare capture record' label. GP551 evolved the same action to 'Prepare & check extraction' because capture preparation now performs the extraction boundary check.",
+      "resolution": "Updated the GP541-GP550 compatibility assertion to the evolved GP551 action label. No product behavior was reverted.",
+      "product_behavior_changed": false,
+      "compatibility_wall_changed": true,
+      "file": "tools/teller_capture_scanner_smoke_test_541_550.py"
+    }
+  ]
+}

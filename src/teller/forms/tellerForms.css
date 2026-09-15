@@ -781,3 +781,22 @@
     flex-direction: column;
   }
 }
+
+
+/* GP551–GP560 — verified document autofill notice */
+
+.teller-verified-autofill-note {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 16px;
+  border:
+    1px solid rgba(111, 223, 188, 0.23);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(111, 223, 188, 0.075);
+}
+
+.teller-verified-autofill-note span {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.79rem;
+}

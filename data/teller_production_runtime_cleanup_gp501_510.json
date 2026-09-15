@@ -1,0 +1,53 @@
+{
+  "pack": "GP501-GP510",
+  "name": "Production Runtime Cleanup + Real Product Boundary",
+  "parent": "21cd0a3e319ce7e9186384b30d1de63cb2c2ba78",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T14:50:10.848861+00:00",
+  "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
+  "completed": {
+    "GP501": "node_modules removed from Git tracking",
+    "GP502": "current dependencies exact-pinned",
+    "GP503": "Tower-issued Teller runtime session boundary installed",
+    "GP504": "local TowerBackupWorkspace removed from active App",
+    "GP505": "GP451-GP500 corridor preserved",
+    "GP506": "one Employee workspace",
+    "GP507": "active fake person/document/money seeds removed",
+    "GP508": "Owner begins with honest empty money states",
+    "GP509": "local pretend Tower navigation and fake delivery claims removed",
+    "GP510": "production regression wall installed"
+  },
+  "dependency_versions": {
+    "@vitejs/plugin-react": "6.0.2",
+    "vite": "8.0.14",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "framer-motion": "12.40.0",
+    "lucide-react": "1.16.0"
+  },
+  "not_done_yet": [
+    "production database/persistence adapter",
+    "actual Tower transport connection",
+    "Forms Engine",
+    "Capture/Scanner",
+    "payment processor",
+    "real money movement"
+  ],
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false,
+    "tower_repo_changed": false
+  },
+  "repairs": [
+    {
+      "repair": "A",
+      "timestamp_utc": "2026-09-15T14:52:16.006188+00:00",
+      "reason": "Production runtime wall found surviving fake owner money literal $3.1k in OwnerMoneyWorkspace.jsx.",
+      "result": "Removed all known fake Owner dollar literals from active Owner workspace/data surfaces.",
+      "files": [
+        "src/teller/OwnerMoneyWorkspace.jsx"
+      ]
+    }
+  ]
+}

@@ -216,9 +216,116 @@ export function chooseTodayMoneyFocus(queue = []) {
   return [...queue].sort((a, b) => scoreItem(b) - scoreItem(a))[0];
 }
 
-export const defaultEmployeeDocuments = [];
+export const defaultEmployeeDocuments = [
+  {
+    key: "w2",
+    label: "W-2",
+    version: "2025",
+    status: MONEY_STATUS.VIEW_ONLY,
+    visibility: VISIBILITY_LEVEL.EMPLOYEE_ONLY,
+    source: "payroll_record",
+    confidence: CONFIDENCE_LEVEL.CONFIRMED,
+    lastUpdated: "2026-01-31",
+    nextReview: "2027-01-31",
+  },
+  {
+    key: "w4",
+    label: "W-4",
+    version: "current",
+    status: MONEY_STATUS.TOWER_REQUIRED,
+    visibility: VISIBILITY_LEVEL.EMPLOYEE_ONLY,
+    source: "employee_tax_record",
+    confidence: CONFIDENCE_LEVEL.CONFIRMED,
+    lastUpdated: "2026-05-24",
+    nextReview: "2026-12-31",
+  },
+  {
+    key: "i9",
+    label: "I-9",
+    version: "on_file",
+    status: MONEY_STATUS.VIEW_ONLY,
+    visibility: VISIBILITY_LEVEL.EMPLOYEE_ONLY,
+    source: "identity_record",
+    confidence: CONFIDENCE_LEVEL.CONFIRMED,
+    lastUpdated: "2026-05-24",
+    nextReview: "2027-05-24",
+  },
+  {
+    key: "paystubs",
+    label: "Pay stubs",
+    version: "rolling",
+    status: MONEY_STATUS.VIEW_ONLY,
+    visibility: VISIBILITY_LEVEL.EMPLOYEE_ONLY,
+    source: "payroll_record",
+    confidence: CONFIDENCE_LEVEL.CONFIRMED,
+    lastUpdated: "2026-06-14",
+    nextReview: "next_pay_cycle",
+  },
+  {
+    key: "direct_deposit",
+    label: "Direct deposit form",
+    version: "current",
+    status: MONEY_STATUS.TOWER_REQUIRED,
+    visibility: VISIBILITY_LEVEL.EMPLOYEE_ONLY,
+    source: "payment_record",
+    confidence: CONFIDENCE_LEVEL.CONFIRMED,
+    lastUpdated: "2026-05-24",
+    nextReview: "on_change",
+  },
+  {
+    key: "handbook",
+    label: "Employee handbook",
+    version: "v2026.1",
+    status: MONEY_STATUS.SIGNATURE_REQUIRED,
+    visibility: VISIBILITY_LEVEL.EMPLOYEE_ONLY,
+    source: "policy_record",
+    confidence: CONFIDENCE_LEVEL.CONFIRMED,
+    lastUpdated: "2026-05-24",
+    nextReview: "2027-01-01",
+  },
+];
 
-export const defaultMoneyQueue = [];
+export const defaultMoneyQueue = [
+  {
+    key: "payroll-readiness",
+    lane: "Pay People",
+    business: "SimpleePay",
+    title: "Payroll run needs final readiness",
+    amount: "$4.8k",
+    due: "Today",
+    status: MONEY_STATUS.NEEDS_REVIEW,
+    source: "payroll_record",
+    confidence: CONFIDENCE_LEVEL.NEEDS_PROOF,
+    visibility: VISIBILITY_LEVEL.OWNER_ONLY,
+    priority: 90,
+  },
+  {
+    key: "handbook-signature",
+    lane: "Sign Paperwork",
+    business: "SimpleePay",
+    title: "Employee handbook signature required",
+    amount: "1 signature",
+    due: "Soon",
+    status: MONEY_STATUS.SIGNATURE_REQUIRED,
+    source: "policy_record",
+    confidence: CONFIDENCE_LEVEL.CONFIRMED,
+    visibility: VISIBILITY_LEVEL.EMPLOYEE_ONLY,
+    priority: 78,
+  },
+  {
+    key: "mrktrade-handoff",
+    lane: "Tower Handoff",
+    business: "MrkTrade",
+    title: "Financial paperwork packet",
+    amount: "$3.1k",
+    due: "Protected",
+    status: MONEY_STATUS.TOWER_REQUIRED,
+    source: "manual_entry",
+    confidence: CONFIDENCE_LEVEL.TOWER_GATED,
+    visibility: VISIBILITY_LEVEL.TOWER_REQUIRED,
+    priority: 72,
+  },
+];
 
 export function buildFinalActionPreview(action = {}, language = "en") {
   const copy = getCopy(language);

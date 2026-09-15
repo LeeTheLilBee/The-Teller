@@ -1,4 +1,4 @@
-// GP501_PRODUCTION_MIGRATION_NOTE: Legacy localStorage records remain compatibility-only until the production Teller persistence adapter is connected.
+// PACK_059AF_DEMO_MODE_NOTE: Current Teller bridge data is demo/localStorage backed, not production payroll persistence.
 
 const MANAGER_SUBMISSIONS_KEY = "the_teller_manager_submissions_v1";
 const MANAGER_RETURN_QUEUE_KEY = "the_teller_manager_return_queue_v1";
@@ -159,8 +159,8 @@ export function createTowerBackupItem({ source = "unknown", action = "Recorded a
     summary,
     payload,
     createdAt,
-    status: "Waiting for Tower transport",
-    deliveryMode: "teller_local_queue_waiting_for_tower_transport",
+    status: "Backed up locally for Tower",
+    deliveryMode: "local_handoff_until_tower_api",
   };
 }
 

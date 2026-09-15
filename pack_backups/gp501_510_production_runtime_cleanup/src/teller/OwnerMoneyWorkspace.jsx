@@ -12,6 +12,7 @@ import {
 import { readManagerSubmissions, saveManagerReturnItem, saveManagerSubmission, createBridgeId } from "./managerOwnerBridge";
 import "./ownerMoneyWorkspace.css";
 
+import { saveTowerAccessRequest } from "./towerBackupPlugin";
 import OwnerEscalationDock from "./OwnerEscalationDock.jsx";
 import FinalReceiptViewer from "./FinalReceiptViewer.jsx";
 function statusLabel(status = "") {
@@ -75,20 +76,15 @@ function makeTowerReceiptCopy(ownerReceipt) {
     target: ownerReceipt.target,
     business: ownerReceipt.business,
     createdAt: ownerReceipt.createdAt,
-
-    status: "Waiting for Tower transport",
-
+    status: "Queued for Tower",
     reason: ownerReceipt.tower
-      ? "Protected action requires Tower review."
-      : "Owner workflow receipt requires Tower-safe handoff.",
-
+      ? "Protected or Tower-routed owner action."
+      : "Owner money action receipt copied to The Tower for audit trail.",
     decision: ownerReceipt.decision,
     decisionReason: ownerReceipt.decisionReason,
     decisionNote: ownerReceipt.decisionNote,
     proofReviewed: ownerReceipt.proofReviewed,
-
-    deliveryMode: "teller_request_waiting_for_tower_transport",
-    transportConnected: false,
+    deliveryMode: "local_handoff_until_tower_api",
   };
 }
 
@@ -238,56 +234,67 @@ function businessSpecificCopy(activeBusiness) {
     simpleepay: {
       title: "SimpleePay money workspace",
       subtitle: "Payroll readiness, worker pay, proof packets, tax/payment records, and employee-change money risk.",
-      focusTitle: "Payroll needs a clean real source.",
-      focusBody: "Live payroll totals and proof will appear when the production Teller money source is connected.",
+      focusTitle: "Payroll cannot move casually.",
+      focusBody: "Before payroll sends, The Teller checks worker changes, pay-cycle readiness, funding, proof packets, and whether anything needs Tower review.",
+      leftLabel: "Payroll pressure",
+      leftValue: "$4.8k",
+      middleLabel: "Records needing review",
+      middleValue: "3",
+      rightLabel: "Proof packet status",
+      rightValue: "Waiting",
     },
-
     mrktrade: {
       title: "MrkTrade protected paperwork workspace",
-      subtitle: "Financial paperwork, receipts, proof health, deposits, expenses, and Tower handoff preparation only.",
+      subtitle: "Only vague financial paperwork, receipts, proof health, deposits, expenses, and Tower handoff prep. No OB doorway.",
       focusTitle: "Protected details stay behind The Tower.",
-      focusBody: "Teller organizes money paperwork. Trading, broker, signals, and Observatory details do not open here.",
+      focusBody: "The Teller can organize MrkTrade’s money paperwork, but trading, broker, engine, signals, OB, and protected details must open through The Tower.",
+      leftLabel: "Protected snapshot",
+      leftValue: "$50.0k",
+      middleLabel: "Paperwork packet",
+      middleValue: "$3.1k",
+      rightLabel: "Access route",
+      rightValue: "Tower",
       protected: true,
     },
-
     skincare: {
       title: "SimpleeSkincare money workspace",
-      subtitle: "Sales, fees, refunds, shipping spend, costs, deposits, and proof records.",
-      focusTitle: "Business money needs a real source.",
-      focusBody: "Live skincare money will appear when a production source is connected.",
+      subtitle: "Sales, fees, refunds, shipping spend, costs, deposits, and proof records only.",
+      focusTitle: "Beauty money needs clean separation.",
+      focusBody: "The Teller separates sales from costs, fees, refunds, shipping spend, deposits, and proof so the business money view does not lie to you.",
+      leftLabel: "Sales snapshot",
+      leftValue: "$2.6k",
+      middleLabel: "Costs to review",
+      middleValue: "$740",
+      rightLabel: "Proof records",
+      rightValue: "5",
     },
-
     onthego: {
       title: "SimpleeOnTheGo route money workspace",
       subtitle: "Route revenue, location fees, cash movement, machine costs, worker pay, and route proof.",
-      focusTitle: "Route money needs real records.",
-      focusBody: "Live route totals and proof will appear when a production source is connected.",
+      focusTitle: "Route money needs receipts and movement records.",
+      focusBody: "The Teller keeps revenue, location fees, machine costs, cash needs, and proof tied together before the route looks clean.",
+      leftLabel: "Route revenue",
+      leftValue: "$8.1k",
+      middleLabel: "Missing proof",
+      middleValue: "1",
+      rightLabel: "Cash movement",
+      rightValue: "Track",
     },
-
     property: {
-      title: "The Grounds money workspace",
+      title: "SimpleeProperty money workspace",
       subtitle: "Income, vendor bills, reserves, repairs, taxes, insurance, acquisition costs, and property paperwork.",
-      focusTitle: "Property money stays separated.",
-      focusBody: "Live property money will appear when a production source is connected.",
+      focusTitle: "Property money should not blur together.",
+      focusBody: "The Teller separates income, bills, reserves, repairs, insurance, taxes, and paperwork before anything looks like profit.",
+      leftLabel: "Income tracked",
+      leftValue: "$12.4k",
+      middleLabel: "Vendor bills",
+      middleValue: "3",
+      rightLabel: "Reserve check",
+      rightValue: "$850",
     },
   };
 
-  const selected =
-    map[activeBusiness] ||
-    map.simpleepay;
-
-  return {
-    ...selected,
-
-    leftLabel: "Live money",
-    leftValue: "No live data",
-
-    middleLabel: "Open records",
-    middleValue: "No live data",
-
-    rightLabel: "Proof status",
-    rightValue: "No live data",
-  };
+  return map[activeBusiness] || map.simpleepay;
 }
 
 function OwnerFlowGuide({ activeBusiness, pendingAction, receipts }) {
@@ -524,9 +531,9 @@ function getEvidenceSlots(card) {
     },
     {
       key: "archive-vault",
-      label: "Protected archive proof",
+      label: "Archive Vault placeholder",
       status: "queued",
-      detail: "Archive proof is requested through The Tower when required.",
+      detail: "Later this evidence slot should connect to Archive Vault storage.",
     },
   ];
 
@@ -1444,7 +1451,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Paperwork packet",
           title: "Financial packet needs Tower review",
           detail: "The Teller can prepare the packet, but protected details must be opened by The Tower.",
-          money: "No live data",
+          money: "$3.1k",
           status: "Tower required",
           risk: "High",
           proof: "Protected packet",
@@ -1473,7 +1480,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Sales card",
           title: "Sales batch needs deposit match",
           detail: "Compare expected sales to deposit amount before showing net.",
-          money: "No live data",
+          money: "$2.6k",
           status: "Needs review",
           risk: "Medium",
           proof: "Sales report",
@@ -1513,7 +1520,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Cash movement",
           title: "Route cash movement needs proof",
           detail: "Cash movement should not be counted clean until route proof is attached.",
-          money: "No live data",
+          money: "$8.1k",
           status: "Needs proof",
           risk: "High",
           proof: "Route receipt",
@@ -1553,7 +1560,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Reserve impact",
           title: "Repair may hit reserves",
           detail: "Review reserve impact before paying the repair bill.",
-          money: "No live data",
+          money: "$850",
           status: "Needs review",
           risk: "Medium",
           proof: "Repair estimate",
@@ -2198,17 +2205,29 @@ export default function OwnerMoneyWorkspace() {
   }, []);
 
   function openTowerEvidence() {
-  setPendingAction({
-    label: "Tower review required",
-    business: "The Tower",
-    target: "Protected evidence",
-    description:
-      "Protected evidence must open through a Tower-issued handoff. Teller does not open Tower evidence directly.",
-    money: false,
-    proof: true,
-    tower: true,
-  });
-}
+    try {
+      const now = new Date();
+      const request = {
+        id: `TOWER-ACCESS-${Math.floor(100000 + Math.random() * 900000)}`,
+        sourceApp: "The Teller",
+        sourceLane: "owner",
+        requestedBy: "Owner Dashboard",
+        requestedAccess: "Tower Evidence Viewer",
+        reason: "Open Teller backup/evidence queue from owner dashboard.",
+        createdAt: now.toISOString(),
+        status: "Pending Tower clearance",
+      };
+
+      saveTowerAccessRequest(request);
+      window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
+      window.sessionStorage.removeItem("the_teller_tower_clearance_token_v1");
+      window.sessionStorage.setItem("the_teller_tower_access_request_v1", JSON.stringify(request));
+    } catch {
+      // session storage is optional
+    }
+
+    window.location.href = `${window.location.origin}${window.location.pathname}?teller_view=tower`;
+  }
 
   function openAction(action) {
     setPendingAction(action);

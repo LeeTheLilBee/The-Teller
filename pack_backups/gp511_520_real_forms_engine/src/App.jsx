@@ -1,19 +1,8 @@
-import React, {
-  Component,
-  useState,
-} from "react";
+import React, { Component } from "react";
 
-import EmployeeStandaloneWorkspace
-  from "./teller/EmployeeStandaloneWorkspace.jsx";
-
-import ManagerStandaloneWorkspace
-  from "./teller/ManagerStandaloneWorkspace.jsx";
-
-import OwnerMoneyWorkspace
-  from "./teller/OwnerMoneyWorkspace.jsx";
-
-import TellerFormsWorkspace
-  from "./teller/forms/TellerFormsWorkspace.jsx";
+import EmployeeStandaloneWorkspace from "./teller/EmployeeStandaloneWorkspace.jsx";
+import ManagerStandaloneWorkspace from "./teller/ManagerStandaloneWorkspace.jsx";
+import OwnerMoneyWorkspace from "./teller/OwnerMoneyWorkspace.jsx";
 
 import {
   readTellerTowerSession,
@@ -93,10 +82,7 @@ function TowerLockedScreen() {
 }
 
 
-function TellerHeader({
-  role,
-  onOpenForms,
-}) {
+function TellerHeader({ role }) {
   return (
     <nav className="teller-topbar">
       <div className="teller-topbar-inner">
@@ -110,18 +96,8 @@ function TellerHeader({
           </h1>
         </div>
 
-        <div className="teller-global-actions">
-          <button
-            type="button"
-            className="teller-global-new"
-            onClick={onOpenForms}
-          >
-            + New
-          </button>
-
-          <div className="teller-clearance-chip">
-            Tower clearance · {role}
-          </div>
+        <div className="teller-clearance-chip">
+          Tower clearance · {role}
         </div>
       </div>
     </nav>
@@ -129,25 +105,17 @@ function TellerHeader({
 }
 
 
-function TellerWorkspace({
-  role,
-}) {
+function TellerWorkspace({ role }) {
   if (role === "employee") {
-    return (
-      <EmployeeStandaloneWorkspace />
-    );
+    return <EmployeeStandaloneWorkspace />;
   }
 
   if (role === "manager") {
-    return (
-      <ManagerStandaloneWorkspace />
-    );
+    return <ManagerStandaloneWorkspace />;
   }
 
   if (role === "owner") {
-    return (
-      <OwnerMoneyWorkspace />
-    );
+    return <OwnerMoneyWorkspace />;
   }
 
   return null;
@@ -155,13 +123,7 @@ function TellerWorkspace({
 
 
 export default function App() {
-  const [
-    formsOpen,
-    setFormsOpen,
-  ] = useState(false);
-
-  const towerSession =
-    readTellerTowerSession();
+  const towerSession = readTellerTowerSession();
 
   if (!towerSession) {
     return (
@@ -174,12 +136,7 @@ export default function App() {
   return (
     <TellerErrorBoundary>
       <div className="teller-shell">
-        <TellerHeader
-          role={towerSession.role}
-          onOpenForms={() =>
-            setFormsOpen(true)
-          }
-        />
+        <TellerHeader role={towerSession.role} />
 
         <main className="teller-main">
           <section className="teller-screen-card">
@@ -188,15 +145,6 @@ export default function App() {
             />
           </section>
         </main>
-
-        <TellerFormsWorkspace
-          open={formsOpen}
-          onClose={() =>
-            setFormsOpen(false)
-          }
-          role={towerSession.role}
-          towerSession={towerSession}
-        />
       </div>
     </TellerErrorBoundary>
   );

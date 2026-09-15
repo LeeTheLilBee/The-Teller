@@ -1,0 +1,417 @@
+.teller-global-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.teller-global-new {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.teller-global-new:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.teller-forms-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 28px;
+  background: rgba(8, 10, 18, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.teller-forms-shell {
+  width: min(1180px, 100%);
+  min-height: calc(100vh - 56px);
+  margin: 0 auto;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 28px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(28, 25, 43, 0.98),
+      rgba(15, 16, 26, 0.99)
+    );
+  color: #fff;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.42);
+}
+
+.teller-forms-header,
+.teller-form-renderer-head,
+.teller-form-launcher-top,
+.teller-form-footer,
+.teller-form-label-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.teller-forms-header {
+  margin-bottom: 28px;
+}
+
+.teller-forms-header h1,
+.teller-form-renderer-head h2,
+.teller-form-launcher h2,
+.teller-form-prepared h2,
+.teller-form-section h3 {
+  margin: 0;
+}
+
+.teller-forms-header p,
+.teller-form-renderer-head p,
+.teller-form-launcher p,
+.teller-form-prepared p,
+.teller-form-section-head p,
+.teller-form-card p,
+.teller-form-empty p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.teller-form-kicker {
+  margin: 0 0 7px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d9b8ff;
+}
+
+.teller-forms-close,
+.teller-form-back {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.teller-forms-close {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.teller-form-back {
+  display: block;
+  margin: 0 0 18px;
+  padding: 0;
+  font-weight: 800;
+  color: #cdb9ff;
+}
+
+.teller-form-search {
+  display: grid;
+  gap: 7px;
+  min-width: min(320px, 100%);
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.teller-form-search input,
+.teller-form-field input,
+.teller-form-field textarea,
+.teller-form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 13px;
+  padding: 12px 13px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font: inherit;
+  outline: none;
+}
+
+.teller-form-field select option {
+  background: #191725;
+  color: #fff;
+}
+
+.teller-form-search input:focus,
+.teller-form-field input:focus,
+.teller-form-field textarea:focus,
+.teller-form-field select:focus {
+  border-color: rgba(201, 170, 255, 0.8);
+  box-shadow:
+    0 0 0 3px rgba(201, 170, 255, 0.12);
+}
+
+.teller-form-card-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.teller-form-card {
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.055);
+  color: inherit;
+  cursor: pointer;
+}
+
+.teller-form-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(201, 170, 255, 0.42);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.teller-form-card > span {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d9b8ff;
+}
+
+.teller-form-card strong {
+  font-size: 1rem;
+}
+
+.teller-form-card p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.teller-form-card-bottom {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.teller-form-card-bottom small,
+.teller-form-sensitive-chip {
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.teller-form-prepared {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.teller-form-prepared-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.teller-form-prepared-list article {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.teller-form-prepared-list article span,
+.teller-form-prepared-list article small {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.teller-form-empty {
+  margin-top: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.teller-form-renderer {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.teller-form-progress {
+  min-width: 120px;
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.teller-form-progress strong {
+  font-size: 1.6rem;
+}
+
+.teller-form-progress span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+}
+
+.teller-form-protected-note {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  border: 1px solid rgba(255, 194, 102, 0.25);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(255, 194, 102, 0.08);
+}
+
+.teller-form-protected-note span {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.teller-form-section {
+  margin: 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 19px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.teller-form-section-head {
+  margin-bottom: 17px;
+}
+
+.teller-form-section-head p {
+  margin-bottom: 0;
+}
+
+.teller-form-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.teller-form-field {
+  display: grid;
+  gap: 7px;
+}
+
+.teller-form-field label {
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.teller-form-field small {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.teller-form-field.has-error input,
+.teller-form-field.has-error textarea,
+.teller-form-field.has-error select {
+  border-color: rgba(255, 125, 125, 0.76);
+}
+
+.teller-form-error {
+  margin: 0;
+  color: #ffb2b2;
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.teller-form-footer {
+  align-items: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.teller-form-footer > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.teller-form-footer small {
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.teller-form-footer-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.teller-form-primary,
+.teller-form-secondary {
+  border-radius: 999px;
+  padding: 11px 17px;
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.teller-form-primary {
+  border: 1px solid transparent;
+  background: #d6b6ff;
+  color: #1c1127;
+}
+
+.teller-form-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .teller-forms-overlay {
+    padding: 0;
+  }
+
+  .teller-forms-shell {
+    min-height: 100vh;
+    border: 0;
+    border-radius: 0;
+    padding: 20px;
+  }
+
+  .teller-forms-header,
+  .teller-form-renderer-head,
+  .teller-form-launcher-top,
+  .teller-form-footer {
+    flex-direction: column;
+  }
+
+  .teller-form-search {
+    width: 100%;
+  }
+
+  .teller-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-form-progress {
+    text-align: left;
+  }
+
+  .teller-form-footer-actions {
+    width: 100%;
+  }
+
+  .teller-form-primary,
+  .teller-form-secondary {
+    flex: 1;
+  }
+}

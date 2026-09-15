@@ -3,8 +3,6 @@ import {
   validateTellerFormDefinition,
 } from "./tellerFormSchema.js";
 
-import { TELLER_PEOPLE_EMPLOYMENT_FORMS } from "../people/tellerPeopleEmploymentForms.js";
-
 
 const BUSINESS_OPTIONS = Object.freeze([
   ["simpleepay", "SimpleePay"],
@@ -74,8 +72,6 @@ function section(section_id, title, fields, description = "") {
 
 
 export const TELLER_FORM_REGISTRY = Object.freeze([
-
-  ...TELLER_PEOPLE_EMPLOYMENT_FORMS,
 
   // ------------------------------------------------------------------------------------------------
   // EMPLOYEE — CONTACT

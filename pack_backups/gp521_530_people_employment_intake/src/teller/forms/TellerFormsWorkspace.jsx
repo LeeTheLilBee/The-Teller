@@ -14,9 +14,6 @@ import {
 import TellerFormRenderer
   from "./TellerFormRenderer.jsx";
 
-import TellerPeopleIntakePanel
-  from "../people/TellerPeopleIntakePanel.jsx";
-
 import "./tellerForms.css";
 
 
@@ -106,23 +103,6 @@ export default function TellerFormsWorkspace({
     ) || null;
 
 
-  function openForm(formId) {
-    const allowed =
-      forms.some(
-        (form) =>
-          form.form_id === formId
-      );
-
-    if (!allowed) {
-      return;
-    }
-
-    setSelectedFormId(
-      formId
-    );
-  }
-
-
   function updateDraft(
     formId,
     values
@@ -140,13 +120,12 @@ export default function TellerFormsWorkspace({
     setPreparedPackets(
       (current) => [
         packet,
-
         ...current.filter(
           (item) =>
-            item.form_id !==
-            packet.form_id
+            item.submission_id !==
+            packet.submission_id
         ),
-      ].slice(0, 25)
+      ].slice(0, 10)
     );
 
     setSelectedFormId("");
@@ -172,7 +151,6 @@ export default function TellerFormsWorkspace({
       aria-label="Forms and requests"
     >
       <section className="teller-forms-shell">
-
         <header className="teller-forms-header">
           <div>
             <p className="teller-form-kicker">
@@ -200,57 +178,35 @@ export default function TellerFormsWorkspace({
           </button>
         </header>
 
-
         {selectedForm ? (
           <TellerFormRenderer
             key={selectedForm.form_id}
-
             form={selectedForm}
-
             role={role}
-
             actor={
               towerSession?.actor || {}
             }
-
             business={
               towerSession?.business || {}
             }
-
             initialValues={
               draftValues[
                 selectedForm.form_id
               ] || {}
             }
-
             onDraftChange={
               updateDraft
             }
-
             onPrepared={
               preparePacket
             }
-
             onBack={() =>
               setSelectedFormId("")
             }
           />
         ) : (
           <>
-
-            <TellerPeopleIntakePanel
-              role={role}
-              preparedPackets={
-                preparedPackets
-              }
-              onOpenForm={
-                openForm
-              }
-            />
-
-
             <section className="teller-form-launcher">
-
               <div className="teller-form-launcher-top">
                 <div>
                   <p className="teller-form-kicker">
@@ -269,20 +225,16 @@ export default function TellerFormsWorkspace({
 
                   <input
                     type="search"
-
                     value={search}
-
                     onChange={(event) =>
                       setSearch(
                         event.target.value
                       )
                     }
-
                     placeholder="Search forms"
                   />
                 </label>
               </div>
-
 
               <div className="teller-form-card-grid">
                 {visibleForms.map(
@@ -296,23 +248,13 @@ export default function TellerFormsWorkspace({
                         ).length
                       );
 
-                    const prepared =
-                      preparedPackets.some(
-                        (packet) =>
-                          packet.form_id ===
-                          form.form_id
-                      );
-
                     return (
                       <button
                         type="button"
-
                         className="teller-form-card"
-
                         key={form.form_id}
-
                         onClick={() =>
-                          openForm(
+                          setSelectedFormId(
                             form.form_id
                           )
                         }
@@ -335,12 +277,7 @@ export default function TellerFormsWorkspace({
                         </p>
 
                         <div className="teller-form-card-bottom">
-
-                          {prepared ? (
-                            <small>
-                              Prepared this session
-                            </small>
-                          ) : hasDraft ? (
+                          {hasDraft ? (
                             <small>
                               Draft in this session
                             </small>
@@ -355,14 +292,12 @@ export default function TellerFormsWorkspace({
                               Tower review
                             </small>
                           ) : null}
-
                         </div>
                       </button>
                     );
                   }
                 )}
               </div>
-
 
               {!visibleForms.length ? (
                 <article className="teller-form-empty">
@@ -376,12 +311,9 @@ export default function TellerFormsWorkspace({
                   </p>
                 </article>
               ) : null}
-
             </section>
 
-
             <section className="teller-form-prepared">
-
               <div>
                 <p className="teller-form-kicker">
                   Prepared this session
@@ -399,10 +331,8 @@ export default function TellerFormsWorkspace({
                 </p>
               </div>
 
-
               {preparedPackets.length ? (
                 <div className="teller-form-prepared-list">
-
                   {preparedPackets.map(
                     (packet) => {
                       const summary =
@@ -417,13 +347,11 @@ export default function TellerFormsWorkspace({
                           }
                         >
                           <strong>
-                            {
-                              packet.form_id
-                                .replaceAll(
-                                  "_",
-                                  " "
-                                )
-                            }
+                            {packet.form_id
+                              .replaceAll(
+                                "_",
+                                " "
+                              )}
                           </strong>
 
                           <span>
@@ -440,22 +368,22 @@ export default function TellerFormsWorkspace({
                           {summary
                             .owner_approval_required ? (
                             <small>
-                              Owner approval required
+                              Owner approval
+                              required
                             </small>
                           ) : null}
 
                           {summary
                             .tower_approval_required ? (
                             <small>
-                              Tower review required
+                              Tower review
+                              required
                             </small>
                           ) : null}
-
                         </article>
                       );
                     }
                   )}
-
                 </div>
               ) : (
                 <article className="teller-form-empty">
@@ -468,12 +396,9 @@ export default function TellerFormsWorkspace({
                   </p>
                 </article>
               )}
-
             </section>
-
           </>
         )}
-
       </section>
     </div>
   );

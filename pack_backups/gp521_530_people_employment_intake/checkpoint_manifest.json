@@ -1166,63 +1166,6 @@
         "direct_tower_api": false,
         "direct_vault_access": false
       }
-    },
-    "GP521-GP530": {
-      "name": "People + Employment Intake",
-      "status": "sealed",
-      "timestamp": "2026-09-15T15:15:57.579244+00:00",
-      "parent": "afd8a276ca8a841cb8a27836f9f5507252bf82af",
-      "files_written": [
-        "src/teller/people/tellerPeopleEmploymentForms.js",
-        "src/teller/people/tellerPeopleRecordModel.js",
-        "src/teller/people/tellerEmploymentIntake.js",
-        "src/teller/people/TellerPeopleIntakePanel.jsx",
-        "data/teller_people_employment_intake_gp521_530.json",
-        "docs/teller/TELLER_PEOPLE_EMPLOYMENT_INTAKE_GP521_530.md",
-        "tools/teller_people_employment_intake_smoke_test_521_530.py"
-      ],
-      "files_patched": [
-        "src/teller/forms/tellerFormRegistry.js",
-        "src/teller/forms/TellerFormsWorkspace.jsx",
-        "src/teller/forms/tellerForms.css",
-        "checkpoint_manifest.json"
-      ],
-      "purpose": "Turn the production Forms Engine into a practical progressive People + Employment intake system with canonical person/employment record shapes and truthful session-only onboarding previews.",
-      "truth": {
-        "production_persistence": false,
-        "official_forms_embedded": false,
-        "raw_ssn_tin": false,
-        "raw_bank_credentials": false,
-        "scanner_ocr": false,
-        "tower_api": false,
-        "direct_vault": false
-      },
-      "authorization": {
-        "commit_authorized_by_owner": true,
-        "push_authorized_by_owner": true,
-        "deployment_authorized": false
-      },
-      "sealed_at": "2026-09-15T15:18:27.062256+00:00",
-      "sealed_from_parent": "afd8a276ca8a841cb8a27836f9f5507252bf82af",
-      "acceptance": {
-        "gp521_530_people_employment_wall": "passed",
-        "gp511_520_forms_wall": "passed",
-        "gp501_510_production_wall": "passed",
-        "gp451_500_corridor_wall": "passed",
-        "npm_production_build": "passed",
-        "person_record_model": true,
-        "employment_record_model": true,
-        "progressive_employee_setup": true,
-        "new_people_forms": 5,
-        "raw_ssn_tin_blocked": true,
-        "raw_bank_credentials_blocked": true,
-        "employment_document_numbers_blocked": true,
-        "official_government_forms_embedded": false,
-        "production_persistence_connected": false,
-        "scanner_ocr_connected": false,
-        "direct_tower_api": false,
-        "direct_vault_access": false
-      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

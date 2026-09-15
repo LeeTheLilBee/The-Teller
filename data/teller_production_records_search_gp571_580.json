@@ -1,0 +1,41 @@
+{
+  "pack": "GP571-GP580",
+  "name": "Production Records + Search",
+  "parent": "9cce6f0bfcb993c8381677f0f254641459cc6009",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T16:08:58.171439+00:00",
+  "completed": {
+    "GP571": "canonical Teller record envelope",
+    "GP572": "production repository boundary",
+    "GP573": "prepared workflow to record projection",
+    "GP574": "safe metadata-only record search index",
+    "GP575": "record history / audit event model",
+    "GP576": "record query and filter model",
+    "GP577": "Forms to session-record handoff",
+    "GP578": "Records & Search workspace",
+    "GP579": "global Search doorway",
+    "GP580": "regression wall and evidence"
+  },
+  "truth": {
+    "session_records_searchable": true,
+    "search_indexes_raw_payload": false,
+    "production_repository_contract": true,
+    "production_repository_connected": false,
+    "production_records_persisted": false,
+    "localstorage_record_database": false,
+    "sessionstorage_record_database": false,
+    "indexeddb_record_database": false,
+    "forbidden_credentials_sanitized": true,
+    "direct_tower_api": false,
+    "direct_vault": false
+  },
+  "next": {
+    "pack": "GP581-GP590",
+    "name": "Production Validation + Recovery"
+  },
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false
+  }
+}

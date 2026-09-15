@@ -1,0 +1,978 @@
+.teller-global-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.teller-global-new {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.teller-global-new:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.teller-forms-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 28px;
+  background: rgba(8, 10, 18, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.teller-forms-shell {
+  width: min(1180px, 100%);
+  min-height: calc(100vh - 56px);
+  margin: 0 auto;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 28px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(28, 25, 43, 0.98),
+      rgba(15, 16, 26, 0.99)
+    );
+  color: #fff;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.42);
+}
+
+.teller-forms-header,
+.teller-form-renderer-head,
+.teller-form-launcher-top,
+.teller-form-footer,
+.teller-form-label-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.teller-forms-header {
+  margin-bottom: 28px;
+}
+
+.teller-forms-header h1,
+.teller-form-renderer-head h2,
+.teller-form-launcher h2,
+.teller-form-prepared h2,
+.teller-form-section h3 {
+  margin: 0;
+}
+
+.teller-forms-header p,
+.teller-form-renderer-head p,
+.teller-form-launcher p,
+.teller-form-prepared p,
+.teller-form-section-head p,
+.teller-form-card p,
+.teller-form-empty p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.teller-form-kicker {
+  margin: 0 0 7px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d9b8ff;
+}
+
+.teller-forms-close,
+.teller-form-back {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.teller-forms-close {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.teller-form-back {
+  display: block;
+  margin: 0 0 18px;
+  padding: 0;
+  font-weight: 800;
+  color: #cdb9ff;
+}
+
+.teller-form-search {
+  display: grid;
+  gap: 7px;
+  min-width: min(320px, 100%);
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.teller-form-search input,
+.teller-form-field input,
+.teller-form-field textarea,
+.teller-form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 13px;
+  padding: 12px 13px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font: inherit;
+  outline: none;
+}
+
+.teller-form-field select option {
+  background: #191725;
+  color: #fff;
+}
+
+.teller-form-search input:focus,
+.teller-form-field input:focus,
+.teller-form-field textarea:focus,
+.teller-form-field select:focus {
+  border-color: rgba(201, 170, 255, 0.8);
+  box-shadow:
+    0 0 0 3px rgba(201, 170, 255, 0.12);
+}
+
+.teller-form-card-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.teller-form-card {
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.055);
+  color: inherit;
+  cursor: pointer;
+}
+
+.teller-form-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(201, 170, 255, 0.42);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.teller-form-card > span {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d9b8ff;
+}
+
+.teller-form-card strong {
+  font-size: 1rem;
+}
+
+.teller-form-card p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.teller-form-card-bottom {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.teller-form-card-bottom small,
+.teller-form-sensitive-chip {
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.teller-form-prepared {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.teller-form-prepared-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.teller-form-prepared-list article {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.teller-form-prepared-list article span,
+.teller-form-prepared-list article small {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.teller-form-empty {
+  margin-top: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.teller-form-renderer {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.teller-form-progress {
+  min-width: 120px;
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.teller-form-progress strong {
+  font-size: 1.6rem;
+}
+
+.teller-form-progress span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+}
+
+.teller-form-protected-note {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  border: 1px solid rgba(255, 194, 102, 0.25);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(255, 194, 102, 0.08);
+}
+
+.teller-form-protected-note span {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.teller-form-section {
+  margin: 20px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 19px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.teller-form-section-head {
+  margin-bottom: 17px;
+}
+
+.teller-form-section-head p {
+  margin-bottom: 0;
+}
+
+.teller-form-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.teller-form-field {
+  display: grid;
+  gap: 7px;
+}
+
+.teller-form-field label {
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.teller-form-field small {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.teller-form-field.has-error input,
+.teller-form-field.has-error textarea,
+.teller-form-field.has-error select {
+  border-color: rgba(255, 125, 125, 0.76);
+}
+
+.teller-form-error {
+  margin: 0;
+  color: #ffb2b2;
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.teller-form-footer {
+  align-items: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.teller-form-footer > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.teller-form-footer small {
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.teller-form-footer-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.teller-form-primary,
+.teller-form-secondary {
+  border-radius: 999px;
+  padding: 11px 17px;
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.teller-form-primary {
+  border: 1px solid transparent;
+  background: #d6b6ff;
+  color: #1c1127;
+}
+
+.teller-form-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .teller-forms-overlay {
+    padding: 0;
+  }
+
+  .teller-forms-shell {
+    min-height: 100vh;
+    border: 0;
+    border-radius: 0;
+    padding: 20px;
+  }
+
+  .teller-forms-header,
+  .teller-form-renderer-head,
+  .teller-form-launcher-top,
+  .teller-form-footer {
+    flex-direction: column;
+  }
+
+  .teller-form-search {
+    width: 100%;
+  }
+
+  .teller-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-form-progress {
+    text-align: left;
+  }
+
+  .teller-form-footer-actions {
+    width: 100%;
+  }
+
+  .teller-form-primary,
+  .teller-form-secondary {
+    flex: 1;
+  }
+}
+
+
+/* ============================================================================================================
+   GP521–GP530 — PEOPLE + EMPLOYMENT INTAKE
+   ============================================================================================================ */
+
+.teller-people-intake {
+  margin-bottom: 28px;
+  border: 1px solid rgba(201, 170, 255, 0.18);
+  border-radius: 22px;
+  padding: 20px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(166, 126, 255, 0.09),
+      rgba(255, 255, 255, 0.035)
+    );
+}
+
+.teller-people-intake-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.teller-people-intake-head h2 {
+  margin: 0;
+}
+
+.teller-people-intake-head p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.teller-people-intake-progress {
+  min-width: 130px;
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.teller-people-intake-progress strong {
+  font-size: 1.65rem;
+}
+
+.teller-people-intake-progress span {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.73rem;
+}
+
+.teller-people-step-grid {
+  display: grid;
+  gap: 9px;
+}
+
+.teller-people-step {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 15px;
+  padding: 13px 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  cursor: pointer;
+}
+
+.teller-people-step:hover {
+  border-color: rgba(201, 170, 255, 0.38);
+}
+
+.teller-people-step.is-complete {
+  background: rgba(113, 226, 177, 0.07);
+  border-color: rgba(113, 226, 177, 0.2);
+}
+
+.teller-people-step > span {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.teller-people-step div {
+  min-width: 0;
+}
+
+.teller-people-step strong {
+  display: block;
+}
+
+.teller-people-step p {
+  margin: 3px 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.79rem;
+}
+
+.teller-people-step small {
+  color: rgba(255, 255, 255, 0.56);
+  font-weight: 800;
+}
+
+.teller-people-intake-footer {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.teller-people-intake-footer > div {
+  display: grid;
+  gap: 4px;
+  border-radius: 13px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.teller-people-intake-footer small {
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.teller-people-next {
+  width: 100%;
+  margin-top: 15px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 12px 16px;
+  background: #d6b6ff;
+  color: #1c1127;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.teller-people-complete {
+  display: grid;
+  gap: 4px;
+  margin-top: 15px;
+  border-radius: 14px;
+  padding: 13px 15px;
+  background: rgba(113, 226, 177, 0.08);
+}
+
+.teller-people-complete span {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 760px) {
+  .teller-people-intake-head {
+    flex-direction: column;
+  }
+
+  .teller-people-intake-progress {
+    text-align: left;
+  }
+
+  .teller-people-intake-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-people-step {
+    grid-template-columns: auto 1fr;
+  }
+
+  .teller-people-step > small {
+    grid-column: 2;
+  }
+}
+
+
+/* ============================================================================================================
+   GP531–GP540 — PAYROLL + PAYMENT INTAKE
+   ============================================================================================================ */
+
+.teller-money-intake {
+  margin-bottom: 28px;
+  border: 1px solid rgba(120, 214, 190, 0.18);
+  border-radius: 22px;
+  padding: 20px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(87, 195, 170, 0.075),
+      rgba(255, 255, 255, 0.035)
+    );
+}
+
+.teller-money-intake-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.teller-money-intake-head h2 {
+  margin: 0;
+}
+
+.teller-money-intake-head > div:first-child > p:last-child {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.teller-money-intake-stats {
+  display: flex;
+  gap: 10px;
+}
+
+.teller-money-intake-stats > div {
+  min-width: 120px;
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.teller-money-intake-stats strong {
+  font-size: 1.45rem;
+}
+
+.teller-money-intake-stats span {
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.7rem;
+}
+
+.teller-money-intake-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.teller-money-intake-column {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 17px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.teller-money-intake-column h3 {
+  margin: 0;
+}
+
+.teller-money-intake-description {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.teller-money-action-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.teller-money-action-list button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  border-radius: 13px;
+  padding: 11px 12px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  cursor: pointer;
+}
+
+.teller-money-action-list button:hover {
+  border-color: rgba(125, 228, 203, 0.32);
+}
+
+.teller-money-action-list strong {
+  display: block;
+}
+
+.teller-money-action-list p {
+  margin: 3px 0 0;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.74rem;
+}
+
+.teller-money-action-list small {
+  color: rgba(255, 255, 255, 0.57);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.teller-money-intake-truth {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.teller-money-intake-truth > div {
+  display: grid;
+  gap: 4px;
+  border-radius: 12px;
+  padding: 11px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.teller-money-intake-truth small {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.teller-money-cycle-note {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 13px;
+  border-radius: 13px;
+  padding: 12px 13px;
+  background: rgba(115, 222, 191, 0.07);
+}
+
+.teller-money-cycle-note span {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+@media (max-width: 800px) {
+  .teller-money-intake-head {
+    flex-direction: column;
+  }
+
+  .teller-money-intake-stats {
+    width: 100%;
+  }
+
+  .teller-money-intake-stats > div {
+    text-align: left;
+    flex: 1;
+  }
+
+  .teller-money-intake-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-money-intake-truth {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .teller-money-intake-truth {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-money-cycle-note {
+    flex-direction: column;
+  }
+}
+
+
+/* GP551–GP560 — verified document autofill notice */
+
+.teller-verified-autofill-note {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 16px;
+  border:
+    1px solid rgba(111, 223, 188, 0.23);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(111, 223, 188, 0.075);
+}
+
+.teller-verified-autofill-note span {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.79rem;
+}
+
+
+/* ============================================================================================================
+   GP561–GP570 — VENDOR + DOCUMENT INTAKE
+   ============================================================================================================ */
+
+.teller-vendor-document-panel {
+  margin-bottom: 28px;
+  border:
+    1px solid rgba(255, 207, 132, 0.17);
+  border-radius: 22px;
+  padding: 20px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(221, 165, 83, 0.07),
+      rgba(255, 255, 255, 0.03)
+    );
+}
+
+.teller-vendor-document-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.teller-vendor-document-head h2,
+.teller-vendor-document-column h3 {
+  margin: 0;
+}
+
+.teller-vendor-document-head > div:first-child > p:last-child,
+.teller-vendor-document-description {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.teller-vendor-document-counts {
+  display: flex;
+  gap: 10px;
+}
+
+.teller-vendor-document-counts > div {
+  min-width: 105px;
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.teller-vendor-document-counts strong {
+  font-size: 1.4rem;
+}
+
+.teller-vendor-document-counts span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+}
+
+.teller-vendor-document-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.teller-vendor-document-grid.documents-only {
+  grid-template-columns: 1fr;
+}
+
+.teller-vendor-document-column {
+  border:
+    1px solid rgba(255, 255, 255, 0.085);
+  border-radius: 17px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.teller-vendor-document-description {
+  font-size: 0.79rem;
+  line-height: 1.45;
+}
+
+.teller-vendor-document-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.teller-vendor-document-actions button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  border:
+    1px solid rgba(255, 255, 255, 0.085);
+  border-radius: 13px;
+  padding: 11px 12px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  cursor: pointer;
+}
+
+.teller-vendor-document-actions button:hover {
+  border-color:
+    rgba(255, 207, 132, 0.3);
+}
+
+.teller-vendor-document-actions strong {
+  display: block;
+}
+
+.teller-vendor-document-actions p {
+  margin: 3px 0 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.teller-vendor-document-actions small {
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.teller-vendor-document-truth {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.teller-vendor-document-truth > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  border-radius: 12px;
+  padding: 11px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.teller-vendor-document-truth small {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.teller-vendor-document-truth strong {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+  .teller-vendor-document-head {
+    flex-direction: column;
+  }
+
+  .teller-vendor-document-counts > div {
+    text-align: left;
+  }
+
+  .teller-vendor-document-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-vendor-document-truth {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .teller-vendor-document-truth {
+    grid-template-columns: 1fr;
+  }
+}

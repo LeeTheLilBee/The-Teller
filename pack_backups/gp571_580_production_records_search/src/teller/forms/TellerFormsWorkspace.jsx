@@ -28,10 +28,6 @@ import {
   isValidTellerAutofillHandoff,
 } from "../capture/tellerCaptureAutofill.js";
 
-import {
-  buildTellerRecordFromPreparedPacket,
-} from "../records/tellerRecordProjection.js";
-
 import "./tellerForms.css";
 
 
@@ -79,7 +75,6 @@ export default function TellerFormsWorkspace({
   towerSession,
   externalHandoff = null,
   onHandoffConsumed,
-  onRecordPrepared,
 }) {
   const [
     selectedFormId,
@@ -270,27 +265,6 @@ export default function TellerFormsWorkspace({
       verified_autofill_provenance:
         provenance,
     };
-
-
-    const sessionRecord =
-      buildTellerRecordFromPreparedPacket(
-        packetWithProvenance,
-        {
-          actor_role:
-            role,
-
-          business_key:
-            towerSession?.business?.key ||
-            towerSession?.business?.business_key ||
-            towerSession?.business?.id ||
-            "",
-        }
-      );
-
-
-    onRecordPrepared?.(
-      sessionRecord
-    );
 
 
     setPreparedPackets(

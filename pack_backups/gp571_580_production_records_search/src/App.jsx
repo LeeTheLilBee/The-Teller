@@ -18,9 +18,6 @@ import TellerFormsWorkspace
 import TellerCaptureWorkspace
   from "./teller/capture/TellerCaptureWorkspace.jsx";
 
-import TellerRecordsWorkspace
-  from "./teller/records/TellerRecordsWorkspace.jsx";
-
 import {
   readTellerTowerSession,
 } from "./teller/tellerRuntimeSession.js";
@@ -111,10 +108,8 @@ function TowerLockedScreen() {
 
 function TellerHeader({
   role,
-  recordCount,
   onOpenForms,
   onOpenCapture,
-  onOpenRecords,
 }) {
   return (
     <nav className="teller-topbar">
@@ -149,20 +144,6 @@ function TellerHeader({
             onClick={onOpenCapture}
           >
             Scan
-          </button>
-
-
-          <button
-            type="button"
-            className="teller-global-new teller-global-search"
-            onClick={onOpenRecords}
-          >
-            Search
-            {
-              recordCount
-                ? ` · ${recordCount}`
-                : ""
-            }
           </button>
 
 
@@ -218,21 +199,9 @@ export default function App() {
 
 
   const [
-    recordsOpen,
-    setRecordsOpen,
-  ] = useState(false);
-
-
-  const [
     verifiedAutofillHandoff,
     setVerifiedAutofillHandoff,
   ] = useState(null);
-
-
-  const [
-    sessionRecords,
-    setSessionRecords,
-  ] = useState([]);
 
 
   const towerSession =
@@ -248,28 +217,15 @@ export default function App() {
   }
 
 
-  function closeAllWorkspaces() {
-    setFormsOpen(false);
-    setCaptureOpen(false);
-    setRecordsOpen(false);
-  }
-
-
   function openForms() {
-    closeAllWorkspaces();
+    setCaptureOpen(false);
     setFormsOpen(true);
   }
 
 
   function openCapture() {
-    closeAllWorkspaces();
+    setFormsOpen(false);
     setCaptureOpen(true);
-  }
-
-
-  function openRecords() {
-    closeAllWorkspaces();
-    setRecordsOpen(true);
   }
 
 
@@ -280,30 +236,8 @@ export default function App() {
       handoff
     );
 
-    closeAllWorkspaces();
+    setCaptureOpen(false);
     setFormsOpen(true);
-  }
-
-
-  function handleRecordPrepared(
-    record
-  ) {
-    if (!record?.record_id) {
-      return;
-    }
-
-
-    setSessionRecords(
-      (current) => [
-        record,
-
-        ...current.filter(
-          (item) =>
-            item.record_id !==
-            record.record_id
-        ),
-      ].slice(0, 250)
-    );
   }
 
 
@@ -317,20 +251,12 @@ export default function App() {
             towerSession.role
           }
 
-          recordCount={
-            sessionRecords.length
-          }
-
           onOpenForms={
             openForms
           }
 
           onOpenCapture={
             openCapture
-          }
-
-          onOpenRecords={
-            openRecords
           }
         />
 
@@ -376,10 +302,6 @@ export default function App() {
               null
             )
           }
-
-          onRecordPrepared={
-            handleRecordPrepared
-          }
         />
 
 
@@ -398,25 +320,6 @@ export default function App() {
 
           onFormHandoff={
             handleVerifiedAutofill
-          }
-        />
-
-
-        <TellerRecordsWorkspace
-          open={
-            recordsOpen
-          }
-
-          onClose={() =>
-            setRecordsOpen(false)
-          }
-
-          role={
-            towerSession.role
-          }
-
-          records={
-            sessionRecords
           }
         />
 

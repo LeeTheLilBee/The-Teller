@@ -1,0 +1,57 @@
+{
+  "pack": "GP531-GP540",
+  "name": "Payroll + Payment Intake",
+  "parent": "0585df5d44ac2153b358718c94c3776d5562a326",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T15:23:01.119887+00:00",
+  "completed": {
+    "GP531": "canonical Payroll Intake model",
+    "GP532": "canonical Payment Intake model",
+    "GP533": "payroll/payment intake planners",
+    "GP534": "payroll cycle setup",
+    "GP535": "payroll adjustment and bonus/commission intake",
+    "GP536": "off-cycle pay and payroll correction intake",
+    "GP537": "payment exception and refund/reversal intake",
+    "GP538": "workflow-safe payroll/payment preview",
+    "GP539": "Payroll + Payments UI inside Forms & Requests",
+    "GP540": "regression wall and evidence"
+  },
+  "new_forms": [
+    "payroll_cycle_setup",
+    "payroll_adjustment_request",
+    "bonus_commission_request",
+    "off_cycle_pay_request",
+    "payroll_correction_request",
+    "payment_exception_request",
+    "refund_reversal_request"
+  ],
+  "existing_money_forms_reused": [
+    "invoice_intake",
+    "payment_request",
+    "reimbursement_request"
+  ],
+  "truth": {
+    "production_payroll_processor_connected": false,
+    "production_payment_processor_connected": false,
+    "payroll_submitted": false,
+    "payment_sent": false,
+    "refund_sent": false,
+    "reversal_sent": false,
+    "money_moved": false,
+    "production_persistence_connected": false,
+    "raw_bank_credentials_collected": false,
+    "raw_ssn_tin_collected": false,
+    "scanner_ocr_connected": false,
+    "tower_api_connected": false,
+    "direct_vault_access": false
+  },
+  "next": {
+    "pack": "GP541-GP550",
+    "name": "Teller Capture / Scanner Foundation"
+  },
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false
+  }
+}

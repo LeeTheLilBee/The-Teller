@@ -1223,67 +1223,6 @@
         "direct_tower_api": false,
         "direct_vault_access": false
       }
-    },
-    "GP531-GP540": {
-      "name": "Payroll + Payment Intake",
-      "status": "sealed",
-      "timestamp": "2026-09-15T15:23:01.119887+00:00",
-      "parent": "0585df5d44ac2153b358718c94c3776d5562a326",
-      "files_written": [
-        "src/teller/money/tellerPayrollPaymentForms.js",
-        "src/teller/money/tellerPayrollPaymentModel.js",
-        "src/teller/money/tellerPayrollPaymentIntake.js",
-        "src/teller/money/TellerPayrollPaymentPanel.jsx",
-        "data/teller_payroll_payment_intake_gp531_540.json",
-        "docs/teller/TELLER_PAYROLL_PAYMENT_INTAKE_GP531_540.md",
-        "tools/teller_payroll_payment_intake_smoke_test_531_540.py"
-      ],
-      "files_patched": [
-        "src/teller/forms/tellerFormRegistry.js",
-        "src/teller/forms/TellerFormsWorkspace.jsx",
-        "src/teller/forms/tellerForms.css",
-        "checkpoint_manifest.json"
-      ],
-      "purpose": "Add practical payroll and payment intake workflows without claiming processor integration, production persistence, or money movement.",
-      "truth": {
-        "payroll_processor": false,
-        "payment_processor": false,
-        "money_movement": false,
-        "production_persistence": false,
-        "raw_bank_credentials": false,
-        "raw_ssn_tin": false,
-        "scanner_ocr": false,
-        "tower_api": false,
-        "direct_vault": false
-      },
-      "authorization": {
-        "commit_authorized_by_owner": true,
-        "push_authorized_by_owner": true,
-        "deployment_authorized": false
-      },
-      "sealed_at": "2026-09-15T15:25:20.807002+00:00",
-      "sealed_from_parent": "0585df5d44ac2153b358718c94c3776d5562a326",
-      "acceptance": {
-        "gp531_540_payroll_payment_wall": "passed",
-        "gp521_530_people_employment_wall": "passed",
-        "gp511_520_forms_wall": "passed",
-        "gp501_510_production_wall": "passed",
-        "gp451_500_corridor_wall": "passed",
-        "npm_production_build": "passed",
-        "payroll_intake_model": true,
-        "payment_intake_model": true,
-        "new_money_forms": 7,
-        "existing_money_forms_preserved": true,
-        "payroll_processor_connected": false,
-        "payment_processor_connected": false,
-        "money_movement": false,
-        "raw_bank_credentials_blocked": true,
-        "raw_ssn_tin_blocked": true,
-        "production_persistence_connected": false,
-        "scanner_ocr_connected": false,
-        "direct_tower_api": false,
-        "direct_vault_access": false
-      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

@@ -17,9 +17,6 @@ import TellerFormRenderer
 import TellerPeopleIntakePanel
   from "../people/TellerPeopleIntakePanel.jsx";
 
-import TellerPayrollPaymentPanel
-  from "../money/TellerPayrollPaymentPanel.jsx";
-
 import "./tellerForms.css";
 
 

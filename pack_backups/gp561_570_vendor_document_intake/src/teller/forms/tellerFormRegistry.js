@@ -1,4 +1,3 @@
-import { TELLER_VENDOR_DOCUMENT_FORMS } from "../vendors/tellerVendorDocumentForms.js";
 import { TELLER_PAYROLL_PAYMENT_FORMS } from "../money/tellerPayrollPaymentForms.js";
 import {
   TELLER_FIELD_SENSITIVITY,
@@ -76,8 +75,6 @@ function section(section_id, title, fields, description = "") {
 
 
 export const TELLER_FORM_REGISTRY = Object.freeze([
-
-  ...TELLER_VENDOR_DOCUMENT_FORMS,
 
   ...TELLER_PEOPLE_EMPLOYMENT_FORMS,
   ...TELLER_PAYROLL_PAYMENT_FORMS,

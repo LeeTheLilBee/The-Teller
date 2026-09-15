@@ -21,9 +21,6 @@ import TellerPeopleIntakePanel
 import TellerPayrollPaymentPanel
   from "../money/TellerPayrollPaymentPanel.jsx";
 
-import TellerVendorDocumentPanel
-  from "../vendors/TellerVendorDocumentPanel.jsx";
-
 import {
   isValidTellerAutofillHandoff,
 } from "../capture/tellerCaptureAutofill.js";
@@ -421,22 +418,6 @@ export default function TellerFormsWorkspace({
 
 
             <TellerPayrollPaymentPanel
-              role={
-                role
-              }
-
-              preparedPackets={
-                preparedPackets
-              }
-
-              onOpenForm={
-                openForm
-              }
-            />
-
-
-
-            <TellerVendorDocumentPanel
               role={
                 role
               }

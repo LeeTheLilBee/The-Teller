@@ -6,10 +6,6 @@ import {
   getTellerFormDefinition,
 } from "../forms/tellerFormRegistry.js";
 
-import {
-  buildTellerSubmissionFingerprint,
-} from "../recovery/tellerSubmissionGuard.js";
-
 
 function createRecordId(
   submissionId
@@ -48,8 +44,7 @@ export function buildTellerRecordFromPreparedPacket(
     "";
 
 
-  const record =
-    createTellerRecordEnvelope({
+  return createTellerRecordEnvelope({
     record_id:
       createRecordId(
         submissionId
@@ -111,17 +106,5 @@ export function buildTellerRecordFromPreparedPacket(
     created_at:
       packet.created_at ||
       null,
-  });
-
-
-  return Object.freeze({
-    ...record,
-
-    integrity: {
-      submission_fingerprint:
-        buildTellerSubmissionFingerprint(
-          packet
-        ),
-    },
   });
 }

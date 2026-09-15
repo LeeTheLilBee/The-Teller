@@ -1,0 +1,44 @@
+{
+  "pack": "GP581-GP590",
+  "name": "Production Validation + Recovery",
+  "parent": "b16decd585fb03d84c3336c046caf4cb74943950",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T16:38:29.230284+00:00",
+  "completed": {
+    "GP581": "production record validation",
+    "GP582": "forbidden-field deep validation",
+    "GP583": "duplicate prepared-workflow guard",
+    "GP584": "record correction workflow",
+    "GP585": "retryable operation-state contract",
+    "GP586": "session workflow record lock",
+    "GP587": "in-memory recovery snapshot",
+    "GP588": "App validation and duplicate acceptance gates",
+    "GP589": "Recovery Center inside Records & Search",
+    "GP590": "regression wall and evidence"
+  },
+  "truth": {
+    "record_validation": true,
+    "duplicate_guard": true,
+    "correction_workflow": true,
+    "retry_state_contract": true,
+    "network_retry_connected": false,
+    "session_workflow_lock": true,
+    "tower_security_lock": false,
+    "in_memory_recovery": true,
+    "recovery_survives_reload": false,
+    "production_backup": false,
+    "production_repository_connected": false,
+    "browser_record_database": false,
+    "direct_tower_api": false,
+    "direct_vault": false
+  },
+  "next": {
+    "pack": "GP591-GP600",
+    "name": "Teller Practical-Use Certification"
+  },
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false
+  }
+}

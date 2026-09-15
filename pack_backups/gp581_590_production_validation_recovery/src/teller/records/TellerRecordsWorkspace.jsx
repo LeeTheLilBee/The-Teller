@@ -24,11 +24,6 @@ import {
 
 import "./tellerRecords.css";
 
-import TellerRecoveryPanel
-  from "../recovery/TellerRecoveryPanel.jsx";
-
-import "../recovery/tellerRecovery.css";
-
 
 function SelectFilter({
   label,
@@ -211,8 +206,6 @@ export default function TellerRecordsWorkspace({
   onClose,
   role,
   records = [],
-  recoveryEvents = [],
-  onReplaceRecords,
   repository =
     createUnconfiguredTellerRecordRepository(),
 }) {
@@ -548,25 +541,6 @@ export default function TellerRecordsWorkspace({
           )}
 
         </section>
-
-
-        <TellerRecoveryPanel
-          role={
-            role
-          }
-
-          records={
-            records
-          }
-
-          recoveryEvents={
-            recoveryEvents
-          }
-
-          onReplaceRecords={
-            onReplaceRecords
-          }
-        />
 
 
         {!repositoryTruth.configured ? (

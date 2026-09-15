@@ -25,14 +25,6 @@ import {
   readTellerTowerSession,
 } from "./teller/tellerRuntimeSession.js";
 
-import {
-  validateTellerProductionRecord,
-} from "./teller/recovery/tellerProductionValidation.js";
-
-import {
-  findDuplicateTellerRecord,
-} from "./teller/recovery/tellerSubmissionGuard.js";
-
 import "./teller/tellerShell.css";
 
 
@@ -243,12 +235,6 @@ export default function App() {
   ] = useState([]);
 
 
-  const [
-    recordRecoveryEvents,
-    setRecordRecoveryEvents,
-  ] = useState([]);
-
-
   const towerSession =
     readTellerTowerSession();
 
@@ -299,92 +285,10 @@ export default function App() {
   }
 
 
-  function addRecoveryEvent(
-    event
-  ) {
-    setRecordRecoveryEvents(
-      (current) => [
-        {
-          event_id:
-            `recovery_event_${Date.now()}_${Math.random()
-              .toString(36)
-              .slice(2, 8)}`,
-
-          at:
-            new Date().toISOString(),
-
-          ...event,
-        },
-
-        ...current,
-      ].slice(0, 100)
-    );
-  }
-
-
   function handleRecordPrepared(
     record
   ) {
     if (!record?.record_id) {
-      addRecoveryEvent({
-        event:
-          "record_blocked",
-
-        reason:
-          "Record ID missing",
-      });
-
-      return;
-    }
-
-
-    const validation =
-      validateTellerProductionRecord(
-        record
-      );
-
-
-    if (!validation.valid) {
-      addRecoveryEvent({
-        event:
-          "record_validation_blocked",
-
-        record_id:
-          record.record_id,
-
-        reason:
-          "Prepared record failed Teller production validation.",
-
-        problem_count:
-          validation.problems.length,
-      });
-
-      return;
-    }
-
-
-    const duplicate =
-      findDuplicateTellerRecord(
-        sessionRecords,
-        record
-      );
-
-
-    if (duplicate) {
-      addRecoveryEvent({
-        event:
-          "duplicate_preparation_blocked",
-
-        record_id:
-          record.record_id,
-
-        duplicate_of:
-          duplicate.record_id,
-
-        reason:
-          "An identical prepared workflow already exists in this Teller session.",
-      });
-
       return;
     }
 
@@ -400,38 +304,6 @@ export default function App() {
         ),
       ].slice(0, 250)
     );
-
-
-    addRecoveryEvent({
-      event:
-        "record_accepted",
-
-      record_id:
-        record.record_id,
-
-      reason:
-        "Prepared Teller record passed validation and duplicate checks.",
-    });
-  }
-
-
-  function replaceSessionRecords(
-    nextRecords
-  ) {
-    setSessionRecords(
-      Array.isArray(nextRecords)
-        ? nextRecords.slice(0, 250)
-        : []
-    );
-
-
-    addRecoveryEvent({
-      event:
-        "session_records_recovered",
-
-      reason:
-        "Teller session records were restored from an in-memory recovery point.",
-    });
   }
 
 
@@ -545,14 +417,6 @@ export default function App() {
 
           records={
             sessionRecords
-          }
-
-          recoveryEvents={
-            recordRecoveryEvents
-          }
-
-          onReplaceRecords={
-            replaceSessionRecords
           }
         />
 

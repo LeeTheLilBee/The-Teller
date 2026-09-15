@@ -1,0 +1,82 @@
+{
+  "pack": "GP591-GP600",
+  "name": "Teller Practical-Use Certification",
+  "parent": "bf3b72ba99ad5f3aa2b579fd4440a76937c44965",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T16:46:44.550827+00:00",
+  "certification_scope": "practical_use_source_lane",
+  "certified_now": [
+    "Tower-issued Teller session boundary",
+    "role-filtered Forms Engine",
+    "People + Employment intake",
+    "Payroll + Payment intake",
+    "Vendor + Document intake",
+    "Capture / Scanner foundation",
+    "human-verified extraction/autofill path",
+    "session Records + Search",
+    "record validation",
+    "duplicate prepared-workflow protection",
+    "record correction workflow",
+    "session workflow locks",
+    "in-memory recovery"
+  ],
+  "blocked_pending_integration": [
+    "production record repository",
+    "production OCR provider",
+    "payroll processor",
+    "payment processor",
+    "real money movement",
+    "reload-safe persistence",
+    "Tower transport/API",
+    "Tower-mediated Vault transport/storage"
+  ],
+  "not_authorized": [
+    "deployment",
+    "promotion",
+    "live payroll execution",
+    "live payment execution",
+    "direct Vault access"
+  ],
+  "truth": {
+    "practical_use_source_lane_certifiable": true,
+    "deployment_ready": false,
+    "deployment_authorized": false,
+    "production_repository_connected": false,
+    "ocr_provider_connected": false,
+    "payroll_processor_connected": false,
+    "payment_processor_connected": false,
+    "money_movement": false,
+    "reload_safe_persistence": false,
+    "direct_tower_api": false,
+    "direct_vault": false
+  },
+  "authorization": {
+    "commit": true,
+    "push": true,
+    "deploy": false
+  },
+  "source_certification": {
+    "status": "sealed",
+    "executable_scenario": "passed",
+    "complete_regression_wall": "passed",
+    "npm_production_build": "passed",
+    "practical_use_source_lane": "certified",
+    "deployment_ready": false,
+    "deployment_authorized": false,
+    "production_integrations_complete": false,
+    "certified_at": "2026-09-15T16:46:48.299867+00:00",
+    "sealed_at": "2026-09-15T16:53:45.283728+00:00"
+  },
+  "seal_repairs": {
+    "A": {
+      "status": "complete",
+      "product_source_changed": false,
+      "reason": "Corrected literal sanitization-token seal assertion."
+    },
+    "B": {
+      "status": "complete",
+      "product_source_changed": false,
+      "reason": "Corrected self-match against negative regression fixtures."
+    }
+  }
+}

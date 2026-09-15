@@ -15,9 +15,6 @@ import OwnerMoneyWorkspace
 import TellerFormsWorkspace
   from "./teller/forms/TellerFormsWorkspace.jsx";
 
-import TellerCaptureWorkspace
-  from "./teller/capture/TellerCaptureWorkspace.jsx";
-
 import {
   readTellerTowerSession,
 } from "./teller/tellerRuntimeSession.js";
@@ -99,12 +96,10 @@ function TowerLockedScreen() {
 function TellerHeader({
   role,
   onOpenForms,
-  onOpenCapture,
 }) {
   return (
     <nav className="teller-topbar">
       <div className="teller-topbar-inner">
-
         <div>
           <p className="teller-kicker">
             Opened by The Tower
@@ -115,9 +110,7 @@ function TellerHeader({
           </h1>
         </div>
 
-
         <div className="teller-global-actions">
-
           <button
             type="button"
             className="teller-global-new"
@@ -126,22 +119,10 @@ function TellerHeader({
             + New
           </button>
 
-
-          <button
-            type="button"
-            className="teller-global-new teller-global-scan"
-            onClick={onOpenCapture}
-          >
-            Scan
-          </button>
-
-
           <div className="teller-clearance-chip">
             Tower clearance · {role}
           </div>
-
         </div>
-
       </div>
     </nav>
   );
@@ -179,16 +160,8 @@ export default function App() {
     setFormsOpen,
   ] = useState(false);
 
-
-  const [
-    captureOpen,
-    setCaptureOpen,
-  ] = useState(false);
-
-
   const towerSession =
     readTellerTowerSession();
-
 
   if (!towerSession) {
     return (
@@ -198,30 +171,15 @@ export default function App() {
     );
   }
 
-
-  function openForms() {
-    setCaptureOpen(false);
-    setFormsOpen(true);
-  }
-
-
-  function openCapture() {
-    setFormsOpen(false);
-    setCaptureOpen(true);
-  }
-
-
   return (
     <TellerErrorBoundary>
-
       <div className="teller-shell">
-
         <TellerHeader
           role={towerSession.role}
-          onOpenForms={openForms}
-          onOpenCapture={openCapture}
+          onOpenForms={() =>
+            setFormsOpen(true)
+          }
         />
-
 
         <main className="teller-main">
           <section className="teller-screen-card">
@@ -231,7 +189,6 @@ export default function App() {
           </section>
         </main>
 
-
         <TellerFormsWorkspace
           open={formsOpen}
           onClose={() =>
@@ -240,18 +197,7 @@ export default function App() {
           role={towerSession.role}
           towerSession={towerSession}
         />
-
-
-        <TellerCaptureWorkspace
-          open={captureOpen}
-          onClose={() =>
-            setCaptureOpen(false)
-          }
-          role={towerSession.role}
-        />
-
       </div>
-
     </TellerErrorBoundary>
   );
 }

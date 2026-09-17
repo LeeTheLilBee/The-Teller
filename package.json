@@ -6,15 +6,17 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "teller:persistence:migrate": "node server/teller/persistence/runTellerPersistenceMigrations.js",
+    "teller:persistence:health": "node server/teller/persistence/tellerPersistenceHealth.js"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.0.2",
-    "vite": "8.0.14",
+    "framer-motion": "12.40.0",
+    "lucide-react": "1.16.0",
+    "pg": "8.23.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "framer-motion": "12.40.0",
-    "lucide-react": "1.16.0"
-  },
-  "devDependencies": {}
+    "vite": "8.0.14"
+  }
 }

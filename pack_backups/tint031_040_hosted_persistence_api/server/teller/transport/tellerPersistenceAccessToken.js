@@ -175,7 +175,6 @@ function normalizeClaims(
       "aud",
       "jti",
       "tower_session_id",
-      "tower_receipt_id",
       "actor_id",
       "actor_role",
       "business_key",

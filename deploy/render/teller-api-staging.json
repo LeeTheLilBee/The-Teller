@@ -1,0 +1,38 @@
+{
+  "workspace": "Simplee World Staging",
+  "service": {
+    "name": "simplee-teller-api-staging",
+    "type": "web_service",
+    "runtime": "node",
+    "region": "virginia",
+    "plan": "free",
+    "repository": "https://github.com/LeeTheLilBee/The-Teller.git",
+    "branch": "teller-tower-request-handoff-dev",
+    "auto_deploy": false,
+    "build_command": "npm ci",
+    "start_command": "npm run teller:api",
+    "health_check_path": "/readyz"
+  },
+  "public_runtime": {
+    "TELLER_HOSTED_RUNTIME": "staging",
+    "TELLER_TRANSPORT_TOKEN_ISSUER": "tower",
+    "TELLER_TRANSPORT_TOKEN_AUDIENCE": "teller-persistence",
+    "TELLER_TRANSPORT_MAX_TOKEN_LIFETIME_SECONDS": "600",
+    "TELLER_DATABASE_SSL_MODE": "require",
+    "TELLER_DATABASE_POOL_MAX": "5",
+    "TELLER_DATABASE_STATEMENT_TIMEOUT_MS": "15000",
+    "TELLER_TRANSPORT_MAX_BODY_BYTES": "524288",
+    "TELLER_ALLOWED_ORIGINS": "https://simplee-teller.onrender.com,https://simplee-tower-ob.onrender.com"
+  },
+  "secret_runtime": {
+    "DATABASE_URL": "Render INTERNAL database URL for simplee-teller-postgres-staging",
+    "TELLER_PERSISTENCE_ENABLED": "true",
+    "TELLER_TOWER_TOKEN_SECRET": "staging shared Tower\u2194Teller signing secret"
+  },
+  "must_not_use": {
+    "external_database_url_from_render_service": true,
+    "database_credentials_in_browser": true,
+    "token_secret_in_browser": true,
+    "auto_deploy_before_environment_is_complete": true
+  }
+}

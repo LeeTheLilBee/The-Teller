@@ -15,10 +15,6 @@ import {
 } from "./tellerTransportConfig.js";
 
 import {
-  checkTellerHostedReadiness,
-} from "./tellerHostedReadiness.js";
-
-import {
   tellerPersistenceScopeFromClaims,
   verifyTellerPersistenceAccessToken,
 } from "./tellerPersistenceAccessToken.js";
@@ -443,84 +439,7 @@ export function createTellerPersistenceHttpServer({
               service:
                 "teller-persistence",
 
-              runtime:
-                config
-                  ?.hostedRuntime
-                  ?.runtime ||
-                "local",
-
-              hosted:
-                Boolean(
-                  config
-                    ?.hostedRuntime
-                    ?.hosted
-                ),
-
-              transport_configured:
-                Boolean(
-                  config.configured
-                ),
-
               database_credentials_exposed:
-                false,
-
-              token_secret_exposed:
-                false,
-
-              request_id:
-                requestId,
-            },
-            responseContext
-          );
-
-          return;
-        }
-
-
-        if (
-          request.method ===
-            "GET" &&
-          url.pathname ===
-            "/readyz"
-        ) {
-          const readiness =
-            await checkTellerHostedReadiness({
-              pool,
-              config,
-            });
-
-
-          json(
-            response,
-            readiness.ready
-              ? 200
-              : 503,
-            {
-              status:
-                readiness.status,
-
-              ready:
-                readiness.ready,
-
-              database:
-                readiness.database,
-
-              transport:
-                readiness.transport,
-
-              service:
-                "teller-persistence",
-
-              runtime:
-                config
-                  ?.hostedRuntime
-                  ?.runtime ||
-                "local",
-
-              database_credentials_exposed:
-                false,
-
-              token_secret_exposed:
                 false,
 
               request_id:
@@ -569,9 +488,6 @@ export function createTellerPersistenceHttpServer({
 
               audience:
                 config.audience,
-
-              maxLifetimeSeconds:
-                config.maxTokenLifetimeSeconds,
             });
 
         } catch {

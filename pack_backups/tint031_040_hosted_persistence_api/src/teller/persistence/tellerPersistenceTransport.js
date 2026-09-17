@@ -25,88 +25,13 @@ function trimSlash(
 }
 
 
-function isLoopbackHost(
-  hostname
-) {
-  return (
-    hostname ===
-      "127.0.0.1" ||
-    hostname ===
-      "localhost" ||
-    hostname ===
-      "::1"
-  );
-}
-
-
-export function normalizeTellerPersistenceApiUrl({
-  value,
-  devMode = false,
-} = {}) {
-  const candidate =
-    trimSlash(
-      value
-    );
-
-
-  if (!candidate) {
-    return "";
-  }
-
-
-  let parsed = null;
-
-
-  try {
-    parsed =
-      new URL(
-        candidate
-      );
-
-  } catch {
-    return "";
-  }
-
-
-  if (
-    parsed.protocol ===
-    "https:"
-  ) {
-    return candidate;
-  }
-
-
-  if (
-    devMode &&
-    parsed.protocol ===
-      "http:" &&
-    isLoopbackHost(
-      parsed.hostname
-    )
-  ) {
-    return candidate;
-  }
-
-
-  return "";
-}
-
-
 function runtimeApiUrl() {
-  return normalizeTellerPersistenceApiUrl({
-    value:
-      import.meta
-        ?.env
-        ?.VITE_TELLER_PERSISTENCE_API_URL ||
-      "",
-
-    devMode:
-      Boolean(
-        import.meta
-          ?.env
-          ?.DEV
-      ),
-  });
+  return trimSlash(
+    import.meta
+      ?.env
+      ?.VITE_TELLER_PERSISTENCE_API_URL ||
+    ""
+  );
 }
 
 
@@ -139,15 +64,11 @@ export function createTellerPersistenceTransport({
   baseUrl,
   accessToken,
   fetchImpl = globalThis.fetch,
-  devMode = false,
 } = {}) {
   const resolvedBaseUrl =
-    normalizeTellerPersistenceApiUrl({
-      value:
-        baseUrl,
-
-      devMode,
-    });
+    trimSlash(
+      baseUrl
+    );
 
 
   const resolvedToken =
@@ -184,12 +105,6 @@ export function createTellerPersistenceTransport({
         `${resolvedBaseUrl}${path}`,
         {
           method,
-
-          credentials:
-            "omit",
-
-          referrerPolicy:
-            "no-referrer",
 
           headers: {
             "Authorization":
@@ -245,12 +160,8 @@ export function createTellerPersistenceTransport({
   return Object.freeze({
     connected,
 
-    baseUrl:
-      resolvedBaseUrl,
-
     identityKey:
       `${resolvedBaseUrl}|${connected ? "authenticated" : "disconnected"}`,
-
 
     async searchRecords(
       query = {}
@@ -359,12 +270,5 @@ export function createTellerPersistenceTransportFromRuntime() {
 
     accessToken:
       readTellerPersistenceAccessToken(),
-
-    devMode:
-      Boolean(
-        import.meta
-          ?.env
-          ?.DEV
-      ),
   });
 }

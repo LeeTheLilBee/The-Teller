@@ -1,8 +1,3 @@
-import {
-  readTellerHostedRuntime,
-} from "./tellerHostedRuntime.js";
-
-
 function clean(
   value
 ) {
@@ -36,47 +31,9 @@ function positiveInteger(
 }
 
 
-function originAllowedForHostedRuntime(
-  origin
-) {
-  try {
-    const parsed =
-      new URL(
-        origin
-      );
-
-
-    return (
-      parsed.protocol ===
-      "https:"
-    );
-
-  } catch {
-    return false;
-  }
-}
-
-
-function dedupe(
-  values
-) {
-  return [
-    ...new Set(
-      values
-    ),
-  ];
-}
-
-
 export function readTellerTransportConfig(
   env = process.env
 ) {
-  const hostedRuntime =
-    readTellerHostedRuntime(
-      env
-    );
-
-
   const tokenSecret =
     clean(
       env.TELLER_TOWER_TOKEN_SECRET
@@ -98,17 +55,15 @@ export function readTellerTransportConfig(
 
 
   const allowedOrigins =
-    dedupe(
-      clean(
-        env.TELLER_ALLOWED_ORIGINS
+    clean(
+      env.TELLER_ALLOWED_ORIGINS
+    )
+      .split(",")
+      .map(
+        (item) =>
+          item.trim()
       )
-        .split(",")
-        .map(
-          (item) =>
-            item.trim()
-        )
-        .filter(Boolean)
-    );
+      .filter(Boolean);
 
 
   const port =
@@ -125,43 +80,9 @@ export function readTellerTransportConfig(
     );
 
 
-  const maxTokenLifetimeSeconds =
-    Math.min(
-      positiveInteger(
-        env.TELLER_TRANSPORT_MAX_TOKEN_LIFETIME_SECONDS,
-        600
-      ),
-      900
-    );
-
-
-  const hostedOriginsValid =
-    !hostedRuntime.hosted ||
-    (
-      allowedOrigins.length > 0 &&
-      allowedOrigins.every(
-        originAllowedForHostedRuntime
-      )
-    );
-
-
-  const configured =
-    (
-      tokenSecret.length >= 32 &&
-      Boolean(
-        issuer
-      ) &&
-      Boolean(
-        audience
-      ) &&
-      hostedOriginsValid
-    );
-
-
   return Object.freeze({
-    configured,
-
-    hostedRuntime,
+    configured:
+      tokenSecret.length >= 32,
 
     tokenSecret,
 
@@ -171,13 +92,9 @@ export function readTellerTransportConfig(
 
     allowedOrigins,
 
-    hostedOriginsValid,
-
     port,
 
     maxBodyBytes,
-
-    maxTokenLifetimeSeconds,
   });
 }
 
@@ -189,19 +106,6 @@ export function tellerTransportSafeSummary(
     configured:
       Boolean(
         config?.configured
-      ),
-
-    runtime:
-      config
-        ?.hostedRuntime
-        ?.runtime ||
-      "local",
-
-    hosted:
-      Boolean(
-        config
-          ?.hostedRuntime
-          ?.hosted
       ),
 
     issuer:
@@ -222,17 +126,6 @@ export function tellerTransportSafeSummary(
       )
         ? config.allowedOrigins.length
         : 0,
-
-    hostedOriginsValid:
-      Boolean(
-        config?.hostedOriginsValid
-      ),
-
-    maxTokenLifetimeSeconds:
-      Number(
-        config?.maxTokenLifetimeSeconds ||
-        0
-      ),
 
     port:
       Number(

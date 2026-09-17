@@ -1,0 +1,23 @@
+{
+  "name": "the-teller",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "teller:persistence:migrate": "node server/teller/persistence/runTellerPersistenceMigrations.js",
+    "teller:persistence:health": "node server/teller/persistence/tellerPersistenceHealth.js",
+    "teller:api": "node server/teller/transport/startTellerPersistenceServer.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "6.0.2",
+    "framer-motion": "12.40.0",
+    "lucide-react": "1.16.0",
+    "pg": "8.23.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "vite": "8.0.14"
+  }
+}

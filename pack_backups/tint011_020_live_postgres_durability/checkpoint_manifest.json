@@ -1796,60 +1796,6 @@
         "money_movement": false,
         "deployment": false
       }
-    },
-    "TINT011-TINT020": {
-      "name": "Live Postgres Connection + Migration + Durability Proof",
-      "lane": "real_integration",
-      "status": "sealed_live_verified",
-      "timestamp": "2026-09-17T15:08:01.965221+00:00",
-      "parent": "467f1ba87efef76e6cc18905027110a5884ce0c7",
-      "render_postgres_id": "dpg-dalvmbrm8hqs73e90o80-a",
-      "proof_record_id": "teller_live_proof_f742980404314b7d99",
-      "truth": {
-        "staging_database_connected": true,
-        "migration_applied": true,
-        "durable_write": true,
-        "disconnect_reconnect": true,
-        "idempotency": true,
-        "revision_conflict": true,
-        "business_isolation": true,
-        "audit_history": true,
-        "browser_transport_connected": false,
-        "tower_transport_connected": false,
-        "direct_vault": false,
-        "money_movement": false,
-        "deployment": false
-      },
-      "authorization": {
-        "commit_authorized_by_owner": true,
-        "push_authorized_by_owner": true,
-        "additional_database_write_authorized": false,
-        "app_deploy_authorized": false
-      },
-      "sealed_at": "2026-09-17T15:18:19.213395+00:00",
-      "sealed_from_parent": "467f1ba87efef76e6cc18905027110a5884ce0c7",
-      "acceptance": {
-        "live_postgres_health": "passed",
-        "migration_001_live": "passed",
-        "schema_verification": "passed",
-        "forced_rls": "passed",
-        "business_isolation_policies": "passed",
-        "durable_write": "passed",
-        "disconnect_reconnect": "passed",
-        "idempotent_replay": "passed",
-        "optimistic_revision_conflict": "passed",
-        "cross_business_isolation": "passed",
-        "durable_audit_history": "passed",
-        "third_connection_final_read": "passed",
-        "render_postgres_id": "dpg-dalvmbrm8hqs73e90o80-a",
-        "proof_record": "teller_live_proof_f742980404314b7d99",
-        "database_environment": "staging",
-        "browser_transport_connected": false,
-        "tower_transport_connected": false,
-        "direct_vault": false,
-        "money_movement": false,
-        "deployment": false
-      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

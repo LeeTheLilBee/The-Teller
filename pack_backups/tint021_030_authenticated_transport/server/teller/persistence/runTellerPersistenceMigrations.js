@@ -1,5 +1,4 @@
 import {
-  readdir,
   readFile,
 } from "node:fs/promises";
 
@@ -30,30 +29,11 @@ const here =
   );
 
 
-const migrationsDirectory =
+const migrationPath =
   resolve(
     here,
-    "migrations"
+    "migrations/001_teller_records.sql"
   );
-
-
-async function listMigrations() {
-  const names =
-    await readdir(
-      migrationsDirectory
-    );
-
-
-  return names
-    .filter(
-      (name) =>
-        /^\d+_.+\.sql$/
-          .test(
-            name
-          )
-    )
-    .sort();
-}
 
 
 async function main() {
@@ -76,15 +56,11 @@ async function main() {
   }
 
 
-  const migrations =
-    await listMigrations();
-
-
-  if (!migrations.length) {
-    throw new Error(
-      "No Teller persistence migrations found."
+  const migration =
+    await readFile(
+      migrationPath,
+      "utf8"
     );
-  }
 
 
   const pool =
@@ -92,37 +68,13 @@ async function main() {
 
 
   try {
-    for (
-      const name
-      of migrations
-    ) {
-      const path =
-        resolve(
-          migrationsDirectory,
-          name
-        );
-
-
-      const sql =
-        await readFile(
-          path,
-          "utf8"
-        );
-
-
-      await pool.query(
-        sql
-      );
-
-
-      console.log(
-        `Applied Teller migration: ${name}`
-      );
-    }
+    await pool.query(
+      migration
+    );
 
 
     console.log(
-      `Teller persistence migrations applied: ${migrations.length}`
+      "Teller persistence migration applied."
     );
 
   } finally {

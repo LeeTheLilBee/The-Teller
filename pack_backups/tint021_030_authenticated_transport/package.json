@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "teller:persistence:migrate": "node server/teller/persistence/runTellerPersistenceMigrations.js",
-    "teller:persistence:health": "node server/teller/persistence/tellerPersistenceHealth.js",
-    "teller:api": "node server/teller/transport/startTellerPersistenceServer.js"
+    "teller:persistence:health": "node server/teller/persistence/tellerPersistenceHealth.js"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.0.2",

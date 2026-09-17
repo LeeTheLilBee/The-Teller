@@ -1,0 +1,120 @@
+{
+  "pack": "TINT021-TINT030",
+  "name": "Authenticated Persistence Transport + App Hydration",
+  "parent": "b8b3d22ce2baebd48f17d8f9daf454ae9b36ed4b",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-17T15:47:44.790997+00:00",
+  "repairs": [
+    {
+      "id": "TINT023-REPAIR-A",
+      "type": "migration",
+      "reason": "Forced RLS prevented the table owner from backfilling historical actor_id values.",
+      "resolved": true
+    },
+    {
+      "id": "TINT023-REPAIR-A.1",
+      "type": "verification",
+      "reason": "The source verifier matched FORCE inside the NO FORCE clause.",
+      "resolved": true
+    },
+    {
+      "id": "TINT030-REPAIR-B",
+      "type": "verification",
+      "reason": "The security smoke test matched the word sessionStorage inside an explanatory comment instead of executable token-reader code.",
+      "resolved": true
+    },
+    {
+      "id": "TINT030-REPAIR-C",
+      "type": "verification",
+      "reason": "The final direct-Vault audit scanned the negative regression fixture containing the literal vault:// and falsely treated that guard value as product behavior.",
+      "resolution": "Direct-Vault checks now inspect executable/product source separately while allowing the forbidden literal inside its explicit negative regression fixture.",
+      "resolved": true
+    }
+  ],
+  "actor_scope_verification": {
+    "actor_id_not_null": true,
+    "rls_enabled": true,
+    "rls_forced": true,
+    "record_policy": true,
+    "event_policy": true,
+    "visible_staging_records": 1,
+    "missing_actor_ids": 0,
+    "legacy_backfilled": 1
+  },
+  "transport_proof": {
+    "proof_id": "0b1a48ba78494c93a3",
+    "record_id": "teller_transport_proof_0b1a48ba78494c93a3",
+    "business_key": "simplee_world_staging",
+    "actor_id": "manager_transport_a_0b1a48ba78494c93a3",
+    "authentication": true,
+    "token_signature": true,
+    "anonymous_blocked": true,
+    "tamper_blocked": true,
+    "cors_blocked": true,
+    "actor_scope": true,
+    "owner_business_visibility": true,
+    "request_scope_escalation_blocked": true,
+    "durable_http_write": true,
+    "idempotent_http_replay": true,
+    "restart_reload": true
+  },
+  "completed": {
+    "TINT021": "fail-closed authenticated transport configuration",
+    "TINT022": "short-lived signed persistence access token",
+    "TINT023": "actor-scoped PostgreSQL RLS with historical actor migration",
+    "TINT024": "server authorization derived from verified signed claims",
+    "TINT025": "authenticated HTTP persistence API",
+    "TINT026": "browser persistence transport without database credentials",
+    "TINT027": "authenticated reload hydration wired into Teller App",
+    "TINT028": "prepared-record durable save wired into Teller App",
+    "TINT029": "live authenticated HTTP transport proven against staging PostgreSQL",
+    "TINT030": "comment-aware security regression wall and historical certification"
+  },
+  "truth": {
+    "migration_002_live": true,
+    "historical_actor_backfill": true,
+    "actor_id_not_null": true,
+    "record_rls_forced": true,
+    "event_rls_forced": true,
+    "signed_transport_token": true,
+    "server_token_verification": true,
+    "anonymous_http_blocked": true,
+    "tampered_token_blocked": true,
+    "origin_enforcement": true,
+    "request_scope_escalation_blocked": true,
+    "actor_scoped_record_rls": true,
+    "actor_scoped_event_rls": true,
+    "owner_business_visibility": true,
+    "authenticated_http_api": true,
+    "live_http_database_transport_proven": true,
+    "idempotent_http_replay": true,
+    "api_restart_reload": true,
+    "app_hydration_source_wired": true,
+    "prepared_record_save_source_wired": true,
+    "database_credentials_in_browser": false,
+    "access_token_browser_persistence": false,
+    "access_token_session_storage": false,
+    "access_token_local_storage": false,
+    "access_token_query_parameter": false,
+    "tower_token_issuer_connected": false,
+    "hosted_transport_deployed": false,
+    "browser_hosted_transport_active": false,
+    "direct_vault": false,
+    "money_movement": false,
+    "app_deployment": false,
+    "negative_vault_fixture_only": true
+  },
+  "authorization": {
+    "commit": true,
+    "push": true,
+    "additional_database_write": false,
+    "migration_rerun": false,
+    "deploy": false
+  },
+  "next": {
+    "pack": "TINT031-TINT040",
+    "name": "Hosted Persistence API + Tower Token Handoff"
+  },
+  "status": "sealed_live_verified",
+  "sealed_at": "2026-09-17T15:51:40.894876+00:00"
+}

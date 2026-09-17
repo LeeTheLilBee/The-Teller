@@ -1,7 +1,5 @@
 import React, {
   Component,
-  useEffect,
-  useRef,
   useState,
 } from "react";
 
@@ -34,10 +32,6 @@ import {
 import {
   findDuplicateTellerRecord,
 } from "./teller/recovery/tellerSubmissionGuard.js";
-
-import {
-  createTellerPersistenceTransportFromRuntime,
-} from "./teller/persistence/tellerPersistenceTransport.js";
 
 import "./teller/tellerShell.css";
 
@@ -249,10 +243,6 @@ export default function App() {
   ] = useState([]);
 
 
-  const sessionRecordsRef =
-    useRef([]);
-
-
   const [
     recordRecoveryEvents,
     setRecordRecoveryEvents,
@@ -261,114 +251,6 @@ export default function App() {
 
   const towerSession =
     readTellerTowerSession();
-
-
-  const persistenceTransport =
-    createTellerPersistenceTransportFromRuntime();
-
-
-  useEffect(
-    () => {
-      sessionRecordsRef.current =
-        sessionRecords;
-    },
-    [
-      sessionRecords,
-    ]
-  );
-
-
-  useEffect(
-    () => {
-      if (
-        !towerSession ||
-        !persistenceTransport.connected
-      ) {
-        return undefined;
-      }
-
-
-      let cancelled =
-        false;
-
-
-      async function hydrate() {
-        try {
-          const result =
-            await persistenceTransport
-              .searchRecords({
-                limit:
-                  100,
-              });
-
-
-          if (cancelled) {
-            return;
-          }
-
-
-          const records =
-            Array.isArray(
-              result?.records
-            )
-              ? result.records
-              : [];
-
-
-          sessionRecordsRef.current =
-            records;
-
-
-          setSessionRecords(
-            records
-          );
-
-
-          addRecoveryEvent({
-            event:
-              "production_records_hydrated",
-
-            reason:
-              "Teller restored authenticated durable records from the production repository.",
-
-            record_count:
-              records.length,
-          });
-
-        } catch (error) {
-
-          if (cancelled) {
-            return;
-          }
-
-
-          addRecoveryEvent({
-            event:
-              "production_hydration_failed",
-
-            reason:
-              String(
-                error?.message ||
-                "Authenticated Teller persistence hydration failed."
-              ),
-          });
-        }
-      }
-
-
-      void hydrate();
-
-
-      return () => {
-        cancelled =
-          true;
-      };
-    },
-    [
-      towerSession?.sessionId,
-      persistenceTransport.identityKey,
-    ]
-  );
 
 
   if (!towerSession) {
@@ -483,7 +365,7 @@ export default function App() {
 
     const duplicate =
       findDuplicateTellerRecord(
-        sessionRecordsRef.current,
+        sessionRecords,
         record
       );
 
@@ -507,26 +389,16 @@ export default function App() {
     }
 
 
-    const nextRecords = [
-      record,
-
-      ...sessionRecordsRef.current.filter(
-        (item) =>
-          item.record_id !==
-          record.record_id
-      ),
-    ].slice(
-      0,
-      250
-    );
-
-
-    sessionRecordsRef.current =
-      nextRecords;
-
-
     setSessionRecords(
-      nextRecords
+      (current) => [
+        record,
+
+        ...current.filter(
+          (item) =>
+            item.record_id !==
+            record.record_id
+        ),
+      ].slice(0, 250)
     );
 
 
@@ -540,116 +412,16 @@ export default function App() {
       reason:
         "Prepared Teller record passed validation and duplicate checks.",
     });
-
-
-    if (
-      persistenceTransport.connected
-    ) {
-      void persistenceTransport
-        .saveRecord(
-          record
-        )
-        .then(
-          (result) => {
-            const persistedRecord =
-              result?.record;
-
-
-            if (
-              !persistedRecord
-                ?.record_id
-            ) {
-              throw new Error(
-                "Teller persistence transport returned no durable record."
-              );
-            }
-
-
-            const durableRecords = [
-              persistedRecord,
-
-              ...sessionRecordsRef.current
-                .filter(
-                  (item) =>
-                    item.record_id !==
-                    persistedRecord.record_id
-                ),
-            ].slice(
-              0,
-              250
-            );
-
-
-            sessionRecordsRef.current =
-              durableRecords;
-
-
-            setSessionRecords(
-              durableRecords
-            );
-
-
-            addRecoveryEvent({
-              event:
-                "record_persisted",
-
-              record_id:
-                persistedRecord.record_id,
-
-              reason:
-                result
-                  ?.idempotent_replay
-                  ? "Teller confirmed the durable record already existed."
-                  : "Teller saved the prepared record to the authenticated production repository.",
-
-              persistence_revision:
-                persistedRecord
-                  ?.persistence_revision ||
-                1,
-            });
-          }
-        )
-        .catch(
-          (error) => {
-            addRecoveryEvent({
-              event:
-                "record_persistence_failed",
-
-              record_id:
-                record.record_id,
-
-              reason:
-                String(
-                  error?.message ||
-                  "Authenticated Teller persistence failed."
-                ),
-            });
-          }
-        );
-    }
   }
 
 
   function replaceSessionRecords(
     nextRecords
   ) {
-    const resolvedRecords =
-      Array.isArray(
-        nextRecords
-      )
-        ? nextRecords.slice(
-            0,
-            250
-          )
-        : [];
-
-
-    sessionRecordsRef.current =
-      resolvedRecords;
-
-
     setSessionRecords(
-      resolvedRecords
+      Array.isArray(nextRecords)
+        ? nextRecords.slice(0, 250)
+        : []
     );
 
 

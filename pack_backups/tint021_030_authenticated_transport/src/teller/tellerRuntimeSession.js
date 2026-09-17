@@ -222,47 +222,6 @@ export function getTellerRuntimeActor(expectedRole = "") {
 }
 
 
-export function readTellerPersistenceAccessToken() {
-  if (
-    typeof window ===
-    "undefined"
-  ) {
-    return "";
-  }
-
-
-  /*
-   * Persistence access tokens are accepted ONLY from the
-   * live Tower window injection.
-   *
-   * We intentionally do NOT read this token from:
-   *   - query parameters
-   *   - localStorage
-   *   - sessionStorage
-   *
-   * Tower remains responsible for issuing the short-lived token.
-   */
-  const raw =
-    window
-      .__TELLER_TOWER_SESSION__;
-
-
-  if (
-    !raw ||
-    typeof raw !==
-      "object"
-  ) {
-    return "";
-  }
-
-
-  return clean(
-    raw.persistence_access_token ||
-    raw.persistenceAccessToken
-  );
-}
-
-
 export function isTowerIssuedTellerSession() {
   return Boolean(
     readTellerTowerSession()?.towerIssued

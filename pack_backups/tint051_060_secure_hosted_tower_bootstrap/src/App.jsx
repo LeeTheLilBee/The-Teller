@@ -24,13 +24,8 @@ import TellerRecordsWorkspace
   from "./teller/records/TellerRecordsWorkspace.jsx";
 
 import {
-  readTellerLiveTowerSession,
   readTellerTowerSession,
 } from "./teller/tellerRuntimeSession.js";
-
-import {
-  bootstrapTellerFromTower,
-} from "./teller/towerAccess.js";
 
 import {
   validateTellerProductionRecord,
@@ -97,40 +92,7 @@ class TellerErrorBoundary extends Component {
 }
 
 
-function TellerOpeningScreen() {
-  return (
-    <main className="teller-shell">
-
-      <div className="teller-lock-wrap">
-
-        <section className="teller-lock-card">
-
-          <p className="teller-kicker">
-            Tower handoff
-          </p>
-
-          <h1>
-            Opening The Teller…
-          </h1>
-
-          <p>
-            The Teller is verifying the protected
-            Tower handoff before opening your
-            workspace.
-          </p>
-
-        </section>
-
-      </div>
-
-    </main>
-  );
-}
-
-
-function TowerLockedScreen({
-  reason = "",
-}) {
+function TowerLockedScreen() {
   return (
     <main className="teller-shell">
 
@@ -151,16 +113,6 @@ function TowerLockedScreen({
             manager, or owner Teller session
             before this workspace opens.
           </p>
-
-          {
-            reason
-              ? (
-                  <p>
-                    Access status · {reason}
-                  </p>
-                )
-              : null
-          }
 
         </section>
 
@@ -268,18 +220,6 @@ function TellerWorkspace({
 
 export default function App() {
   const [
-    towerBootstrap,
-    setTowerBootstrap,
-  ] = useState({
-    status:
-      "checking",
-
-    reason:
-      "",
-  });
-
-
-  const [
     formsOpen,
     setFormsOpen,
   ] = useState(false);
@@ -327,26 +267,8 @@ export default function App() {
     readTellerTowerSession();
 
 
-  const liveTowerSession =
-    readTellerLiveTowerSession();
-
-
-  /*
-   * Do not even construct the hosted persistence
-   * transport until the LIVE Tower session exists.
-   *
-   * A stored UI-only Teller session is insufficient.
-   */
   const persistenceTransport =
-    liveTowerSession
-      ? createTellerPersistenceTransportFromRuntime()
-      : null;
-
-
-  const persistenceIdentityKey =
-    persistenceTransport
-      ?.identityKey ||
-    "";
+    createTellerPersistenceTransportFromRuntime();
 
 
   const towerIdentityKey = [
@@ -362,76 +284,6 @@ export default function App() {
       "",
     towerSession?.role || "",
   ].join("|");
-
-
-
-  useEffect(
-    () => {
-      let cancelled =
-        false;
-
-
-      bootstrapTellerFromTower({
-        windowLike:
-          window,
-
-        locationLike:
-          window.location,
-
-        historyLike:
-          window.history,
-
-        fetchImpl:
-          window.fetch.bind(
-            window
-          ),
-
-        env:
-          import.meta.env,
-      })
-        .then(
-          (result) => {
-            if (cancelled) {
-              return;
-            }
-
-
-            setTowerBootstrap({
-              status:
-                result?.status ||
-                "locked",
-
-              reason:
-                result?.reason ||
-                "",
-            });
-          }
-        )
-        .catch(
-          () => {
-            if (cancelled) {
-              return;
-            }
-
-
-            setTowerBootstrap({
-              status:
-                "locked",
-
-              reason:
-                "tower_bootstrap_failed",
-            });
-          }
-        );
-
-
-      return () => {
-        cancelled =
-          true;
-      };
-    },
-    []
-  );
 
 
   useEffect(
@@ -496,7 +348,7 @@ export default function App() {
     () => {
       if (
         !towerSession ||
-        !persistenceTransport?.connected
+        !persistenceTransport.connected
       ) {
         return undefined;
       }
@@ -580,37 +432,9 @@ export default function App() {
     },
     [
       towerIdentityKey,
-      persistenceIdentityKey,
+      persistenceTransport.identityKey,
     ]
   );
-
-
-  if (
-    towerBootstrap.status ===
-      "checking"
-  ) {
-    return (
-      <TellerErrorBoundary>
-        <TellerOpeningScreen />
-      </TellerErrorBoundary>
-    );
-  }
-
-
-  if (
-    towerBootstrap.status ===
-      "locked"
-  ) {
-    return (
-      <TellerErrorBoundary>
-        <TowerLockedScreen
-          reason={
-            towerBootstrap.reason
-          }
-        />
-      </TellerErrorBoundary>
-    );
-  }
 
 
   if (!towerSession) {
@@ -785,7 +609,7 @@ export default function App() {
 
 
     if (
-      persistenceTransport?.connected
+      persistenceTransport.connected
     ) {
       void persistenceTransport
         .saveRecord(

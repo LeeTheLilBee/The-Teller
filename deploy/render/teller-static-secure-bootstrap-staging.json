@@ -1,0 +1,19 @@
+{
+  "spec_id": "teller-static-hosted-bootstrap-staging-v1",
+  "target": {
+    "service": "simplee-teller",
+    "url": "https://simplee-teller.onrender.com"
+  },
+  "future_build_environment": {
+    "VITE_TOWER_TELLER_EXCHANGE_URL": "https://simplee-tower-ob.onrender.com/tower/teller/exchange",
+    "VITE_TELLER_PERSISTENCE_API_URL": "https://simplee-teller-api-staging.onrender.com"
+  },
+  "current_truth": {
+    "tower_persistence_issuer_proven": false,
+    "tower_exchange_returns_persistence_token": false,
+    "hosted_static_site_activated": false,
+    "render_mutation_performed": false,
+    "deployment_performed": false
+  },
+  "activation_rule": "Do not activate or redeploy simplee-teller until Tower has implemented and proven the persistence_access_token addition to the existing one-time hosted exchange."
+}

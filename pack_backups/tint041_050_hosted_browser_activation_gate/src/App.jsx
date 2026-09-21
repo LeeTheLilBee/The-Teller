@@ -253,10 +253,6 @@ export default function App() {
     useRef([]);
 
 
-  const lastTowerIdentityRef =
-    useRef("");
-
-
   const [
     recordRecoveryEvents,
     setRecordRecoveryEvents,
@@ -271,21 +267,6 @@ export default function App() {
     createTellerPersistenceTransportFromRuntime();
 
 
-  const towerIdentityKey = [
-    towerSession?.sessionId || "",
-    towerSession?.towerReceiptId || "",
-    towerSession?.actor?.id ||
-      towerSession?.actor?.actor_id ||
-      towerSession?.actor?.actorId ||
-      "",
-    towerSession?.business?.key ||
-      towerSession?.business?.business_key ||
-      towerSession?.business?.businessKey ||
-      "",
-    towerSession?.role || "",
-  ].join("|");
-
-
   useEffect(
     () => {
       sessionRecordsRef.current =
@@ -293,53 +274,6 @@ export default function App() {
     },
     [
       sessionRecords,
-    ]
-  );
-
-
-  useEffect(
-    () => {
-      if (!towerIdentityKey) {
-        lastTowerIdentityRef.current =
-          "";
-
-        return;
-      }
-
-
-      const previous =
-        lastTowerIdentityRef.current;
-
-
-      if (
-        previous &&
-        previous !==
-          towerIdentityKey
-      ) {
-        sessionRecordsRef.current =
-          [];
-
-
-        setSessionRecords(
-          []
-        );
-
-
-        addRecoveryEvent({
-          event:
-            "tower_identity_changed",
-
-          reason:
-            "Teller cleared in-memory records because the Tower session identity or business changed.",
-        });
-      }
-
-
-      lastTowerIdentityRef.current =
-        towerIdentityKey;
-    },
-    [
-      towerIdentityKey,
     ]
   );
 
@@ -431,7 +365,7 @@ export default function App() {
       };
     },
     [
-      towerIdentityKey,
+      towerSession?.sessionId,
       persistenceTransport.identityKey,
     ]
   );

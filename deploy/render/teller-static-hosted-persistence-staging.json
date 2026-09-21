@@ -1,0 +1,29 @@
+{
+  "spec_id": "teller-static-hosted-persistence-staging-v1",
+  "target": {
+    "service": "simplee-teller",
+    "service_type": "static_site",
+    "url": "https://simplee-teller.onrender.com"
+  },
+  "hosted_persistence": {
+    "api_url": "https://simplee-teller-api-staging.onrender.com",
+    "build_environment_variable": "VITE_TELLER_PERSISTENCE_API_URL",
+    "required_value": "https://simplee-teller-api-staging.onrender.com"
+  },
+  "activation_gate": {
+    "tower_live_window_session_required": true,
+    "persistence_access_token_required": true,
+    "token_query_parameter_allowed": false,
+    "token_local_storage_allowed": false,
+    "token_session_storage_allowed": false,
+    "browser_database_credentials_allowed": false,
+    "browser_signing_secret_allowed": false
+  },
+  "current_truth": {
+    "static_site_activation_performed": false,
+    "tower_token_issuer_connected": false,
+    "cross_origin_exchange_built": false,
+    "deployment_authorized": false
+  },
+  "activation_rule": "Do not activate VITE_TELLER_PERSISTENCE_API_URL on the hosted static site until the real hosted Tower-to-Teller session/token crossing is proven."
+}

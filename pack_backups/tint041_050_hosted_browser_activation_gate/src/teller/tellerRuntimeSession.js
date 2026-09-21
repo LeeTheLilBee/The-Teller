@@ -96,27 +96,13 @@ function normalizeSession(raw, source) {
 }
 
 
-export function readTellerLiveTowerSession() {
-  if (
-    typeof window ===
-    "undefined"
-  ) {
-    return null;
-  }
-
-
-  return normalizeSession(
-    window.__TELLER_TOWER_SESSION__,
-    "tower_window_injection"
-  );
-}
-
-
 export function readTellerTowerSession() {
   if (typeof window === "undefined") return null;
 
-  const injected =
-    readTellerLiveTowerSession();
+  const injected = normalizeSession(
+    window.__TELLER_TOWER_SESSION__,
+    "tower_window_injection"
+  );
 
   if (injected) return injected;
 

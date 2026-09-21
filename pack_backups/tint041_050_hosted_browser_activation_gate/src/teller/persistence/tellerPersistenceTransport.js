@@ -1,11 +1,6 @@
 import {
-  readTellerLiveTowerSession,
   readTellerPersistenceAccessToken,
 } from "../tellerRuntimeSession.js";
-
-import {
-  describeTellerHostedPersistenceActivation,
-} from "./tellerHostedPersistenceGate.js";
 
 
 function clean(
@@ -97,7 +92,7 @@ export function normalizeTellerPersistenceApiUrl({
 }
 
 
-export function readTellerPersistenceApiUrlFromRuntime() {
+function runtimeApiUrl() {
   return normalizeTellerPersistenceApiUrl({
     value:
       import.meta
@@ -145,7 +140,6 @@ export function createTellerPersistenceTransport({
   accessToken,
   fetchImpl = globalThis.fetch,
   devMode = false,
-  activation = null,
 } = {}) {
   const resolvedBaseUrl =
     normalizeTellerPersistenceApiUrl({
@@ -255,23 +249,7 @@ export function createTellerPersistenceTransport({
       resolvedBaseUrl,
 
     identityKey:
-      [
-        resolvedBaseUrl,
-        activation?.identityKey || "",
-        connected
-          ? "authenticated"
-          : "disconnected",
-      ].join("|"),
-
-    activation:
-      activation ||
-      Object.freeze({
-        ready:
-          connected,
-
-        blockers:
-          Object.freeze([]),
-      }),
+      `${resolvedBaseUrl}|${connected ? "authenticated" : "disconnected"}`,
 
 
     async searchRecords(
@@ -375,52 +353,18 @@ export function createTellerPersistenceTransport({
 
 
 export function createTellerPersistenceTransportFromRuntime() {
-  const devMode =
-    Boolean(
-      import.meta
-        ?.env
-        ?.DEV
-    );
-
-
-  const baseUrl =
-    readTellerPersistenceApiUrlFromRuntime();
-
-
-  const accessToken =
-    readTellerPersistenceAccessToken();
-
-
-  const session =
-    readTellerLiveTowerSession();
-
-
-  const activation =
-    describeTellerHostedPersistenceActivation({
-      session,
-
-      accessToken,
-
-      apiUrl:
-        baseUrl,
-
-      devMode,
-    });
-
-
   return createTellerPersistenceTransport({
     baseUrl:
-      activation.ready
-        ? activation.apiUrl
-        : "",
+      runtimeApiUrl(),
 
     accessToken:
-      activation.ready
-        ? accessToken
-        : "",
+      readTellerPersistenceAccessToken(),
 
-    devMode,
-
-    activation,
+    devMode:
+      Boolean(
+        import.meta
+          ?.env
+          ?.DEV
+      ),
   });
 }

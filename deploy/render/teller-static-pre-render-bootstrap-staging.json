@@ -1,0 +1,25 @@
+{
+  "spec_id": "teller-static-pre-render-bootstrap-staging-v1",
+  "target": {
+    "service": "simplee-teller",
+    "url": "https://simplee-teller.onrender.com"
+  },
+  "future_build_environment": {
+    "VITE_TOWER_TELLER_EXCHANGE_URL": "https://simplee-tower-ob.onrender.com/tower/teller/exchange",
+    "VITE_TELLER_PERSISTENCE_API_URL": "https://simplee-teller-api-staging.onrender.com"
+  },
+  "required_tower_exchange_version": "tower-teller-exchange.v2",
+  "startup_gate": {
+    "tower_exchange_before_react_mount": true,
+    "live_tower_session_before_react_mount": true,
+    "production_direct_open_allowed": false
+  },
+  "current_truth": {
+    "tower_v2_issuer_proven": false,
+    "tower_v2_exchange_deployed": false,
+    "teller_static_site_activated": false,
+    "render_mutation_performed": false,
+    "deployment_performed": false
+  },
+  "activation_rule": "Do not activate or redeploy the Teller static site until Tower implements and proves tower-teller-exchange.v2."
+}

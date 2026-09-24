@@ -39,40 +39,8 @@ export const TELLER_ENTRY_PATH =
   "/teller";
 
 
-/*
- * EXPLICIT EXCHANGE VERSIONING
- *
- * v1:
- *   Historical/current Tower → Teller access exchange.
- *   Retained for historical low-level compatibility.
- *
- * v2:
- *   Persistence-capable hosted bootstrap.
- *   Production pre-React Teller startup requests v2.
- *
- * v1 is NOT silently redefined.
- */
-export const TOWER_TELLER_EXCHANGE_V1 =
-  "tower-teller-exchange.v1";
-
-
-export const TOWER_TELLER_EXCHANGE_V2 =
-  "tower-teller-exchange.v2";
-
-
 export const TOWER_TELLER_EXCHANGE_VERSION =
-  TOWER_TELLER_EXCHANGE_V1;
-
-
-export const TOWER_TELLER_PERSISTENCE_EXCHANGE_VERSION =
-  TOWER_TELLER_EXCHANGE_V2;
-
-
-const SUPPORTED_TOWER_TELLER_EXCHANGE_VERSIONS =
-  new Set([
-    TOWER_TELLER_EXCHANGE_V1,
-    TOWER_TELLER_EXCHANGE_V2,
-  ]);
+  "tower-teller-exchange.v1";
 
 
 export const TOWER_HANDOFF_FRAGMENT_KEY =
@@ -590,7 +558,6 @@ function normalizeExchangePayload(
   payload,
   {
     nowEpoch,
-    expectedExchangeVersion,
   }
 ) {
   if (
@@ -607,7 +574,7 @@ function normalizeExchangePayload(
 
   if (
     payload.exchange_version !==
-      expectedExchangeVersion ||
+      TOWER_TELLER_EXCHANGE_VERSION ||
     payload.access_verified !==
       true ||
     payload.app_id !==
@@ -825,31 +792,10 @@ export async function bootstrapTellerFromTower({
 
   env = {},
 
-  exchangeVersion =
-    TOWER_TELLER_EXCHANGE_VERSION,
-
   nowEpoch =
     Date.now() /
     1000,
 } = {}) {
-  const requestedExchangeVersion =
-    clean(
-      exchangeVersion
-    );
-
-
-  if (
-    !SUPPORTED_TOWER_TELLER_EXCHANGE_VERSIONS
-      .has(
-        requestedExchangeVersion
-      )
-  ) {
-    return locked(
-      "tower_exchange_version_unsupported"
-    );
-  }
-
-
   const handoffCode =
     readTowerHandoffCode(
       locationLike
@@ -924,7 +870,7 @@ export async function bootstrapTellerFromTower({
                 "the-teller",
 
               exchange_version:
-                requestedExchangeVersion,
+                TOWER_TELLER_EXCHANGE_VERSION,
             }),
         }
       );
@@ -966,9 +912,6 @@ export async function bootstrapTellerFromTower({
       payload,
       {
         nowEpoch,
-
-        expectedExchangeVersion:
-          requestedExchangeVersion,
       }
     );
 

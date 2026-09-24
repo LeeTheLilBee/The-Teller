@@ -1,0 +1,82 @@
+{
+  "contract_id": "teller-pre-render-bootstrap-v2",
+  "owner_system": "The Teller",
+  "authority_system": "The Tower",
+  "versions": {
+    "historical_access_exchange": {
+      "exchange_version": "tower-teller-exchange.v1",
+      "status": "historical_low_level_contract_retained",
+      "production_pre_render_persistence_path": false,
+      "silently_redefined": false
+    },
+    "persistence_bootstrap_exchange": {
+      "exchange_version": "tower-teller-exchange.v2",
+      "status": "required_for_pre_render_persistence_launch",
+      "production_pre_render_persistence_path": true,
+      "response_must_echo_exact_version": true
+    }
+  },
+  "request": {
+    "method": "POST",
+    "endpoint_configuration": "VITE_TOWER_TELLER_EXCHANGE_URL",
+    "fields": [
+      "handoff_code",
+      "client",
+      "exchange_version"
+    ],
+    "client": "the-teller",
+    "exchange_version": "tower-teller-exchange.v2"
+  },
+  "required_v2_response_fields": [
+    "exchange_version",
+    "access_verified",
+    "app_id",
+    "role",
+    "target_path",
+    "receipt_id",
+    "expires_at_epoch",
+    "navigation_context",
+    "tower_session_id",
+    "actor_id",
+    "business_key",
+    "persistence_access_token"
+  ],
+  "memory_only_persistence_token": {
+    "field": "persistence_access_token",
+    "live_location": "window.__TELLER_TOWER_SESSION__.persistence_access_token",
+    "query": false,
+    "fragment": false,
+    "local_storage": false,
+    "session_storage": false,
+    "history_state": false,
+    "react_state": false,
+    "logs": false
+  },
+  "startup_order": [
+    "read opaque tower_handoff",
+    "POST Tower exchange v2",
+    "validate exact v2 response",
+    "install live in-memory Tower session",
+    "sanitize one-time handoff fragment",
+    "verify live persistence session",
+    "mount React application"
+  ],
+  "fail_closed": {
+    "production_without_handoff": true,
+    "wrong_exchange_version": true,
+    "missing_persistence_token": true,
+    "missing_tower_authority_fields": true,
+    "invalid_navigation_context": true,
+    "react_mount_on_failed_bootstrap": false
+  },
+  "tower_authority_fields": [
+    "tower_session_id",
+    "receipt_id",
+    "actor_id",
+    "role",
+    "business_key"
+  ],
+  "browser_receives_signing_secret": false,
+  "browser_receives_database_credentials": false,
+  "direct_teller_vault": false
+}

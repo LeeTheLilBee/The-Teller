@@ -29,6 +29,10 @@ import {
 } from "./teller/tellerRuntimeSession.js";
 
 import {
+  bootstrapTellerFromTower,
+} from "./teller/towerAccess.js";
+
+import {
   validateTellerProductionRecord,
 } from "./teller/recovery/tellerProductionValidation.js";
 
@@ -90,6 +94,37 @@ class TellerErrorBoundary extends Component {
 
     return this.props.children;
   }
+}
+
+
+function TellerOpeningScreen() {
+  return (
+    <main className="teller-shell">
+
+      <div className="teller-lock-wrap">
+
+        <section className="teller-lock-card">
+
+          <p className="teller-kicker">
+            Tower handoff
+          </p>
+
+          <h1>
+            Opening The Teller…
+          </h1>
+
+          <p>
+            The Teller is verifying the protected
+            Tower handoff before opening your
+            workspace.
+          </p>
+
+        </section>
+
+      </div>
+
+    </main>
+  );
 }
 
 
@@ -233,6 +268,18 @@ function TellerWorkspace({
 
 export default function App() {
   const [
+    towerBootstrap,
+    setTowerBootstrap,
+  ] = useState({
+    status:
+      "checking",
+
+    reason:
+      "",
+  });
+
+
+  const [
     formsOpen,
     setFormsOpen,
   ] = useState(false);
@@ -316,6 +363,75 @@ export default function App() {
     towerSession?.role || "",
   ].join("|");
 
+
+
+  useEffect(
+    () => {
+      let cancelled =
+        false;
+
+
+      bootstrapTellerFromTower({
+        windowLike:
+          window,
+
+        locationLike:
+          window.location,
+
+        historyLike:
+          window.history,
+
+        fetchImpl:
+          window.fetch.bind(
+            window
+          ),
+
+        env:
+          import.meta.env,
+      })
+        .then(
+          (result) => {
+            if (cancelled) {
+              return;
+            }
+
+
+            setTowerBootstrap({
+              status:
+                result?.status ||
+                "locked",
+
+              reason:
+                result?.reason ||
+                "",
+            });
+          }
+        )
+        .catch(
+          () => {
+            if (cancelled) {
+              return;
+            }
+
+
+            setTowerBootstrap({
+              status:
+                "locked",
+
+              reason:
+                "tower_bootstrap_failed",
+            });
+          }
+        );
+
+
+      return () => {
+        cancelled =
+          true;
+      };
+    },
+    []
+  );
 
 
   useEffect(
@@ -467,6 +583,34 @@ export default function App() {
       persistenceIdentityKey,
     ]
   );
+
+
+  if (
+    towerBootstrap.status ===
+      "checking"
+  ) {
+    return (
+      <TellerErrorBoundary>
+        <TellerOpeningScreen />
+      </TellerErrorBoundary>
+    );
+  }
+
+
+  if (
+    towerBootstrap.status ===
+      "locked"
+  ) {
+    return (
+      <TellerErrorBoundary>
+        <TowerLockedScreen
+          reason={
+            towerBootstrap.reason
+          }
+        />
+      </TellerErrorBoundary>
+    );
+  }
 
 
   if (!towerSession) {

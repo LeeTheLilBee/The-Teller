@@ -2267,6 +2267,28 @@
         "ci_head": "e50b5037882f19c3272f4ec27fcbfa508a8746b3",
         "hosted_tower_v2_crossing": "not_yet_proven"
       }
+    },
+    "TINT081-TINT090": {
+      "name": "Exact Tower v2 source-crossing proof",
+      "parent": "039f5cac87547034c8ae19e274161d3373cbabf8",
+      "status": "source_candidate_pending_ci",
+      "lane": "real_integration",
+      "tower_candidate": "c70d0327f56668f65d9f579d5259083c516c9db2",
+      "truth": {
+        "actual_issuer_verifier_cross_source_test_added": true,
+        "synthetic_secret_only": true,
+        "hosted_tower_v2_deployed": false,
+        "hosted_teller_activated": false,
+        "hosted_crossing_proven": false,
+        "render_mutation": false,
+        "database_mutation": false
+      },
+      "acceptance": {
+        "crossrepo_test": "pending_runner",
+        "tower_v2_source_regression": "pending_runner",
+        "teller_pre_render_regression": "pending_runner",
+        "vite_build": "pending_runner"
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

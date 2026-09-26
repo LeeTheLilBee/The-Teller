@@ -1,0 +1,15 @@
+{
+  "pack": "TINT081-TINT090",
+  "parent_teller_commit": "039f5cac87547034c8ae19e274161d3373cbabf8",
+  "tower_candidate_commit": "c70d0327f56668f65d9f579d5259083c516c9db2",
+  "status": "source_candidate_pending_ci",
+  "actual_issuer_verifier_synthetic_crossing": true,
+  "hosted_crossing_proven": false,
+  "render_live_snapshot": {
+    "tower": "1cfe40a385710c292f49ca2db20428605a1d5b43",
+    "teller_api": "13b21ef5b39974c06857ca60bf8427fcf90435cc",
+    "teller_static": "1b24db502bbf170b11c081b20b49b5640417b2e8"
+  },
+  "deployments_performed": false,
+  "secret_retrieval_performed": false
+}

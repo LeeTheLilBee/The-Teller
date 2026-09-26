@@ -1,0 +1,124 @@
+name: Teller Tower v2 cross-repository source proof
+
+on:
+  push:
+    branches:
+      - teller-tower-v2-crossrepo-proof-tint081-090
+  pull_request:
+    branches:
+      - teller-tower-request-handoff-dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tower-teller-v2-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TELLER_TOWER_TOKEN_SECRET: synthetic-cross-repository-test-only-0123456789abcdef
+    steps:
+      - name: Checkout Teller candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout exact Tower v2 source candidate
+        uses: actions/checkout@v4
+        with:
+          repository: LeeTheLilBee/SimpleeMrkTrade
+          ref: c70d0327f56668f65d9f579d5259083c516c9db2
+          path: tower-candidate
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install exact source dependencies
+        run: |
+          npm ci
+          python -m pip install -r tower-candidate/deploy/hosted_tower/requirements.txt pytest
+
+      - name: Run Tower v2 source security tests
+        working-directory: tower-candidate
+        run: |
+          python -m pytest -q tests/test_tower_teller_persistence_exchange_twr193_197.py
+
+      - name: Verify actual Tower issuer against Teller verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, os.path.abspath("tower-candidate"))
+          from tower.teller_persistence_token import issue_teller_persistence_access_token
+          issued = issue_teller_persistence_access_token(
+              tower_session_id="cross_session",
+              tower_receipt_id="cross_receipt",
+              actor_id="cross_actor",
+              actor_role="owner",
+              business_key="cross_business",
+              now_epoch=2_000_000_000,
+              lifetime_seconds=300,
+          )
+          path = os.path.join(os.environ["RUNNER_TEMP"], "synthetic_teller_token.json")
+          with open(path, "w", encoding="utf-8") as handle:
+              json.dump({"token": issued["token"], "now": 2_000_000_000}, handle)
+          os.chmod(path, 0o600)
+          print("Tower synthetic issuer completed; bearer not printed.")
+          PY
+          node --input-type=module <<'JS'
+          import assert from "node:assert/strict";
+          import fs from "node:fs";
+          import path from "node:path";
+          import {
+            verifyTellerPersistenceAccessToken,
+          } from "./server/teller/transport/tellerPersistenceAccessToken.js";
+
+          const file = path.join(process.env.RUNNER_TEMP, "synthetic_teller_token.json");
+          const {token, now} = JSON.parse(fs.readFileSync(file, "utf8"));
+          const secret = process.env.TELLER_TOWER_TOKEN_SECRET;
+          const verify = (overrides = {}) => verifyTellerPersistenceAccessToken({
+            token, secret,
+            issuer: "tower", audience: "teller-persistence",
+            nowSeconds: now, maxLifetimeSeconds: 600,
+            ...overrides,
+          });
+          const claims = verify();
+          assert.equal(claims.iss, "tower");
+          assert.equal(claims.aud, "teller-persistence");
+          assert.equal(claims.actor_role, "owner");
+          assert.equal(claims.actor_id, "cross_actor");
+          assert.equal(claims.business_key, "cross_business");
+          assert.equal(claims.tower_session_id, "cross_session");
+          assert.equal(claims.tower_receipt_id, "cross_receipt");
+          assert.equal(claims.exp - claims.iat, 300);
+          assert.ok(claims.jti);
+
+          assert.throws(() => verify({issuer: "other"}));
+          assert.throws(() => verify({audience: "other"}));
+          assert.throws(() => verify({nowSeconds: now + 301}));
+          assert.throws(() => verify({maxLifetimeSeconds: 299}));
+
+          const parts = token.split(".");
+          parts[2] = (parts[2][0] === "A" ? "B" : "A") + parts[2].slice(1);
+          assert.throws(() => verify({token: parts.join(".")}));
+          console.log("Exact Tower issuer -> Teller verifier: PASS (synthetic).");
+          console.log("Issuer/audience/expiry/lifetime/signature negative cases: PASS.");
+          JS
+          rm -f "$RUNNER_TEMP/synthetic_teller_token.json"
+
+      - name: Preserve Teller pre-render and practical regression
+        run: |
+          node tools/teller_pre_render_bootstrap_security_tint071_080.mjs
+          node tools/teller_pre_render_bootstrap_contract_tint061_070.mjs
+          npm run build

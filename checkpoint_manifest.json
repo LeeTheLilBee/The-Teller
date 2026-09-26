@@ -2267,6 +2267,31 @@
         "ci_head": "e50b5037882f19c3272f4ec27fcbfa508a8746b3",
         "hosted_tower_v2_crossing": "not_yet_proven"
       }
+    },
+    "TINT081-TINT090": {
+      "name": "Exact Tower v2 source-crossing proof",
+      "parent": "039f5cac87547034c8ae19e274161d3373cbabf8",
+      "status": "source_ci_verified_hosted_proof_pending",
+      "lane": "real_integration",
+      "tower_candidate": "c70d0327f56668f65d9f579d5259083c516c9db2",
+      "truth": {
+        "actual_issuer_verifier_cross_source_test_added": true,
+        "synthetic_secret_only": true,
+        "hosted_tower_v2_deployed": false,
+        "hosted_teller_activated": false,
+        "hosted_crossing_proven": false,
+        "render_mutation": false,
+        "database_mutation": false
+      },
+      "acceptance": {
+        "crossrepo_test": "passed_in_github_actions",
+        "tower_v2_source_regression": "passed_in_github_actions",
+        "teller_pre_render_regression": "passed_in_github_actions",
+        "vite_build": "passed_in_github_actions",
+        "ci_run": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36270460907",
+        "ci_source_head": "dfa48e32716566be3488965ab6877949220bcaa9",
+        "hosted_v2_exchange": "not_proven"
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

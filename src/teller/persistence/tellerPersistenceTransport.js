@@ -146,6 +146,7 @@ export function createTellerPersistenceTransport({
   fetchImpl = globalThis.fetch,
   devMode = false,
   activation = null,
+  requestGuard = null,
 } = {}) {
   const resolvedBaseUrl =
     normalizeTellerPersistenceApiUrl({
@@ -182,6 +183,27 @@ export function createTellerPersistenceTransport({
       throw new TellerPersistenceTransportError(
         "Teller persistence transport is not connected."
       );
+    }
+
+    /*
+     * Re-check the live Tower session on every request. A transport object
+     * created while authenticated must not continue operating after a
+     * session expires, changes identity, or loses its in-memory credential.
+     * The API remains the cryptographic authority for the signed token.
+     */
+    if (typeof requestGuard === "function") {
+      let permitted = false;
+      try {
+        permitted = requestGuard() === true;
+      } catch {
+        permitted = false;
+      }
+      if (!permitted) {
+        throw new TellerPersistenceTransportError(
+          "Teller Tower session is no longer active.",
+          { status: 401 }
+        );
+      }
     }
 
 
@@ -422,5 +444,31 @@ export function createTellerPersistenceTransportFromRuntime() {
     devMode,
 
     activation,
+
+    requestGuard: () => {
+      const currentSession = readTellerLiveTowerSession();
+      const currentToken = readTellerPersistenceAccessToken();
+
+      if (
+        !currentSession ||
+        !currentToken ||
+        currentToken !== accessToken
+      ) {
+        return false;
+      }
+
+      const currentActivation =
+        describeTellerHostedPersistenceActivation({
+          session: currentSession,
+          accessToken: currentToken,
+          apiUrl: baseUrl,
+          devMode,
+        });
+
+      return (
+        currentActivation.ready &&
+        currentActivation.identityKey === activation.identityKey
+      );
+    },
   });
 }

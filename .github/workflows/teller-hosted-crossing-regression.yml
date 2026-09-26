@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - teller-hosted-crossing-hardening-tint071-080
+      - teller-session-expiry-boundary-tint091-100
   pull_request:
     branches:
       - teller-tower-request-handoff-dev
@@ -41,12 +42,16 @@ jobs:
           node --check src/teller/towerAccess.js
           node --check src/teller/tellerPreRenderBootstrap.js
           node --check tools/teller_pre_render_bootstrap_security_tint071_080.mjs
+          node --check src/teller/tellerRuntimeSession.js
+          node --check src/teller/persistence/tellerPersistenceTransport.js
+          node --check tools/teller_session_expiry_contract_tint091_100.mjs
 
       - name: Run Tower handoff and stale-session contracts
         run: |
           node tools/teller_hosted_bootstrap_contract_tint051_060.mjs
           node tools/teller_pre_render_bootstrap_contract_tint061_070.mjs
           node tools/teller_pre_render_bootstrap_security_tint071_080.mjs
+          node tools/teller_session_expiry_contract_tint091_100.mjs
           node tools/teller_hosted_browser_activation_contract_tint041_050.mjs
 
       - name: Run structural and practical regressions

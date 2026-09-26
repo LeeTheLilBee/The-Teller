@@ -2242,13 +2242,14 @@
     "TINT071-TINT080": {
       "name": "Hosted crossing and pre-render credential lifecycle hardening",
       "parent": "fd430134295167c6ee10e8c2d27a59592fa5d353",
-      "status": "source_candidate_pending_ci",
+      "status": "source_ci_verified_hosted_proof_pending",
       "lane": "real_integration",
       "files": [
         "src/teller/tellerPreRenderBootstrap.js",
         "tools/teller_pre_render_bootstrap_security_tint071_080.mjs",
         "data/teller_hosted_crossing_hardening_tint071_080.json",
-        "docs/teller/TELLER_HOSTED_CROSSING_HARDENING_TINT071_080.md"
+        "docs/teller/TELLER_HOSTED_CROSSING_HARDENING_TINT071_080.md",
+        ".github/workflows/teller-hosted-crossing-regression.yml"
       ],
       "truth": {
         "fresh_tower_handoff_required_in_production": true,
@@ -2259,9 +2260,12 @@
         "deployment": false
       },
       "acceptance": {
-        "new_adversarial_contract": "pending_runner",
-        "historical_contracts": "pending_runner",
-        "vite_production_build": "pending_runner"
+        "new_adversarial_contract": "passed_in_github_actions",
+        "historical_contracts": "passed_in_github_actions",
+        "vite_production_build": "passed_in_github_actions",
+        "ci_run": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36270059808",
+        "ci_head": "e50b5037882f19c3272f4ec27fcbfa508a8746b3",
+        "hosted_tower_v2_crossing": "not_yet_proven"
       }
     }
   },

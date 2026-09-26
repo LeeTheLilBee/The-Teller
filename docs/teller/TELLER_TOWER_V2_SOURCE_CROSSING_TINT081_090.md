@@ -11,3 +11,7 @@ This is **source-level compatibility**, not hosted deployment or HTTP/CORS/brows
 Current connected Render inventory inspected on 2026-09-26: Tower active deployment `1cfe40a385710c292f49ca2db20428605a1d5b43` (TWR192), Teller API active deployment `13b21ef5b39974c06857ca60bf8427fcf90435cc` (TINT031–040), Teller static active deployment `1b24db502bbf170b11c081b20b49b5640417b2e8`. All auto-deploy is off. This evidence requires refreshing before activation.
 
 Deployment gate: exact Tower v2 hosted commit, exact-origin CORS and one-time exchange proof; Teller static build/branch verification; API health/auth/actor/business RLS proof; positive and negative browser crossings; then explicit deployment decision. Keep Tower as authority, Teller as workflow and Vault behind Tower.
+
+## Verified source CI result
+
+Exact candidate `dfa48e32716566be3488965ab6877949220bcaa9` passed [the cross-repository GitHub Actions workflow](https://github.com/LeeTheLilBee/The-Teller/actions/runs/36270460907). Tower source tests, the actual synthetic Tower issuer → Teller verifier, negative authorization cases, Teller pre-render regression and Vite build all passed. **Hosted deployment and live browser/API authorization remain unproven.**

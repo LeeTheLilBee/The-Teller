@@ -2,7 +2,7 @@
   "pack": "TINT081-TINT090",
   "parent_teller_commit": "039f5cac87547034c8ae19e274161d3373cbabf8",
   "tower_candidate_commit": "c70d0327f56668f65d9f579d5259083c516c9db2",
-  "status": "source_candidate_pending_ci",
+  "status": "source_ci_verified_hosted_proof_pending",
   "actual_issuer_verifier_synthetic_crossing": true,
   "hosted_crossing_proven": false,
   "render_live_snapshot": {
@@ -11,5 +11,11 @@
     "teller_static": "1b24db502bbf170b11c081b20b49b5640417b2e8"
   },
   "deployments_performed": false,
-  "secret_retrieval_performed": false
+  "secret_retrieval_performed": false,
+  "ci": {
+    "url": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36270460907",
+    "head": "dfa48e32716566be3488965ab6877949220bcaa9",
+    "conclusion": "success",
+    "proof": "actual Python Tower issuer token accepted by JS Teller verifier with positive and negative cases"
+  }
 }

@@ -1,0 +1,62 @@
+name: Teller hosted crossing source regression
+
+on:
+  push:
+    branches:
+      - teller-hosted-crossing-hardening-tint071-080
+  pull_request:
+    branches:
+      - teller-tower-request-handoff-dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  teller-crossing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install locked packages
+        run: npm ci
+
+      - name: Verify JavaScript source syntax
+        run: |
+          node --check src/teller/towerAccess.js
+          node --check src/teller/tellerPreRenderBootstrap.js
+          node --check tools/teller_pre_render_bootstrap_security_tint071_080.mjs
+
+      - name: Run Tower handoff and stale-session contracts
+        run: |
+          node tools/teller_hosted_bootstrap_contract_tint051_060.mjs
+          node tools/teller_pre_render_bootstrap_contract_tint061_070.mjs
+          node tools/teller_pre_render_bootstrap_security_tint071_080.mjs
+          node tools/teller_hosted_browser_activation_contract_tint041_050.mjs
+
+      - name: Run structural and practical regressions
+        run: |
+          python tools/teller_pre_render_bootstrap_smoke_test_tint061_070.py
+          python tools/teller_hosted_browser_activation_smoke_test_tint041_050.py
+          python tools/teller_hosted_api_smoke_test_tint031_040.py
+          python tools/teller_authenticated_transport_smoke_test_tint021_030.py
+          python tools/teller_persistence_foundation_smoke_test_tint001_010.py
+          python tools/teller_practical_use_certification_smoke_test_591_600.py
+
+      - name: Production source build (no deploy)
+        run: npm run build

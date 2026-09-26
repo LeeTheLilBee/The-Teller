@@ -174,6 +174,31 @@ function locked(
 }
 
 
+/*
+ * A browser-owned window object is not evidence of a fresh Tower launch.
+ * Dispose of any previous in-memory session BEFORE reading a new handoff.
+ * A failure to clear it must block mounting, not fall back to old authority.
+ */
+function discardUnverifiedTowerSession(windowLike) {
+  if (
+    !windowLike ||
+    typeof windowLike !== "object"
+  ) {
+    return false;
+  }
+
+  try {
+    delete windowLike.__TELLER_TOWER_SESSION__;
+  } catch {
+    return false;
+  }
+
+  return (
+    !windowLike.__TELLER_TOWER_SESSION__
+  );
+}
+
+
 export async function prepareTellerBeforeReactMount({
   windowLike =
     globalThis.window,
@@ -194,20 +219,22 @@ export async function prepareTellerBeforeReactMount({
     1000,
 } = {}) {
   /*
-   * Same-document continuation is allowed if a valid
-   * live persistence session already exists.
+   * Production startup always requires a fresh one-time Tower handoff.
+   * Never let a stale, caller-injected, or merely shape-valid window
+   * object short-circuit the exchange. The Tower/server validates the
+   * signed bearer; a browser-side token-shape check is not authority.
    *
-   * A page reload destroys this memory-only object.
+   * Clear any previous live object before attempting this launch, so
+   * a denied/malformed exchange cannot leave old persistence available.
    */
   if (
-    liveTowerPersistenceSession(
+    !discardUnverifiedTowerSession(
       windowLike
     )
   ) {
-    return ready({
-      source:
-        "existing_live_tower_session",
-    });
+    return locked(
+      "tower_live_session_clear_failed"
+    );
   }
 
 
@@ -333,6 +360,9 @@ const PRE_MOUNT_MESSAGES =
 
     tower_live_session_install_failed:
       "The protected Teller session could not be established.",
+
+    tower_live_session_clear_failed:
+      "The prior Teller session could not be cleared safely.",
 
     tower_live_persistence_session_missing:
       "The Teller persistence session was not established.",

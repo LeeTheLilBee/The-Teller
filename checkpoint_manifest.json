@@ -102,7 +102,7 @@
       "files_patched": [
         "src/App.jsx"
       ],
-      "purpose": "Mount the owner money workspace behind Tower owner clearance with whimsical themes, Today\u2019s Money Focus, snapshot cards, business lanes, calm mode, and protected MrkTrade handling.",
+      "purpose": "Mount the owner money workspace behind Tower owner clearance with whimsical themes, Today’s Money Focus, snapshot cards, business lanes, calm mode, and protected MrkTrade handling.",
       "backup": "pack_backups/pack_050D_B_20260525_142527"
     },
     "050D_C_FOCUS_BOARD_PREVIEW": {
@@ -1352,7 +1352,7 @@
       }
     },
     "GP551-GP560": {
-      "name": "Scanner \u2192 Verified Form Autofill",
+      "name": "Scanner → Verified Form Autofill",
       "status": "sealed",
       "timestamp": "2026-09-15T15:39:48.764213+00:00",
       "parent": "0912b7f9fa4e2fbe3d2446b33e474351444ea8f0",
@@ -2238,6 +2238,35 @@
       },
       "sealed_at": "2026-09-24T14:04:18.511916+00:00",
       "sealed_from_parent": "8eba601d137fac7c8e13f55a054c5bbf0cb4b772"
+    },
+    "TINT071-TINT080": {
+      "name": "Hosted crossing and pre-render credential lifecycle hardening",
+      "parent": "fd430134295167c6ee10e8c2d27a59592fa5d353",
+      "status": "source_ci_verified_hosted_proof_pending",
+      "lane": "real_integration",
+      "files": [
+        "src/teller/tellerPreRenderBootstrap.js",
+        "tools/teller_pre_render_bootstrap_security_tint071_080.mjs",
+        "data/teller_hosted_crossing_hardening_tint071_080.json",
+        "docs/teller/TELLER_HOSTED_CROSSING_HARDENING_TINT071_080.md",
+        ".github/workflows/teller-hosted-crossing-regression.yml"
+      ],
+      "truth": {
+        "fresh_tower_handoff_required_in_production": true,
+        "stale_live_memory_cleared_before_exchange": true,
+        "failed_exchange_does_not_keep_stale_session": true,
+        "hosted_crossing_proven": false,
+        "static_site_activated": false,
+        "deployment": false
+      },
+      "acceptance": {
+        "new_adversarial_contract": "passed_in_github_actions",
+        "historical_contracts": "passed_in_github_actions",
+        "vite_production_build": "passed_in_github_actions",
+        "ci_run": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36270059808",
+        "ci_head": "e50b5037882f19c3272f4ec27fcbfa508a8746b3",
+        "hosted_tower_v2_crossing": "not_yet_proven"
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {
@@ -2253,7 +2282,7 @@
   "checkpoints": [
     {
       "pack": "GP451-GP460",
-      "name": "ARCHIVE VAULT \u2014 TELLER TO TOWER REQUEST HANDOFF LAYER",
+      "name": "ARCHIVE VAULT — TELLER TO TOWER REQUEST HANDOFF LAYER",
       "timestamp_utc": "2026-08-14T14:55:42.338114+00:00",
       "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
       "files": [
@@ -2268,7 +2297,7 @@
     },
     {
       "pack": "GP461-GP470",
-      "name": "TELLER \u2014 TOWER REQUEST QUEUE + SAFE RESULT INTAKE",
+      "name": "TELLER — TOWER REQUEST QUEUE + SAFE RESULT INTAKE",
       "timestamp_utc": "2026-08-14T15:33:02.634559+00:00",
       "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
       "files": [
@@ -2284,7 +2313,7 @@
     },
     {
       "pack": "GP471-GP480",
-      "name": "TELLER \u2014 WORKFLOW-SAFE REQUEST STATUS WIRING",
+      "name": "TELLER — WORKFLOW-SAFE REQUEST STATUS WIRING",
       "timestamp_utc": "2026-08-14T15:34:55.537499+00:00",
       "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
       "files": [
@@ -2301,7 +2330,7 @@
     },
     {
       "pack": "GP481-GP490",
-      "name": "TELLER \u2014 WORKFLOW-SAFE STATUS DRAWER WIRING",
+      "name": "TELLER — WORKFLOW-SAFE STATUS DRAWER WIRING",
       "timestamp_utc": "2026-08-14T15:37:19.602819+00:00",
       "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
       "files": [
@@ -2319,7 +2348,7 @@
     },
     {
       "pack": "GP491-GP500",
-      "name": "TELLER \u2014 WORKFLOW-SAFE CLOSEOUT + SAVE",
+      "name": "TELLER — WORKFLOW-SAFE CLOSEOUT + SAVE",
       "timestamp_utc": "2026-08-14T15:39:41.568212+00:00",
       "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
       "files": [

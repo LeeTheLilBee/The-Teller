@@ -2297,7 +2297,7 @@
       "name": "Live Tower session expiry and authenticated transport revocation",
       "parent": "620a2c7af35272b333fca6c9bde3cf5f347ba742",
       "lane": "real_integration",
-      "status": "source_candidate_pending_ci",
+      "status": "source_ci_verified_hosted_proof_pending",
       "files": [
         "src/teller/tellerRuntimeSession.js",
         "src/teller/persistence/tellerPersistenceTransport.js",
@@ -2320,10 +2320,16 @@
         "fresh_tower_handoff_required_to_reenter": true
       },
       "acceptance": {
-        "expiry_contract": "pending_runner",
-        "historical_contracts": "pending_runner",
-        "production_build": "pending_runner",
+        "expiry_contract": "passed_in_github_actions",
+        "historical_contracts": "passed_in_github_actions",
+        "production_build": "passed_in_github_actions",
         "hosted_crossing": "not_proven"
+      },
+      "ci": {
+        "run_id": 36273531735,
+        "head": "28f97d708cd74fa227e78cd32f5147e2dc46b97e",
+        "conclusion": "success",
+        "url": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36273531735"
       }
     }
   },

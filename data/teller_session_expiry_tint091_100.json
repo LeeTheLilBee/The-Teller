@@ -2,7 +2,7 @@
   "pack": "TINT091-TINT100",
   "name": "Live Tower session expiry and authenticated transport revocation",
   "parent": "620a2c7af35272b333fca6c9bde3cf5f347ba742",
-  "status": "source_candidate_pending_ci",
+  "status": "source_ci_verified_hosted_proof_pending",
   "behavior": {
     "expiry_source": "Tower v2 response expires_at_epoch (also installed as ISO expires_at)",
     "production_storage_fallback": false,
@@ -24,9 +24,15 @@
     "teller_to_vault_direct": false,
     "bank_payment_or_payroll_execution": false
   },
-  "test_status": "pending_runner",
+  "test_status": "passed_in_github_actions",
   "hosted_crossing_proven": false,
   "tower_deployment": false,
   "teller_api_deployment": false,
-  "teller_static_activation": false
+  "teller_static_activation": false,
+  "ci": {
+    "run_id": 36273531735,
+    "head": "28f97d708cd74fa227e78cd32f5147e2dc46b97e",
+    "conclusion": "success",
+    "url": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36273531735"
+  }
 }

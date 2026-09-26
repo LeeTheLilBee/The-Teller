@@ -2292,6 +2292,45 @@
         "ci_source_head": "dfa48e32716566be3488965ab6877949220bcaa9",
         "hosted_v2_exchange": "not_proven"
       }
+    },
+    "TINT091-TINT100": {
+      "name": "Live Tower session expiry and authenticated transport revocation",
+      "parent": "620a2c7af35272b333fca6c9bde3cf5f347ba742",
+      "lane": "real_integration",
+      "status": "source_ci_verified_hosted_proof_pending",
+      "files": [
+        "src/teller/tellerRuntimeSession.js",
+        "src/teller/persistence/tellerPersistenceTransport.js",
+        "src/teller/tellerPreRenderBootstrap.js",
+        "src/main.jsx",
+        "tools/teller_session_expiry_contract_tint091_100.mjs",
+        ".github/workflows/teller-hosted-crossing-regression.yml",
+        "data/teller_session_expiry_tint091_100.json",
+        "docs/teller/TELLER_SESSION_EXPIRY_TINT091_100.md"
+      ],
+      "truth": {
+        "expiry_source": "Tower v2 response expires_at_epoch (also installed as ISO expires_at)",
+        "production_storage_fallback": false,
+        "expired_browser_live_session_recognized": false,
+        "expired_persistence_access_token_returned": false,
+        "authenticated_transport_rechecks_live_session_each_request": true,
+        "stale_captured_transport_fails_before_fetch": true,
+        "ui_unmounts_and_locks_at_expiry": true,
+        "automatic_token_refresh": false,
+        "fresh_tower_handoff_required_to_reenter": true
+      },
+      "acceptance": {
+        "expiry_contract": "passed_in_github_actions",
+        "historical_contracts": "passed_in_github_actions",
+        "production_build": "passed_in_github_actions",
+        "hosted_crossing": "not_proven"
+      },
+      "ci": {
+        "run_id": 36273531735,
+        "head": "28f97d708cd74fa227e78cd32f5147e2dc46b97e",
+        "conclusion": "success",
+        "url": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36273531735"
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

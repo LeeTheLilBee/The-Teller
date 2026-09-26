@@ -5,6 +5,10 @@ import {
   TOWER_TELLER_PERSISTENCE_EXCHANGE_VERSION,
 } from "./towerAccess.js";
 
+import {
+  tellerSessionExpiryEpoch,
+} from "./tellerRuntimeSession.js";
+
 
 const TPT1_TOKEN_SHAPE =
   /^tpt1\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
@@ -20,7 +24,8 @@ function clean(
 
 
 function liveTowerPersistenceSession(
-  windowLike
+  windowLike,
+  nowEpoch = Date.now() / 1000
 ) {
   const raw =
     windowLike
@@ -79,12 +84,16 @@ function liveTowerPersistenceSession(
       raw.persistenceAccessToken
     );
 
+  const expiresAtEpoch =
+    tellerSessionExpiryEpoch(raw);
+
 
   return Boolean(
     sessionId &&
     receiptId &&
     actorId &&
     businessKey &&
+    expiresAtEpoch > Number(nowEpoch) &&
     (
       role === "employee" ||
       role === "manager" ||
@@ -307,7 +316,8 @@ export async function prepareTellerBeforeReactMount({
    */
   if (
     !liveTowerPersistenceSession(
-      windowLike
+      windowLike,
+      nowEpoch
     )
   ) {
     return locked(
@@ -363,6 +373,9 @@ const PRE_MOUNT_MESSAGES =
 
     tower_live_session_clear_failed:
       "The prior Teller session could not be cleared safely.",
+
+    tower_session_expired:
+      "Your protected Teller session has ended. Open Teller again through The Tower.",
 
     tower_live_persistence_session_missing:
       "The Teller persistence session was not established.",

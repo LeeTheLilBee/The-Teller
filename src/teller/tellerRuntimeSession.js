@@ -22,6 +22,35 @@ function normalizeRole(value) {
 }
 
 
+/*
+ * Client-side lifetime detection is a UI/request guard, not an authorization
+ * verifier. The Teller API must still verify Tower's signed tpt1 token.
+ */
+export function tellerSessionExpiryEpoch(raw) {
+  if (!raw || typeof raw !== "object") return 0;
+
+  const explicit = raw.expires_at_epoch ?? raw.expiresAtEpoch;
+  if (explicit !== undefined && explicit !== null && explicit !== "") {
+    const epoch = Number(explicit);
+    return Number.isFinite(epoch) && epoch > 0
+      ? Math.floor(epoch)
+      : 0;
+  }
+
+  const value = raw.expires_at || raw.expiresAt;
+  if (!value) return 0;
+  const parsed = Date.parse(String(value));
+  return Number.isFinite(parsed) && parsed > 0
+    ? Math.floor(parsed / 1000)
+    : 0;
+}
+
+export function isTellerSessionExpired(raw, nowEpoch = Date.now() / 1000) {
+  const expiry = tellerSessionExpiryEpoch(raw);
+  return expiry > 0 && expiry <= Number(nowEpoch);
+}
+
+
 function readStoredSession() {
   if (typeof window === "undefined") return null;
 
@@ -105,8 +134,11 @@ export function readTellerLiveTowerSession() {
   }
 
 
+  const raw = window.__TELLER_TOWER_SESSION__;
+  if (!raw || isTellerSessionExpired(raw)) return null;
+
   return normalizeSession(
-    window.__TELLER_TOWER_SESSION__,
+    raw,
     "tower_window_injection"
   );
 }
@@ -120,12 +152,17 @@ export function readTellerTowerSession() {
 
   if (injected) return injected;
 
-  const stored = normalizeSession(
-    readStoredSession(),
-    "tower_session_storage"
-  );
-
-  if (stored) return stored;
+  /*
+   * Historical UI-only sessionStorage fallback is permitted in DEV only.
+   * Production identity must never be revived from browser storage.
+   */
+  if (import.meta.env.DEV) {
+    const stored = normalizeSession(
+      readStoredSession(),
+      "tower_session_storage"
+    );
+    if (stored) return stored;
+  }
 
   /*
    * Browser development convenience only.
@@ -264,7 +301,8 @@ export function readTellerPersistenceAccessToken() {
   if (
     !raw ||
     typeof raw !==
-      "object"
+      "object" ||
+    isTellerSessionExpired(raw)
   ) {
     return "";
   }

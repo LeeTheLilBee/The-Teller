@@ -63,7 +63,7 @@ function amount(value, positive) {
   if (cents > MAX_CENTS || (positive ? cents <= 0n : cents < 0n)) {
     deny("MONEY_RANGE_INVALID");
   }
-  return cents.toString(); // Internal compare only. No amount is returned.
+  return cents; // BigInt internal compare only. No amount is returned.
 }
 function timestamp(value) {
   if (typeof value !== "string" || !ISO_WITH_ZONE.test(value)) {

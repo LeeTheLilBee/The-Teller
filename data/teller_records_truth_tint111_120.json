@@ -1,0 +1,36 @@
+{
+  "pack": "TINT111-TINT120",
+  "name": "Truthful record provenance and authenticated search",
+  "parent": "f1624712b4359c8c1ae2e4d30b8f21cb76810235",
+  "status": "source_candidate_pending_ci",
+  "before": [
+    "TellerRecordCard hard-coded Session record and Production persisted: No for every item, including records returned by authenticated Postgres serialization.",
+    "Records workspace used an unconfigured repository default even while App had authenticated API transport.",
+    "Search filtered only the first 100 hydrated records but could be mistaken for repository-wide search."
+  ],
+  "source_changes": [
+    "Record cards label durable only when both server-produced persistence flags and a positive revision exist.",
+    "Repository connection is Verified only after an authenticated hydration request succeeds; Checking, Unavailable and Not connected remain distinct.",
+    "Explicit user-triggered server search uses Teller API text/category/status under bearer/RLS business authority, capped at 100 per search and clearly labelled.",
+    "Stale search responses are ignored after filter changes/closure; late responses from changed Tower actor/business are rejected in App.",
+    "Session-only records never receive blanket durable wording, and the existing local search remains available when remote search is unavailable."
+  ],
+  "truth": {
+    "source_ci": "pending",
+    "hosted_tower_v2_proof": false,
+    "authenticated_remote_search_hosted": false,
+    "static_site_activated": false,
+    "api_deployed_source_unchanged": true,
+    "render_mutation": false,
+    "direct_vault": false,
+    "payroll_or_payment_execution": false
+  },
+  "deployment_gate": {
+    "tower_hostname_selection": "pending_dual-host_canonical_decision",
+    "teller_static_live_source": "1b24db502bbf170b11c081b20b49b5640417b2e8",
+    "teller_api_live_source": "13b21ef5b39974c06857ca60bf8427fcf90435cc",
+    "tower_canonical_secondary_host": "https://simplee-tower-ob-tunv.onrender.com",
+    "tower_old_staging_host": "https://simplee-tower-ob.onrender.com",
+    "tower_issue": "https://github.com/LeeTheLilBee/SimpleeMrkTrade/issues/25"
+  }
+}

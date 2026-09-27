@@ -2361,6 +2361,38 @@
         "teller_static_activated": false,
         "render_mutation": false
       }
+    },
+    "TINT111-TINT120": {
+      "name": "Truthful record provenance and authenticated search",
+      "parent": "f1624712b4359c8c1ae2e4d30b8f21cb76810235",
+      "lane": "real_integration",
+      "status": "source_candidate_pending_ci",
+      "files": [
+        "src/App.jsx",
+        "src/teller/records/TellerRecordsWorkspace.jsx",
+        "src/teller/records/tellerRecordStorageTruth.js",
+        "tools/teller_records_truth_contract_tint111_120.mjs",
+        "tools/teller_records_truth_smoke_tint111_120.py",
+        ".github/workflows/teller-hosted-crossing-regression.yml",
+        "data/teller_records_truth_tint111_120.json",
+        "docs/teller/TELLER_RECORDS_TRUTH_TINT111_120.md",
+        "checkpoint_manifest.json"
+      ],
+      "truth": {
+        "durable_label_requires_server_serializer_evidence": true,
+        "repository_verified_only_after_authenticated_hydration": true,
+        "remote_search_bearer_and_rls": true,
+        "search_limit_disclosed": true,
+        "hosted_crossing_proven": false,
+        "static_activation": false,
+        "render_mutation": false
+      },
+      "acceptance": {
+        "records_contract": "pending",
+        "structural_wall": "pending",
+        "historical_tests": "pending",
+        "vite_build": "pending"
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

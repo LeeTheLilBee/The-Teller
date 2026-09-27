@@ -6,6 +6,7 @@ on:
       - teller-hosted-crossing-hardening-tint071-080
       - teller-session-expiry-boundary-tint091-100
       - teller-durable-record-ack-tint101-110
+      - teller-records-truth-tint111-120
   pull_request:
     branches:
       - teller-tower-request-handoff-dev
@@ -48,6 +49,8 @@ jobs:
           node --check tools/teller_session_expiry_contract_tint091_100.mjs
           node --check src/teller/records/tellerDurablePreparation.js
           node --check tools/teller_durable_preparation_contract_tint101_110.mjs
+          node --check src/teller/records/tellerRecordStorageTruth.js
+          node --check tools/teller_records_truth_contract_tint111_120.mjs
 
       - name: Run Tower handoff and stale-session contracts
         run: |
@@ -56,6 +59,7 @@ jobs:
           node tools/teller_pre_render_bootstrap_security_tint071_080.mjs
           node tools/teller_session_expiry_contract_tint091_100.mjs
           node tools/teller_durable_preparation_contract_tint101_110.mjs
+          node tools/teller_records_truth_contract_tint111_120.mjs
           node tools/teller_hosted_browser_activation_contract_tint041_050.mjs
 
       - name: Run structural and practical regressions
@@ -67,6 +71,7 @@ jobs:
           python tools/teller_persistence_foundation_smoke_test_tint001_010.py
           python tools/teller_practical_use_certification_smoke_test_591_600.py
           python tools/teller_forms_durable_ack_smoke_tint101_110.py
+          python tools/teller_records_truth_smoke_tint111_120.py
 
       - name: Production source build (no deploy)
         run: npm run build

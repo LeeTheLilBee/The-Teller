@@ -661,7 +661,7 @@ export default function TellerRecordsWorkspace({
                 ? "Checking the authenticated record connection."
                 : repositoryConnection.label === "Unavailable"
                   ? "Authenticated record connection unavailable."
-                  : "Production record storage is not connected."}
+                  : "Production record storage is not connected yet."}
             </strong>
             <p>
               Only records with an acknowledged persistence revision are

@@ -255,7 +255,7 @@ export default function TellerFormsWorkspace({
   }
 
 
-  function preparePacket(
+  async function preparePacket(
     packet
   ) {
     const provenance =
@@ -288,9 +288,21 @@ export default function TellerFormsWorkspace({
       );
 
 
-    onRecordPrepared?.(
-      sessionRecord
-    );
+    // Keep the draft open unless the App has accepted the record.
+    // A hosted record is accepted only after the authenticated repository
+    // acknowledges its save; an unsuccessful POST must not look prepared.
+    let result;
+    try {
+      result = onRecordPrepared
+        ? await onRecordPrepared(sessionRecord)
+        : { accepted: true, durable: false, status: "session_only" };
+    } catch {
+      result = { accepted: false, status: "persistence_failed" };
+    }
+
+    if (result?.accepted !== true) {
+      return result || { accepted: false, status: "not_accepted" };
+    }
 
 
     setPreparedPackets(
@@ -307,6 +319,7 @@ export default function TellerFormsWorkspace({
 
 
     setSelectedFormId("");
+    return result;
   }
 
 

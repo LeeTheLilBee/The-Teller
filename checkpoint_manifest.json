@@ -2331,6 +2331,36 @@
         "conclusion": "success",
         "url": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36273531735"
       }
+    },
+    "TINT101-TINT110": {
+      "name": "Durable record acknowledgement and form draft preservation",
+      "parent": "a9b43effbfb8d4be06619379b6710738a8496a44",
+      "lane": "real_integration",
+      "status": "source_candidate_pending_ci",
+      "files": [
+        "src/teller/records/tellerDurablePreparation.js",
+        "src/App.jsx",
+        "src/teller/forms/TellerFormsWorkspace.jsx",
+        "src/teller/forms/TellerFormRenderer.jsx",
+        "tools/teller_durable_preparation_contract_tint101_110.mjs",
+        "tools/teller_forms_durable_ack_smoke_tint101_110.py",
+        ".github/workflows/teller-hosted-crossing-regression.yml",
+        "data/teller_durable_record_ack_tint101_110.json",
+        "docs/teller/TELLER_DURABLE_RECORD_ACK_TINT101_110.md",
+        "checkpoint_manifest.json"
+      ],
+      "truth": {
+        "hosted_ack_before_visible_record": true,
+        "hosted_missing_api_fails_closed": true,
+        "failed_save_keeps_form_draft": true,
+        "session_only_dev_marked_not_durable": true,
+        "changed_scope_late_ack_discarded": true,
+        "hydration_reconciles_acknowledged_saves": true,
+        "source_ci": "pending",
+        "hosted_tower_v2": false,
+        "teller_static_activated": false,
+        "render_mutation": false
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

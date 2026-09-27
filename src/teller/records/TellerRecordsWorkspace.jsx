@@ -1,5 +1,7 @@
 import React, {
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -21,6 +23,11 @@ import {
 import {
   humanizeTellerRecordToken,
 } from "./tellerRecordSchema.js";
+
+import {
+  describeTellerRecordStorage,
+  describeTellerRepositoryConnection,
+} from "./tellerRecordStorageTruth.js";
 
 import "./tellerRecords.css";
 
@@ -84,6 +91,8 @@ function TellerRecordCard({
 }) {
   const projection =
     record.search_projection || {};
+
+  const storage = describeTellerRecordStorage(record);
 
 
   return (
@@ -191,13 +200,9 @@ function TellerRecordCard({
 
       <div className="teller-record-card-truth">
 
-        <span>
-          Session record
-        </span>
+        <span>{storage.label}</span>
 
-        <span>
-          Production persisted: No
-        </span>
+        <span>{storage.detail}</span>
 
       </div>
 
@@ -213,6 +218,7 @@ export default function TellerRecordsWorkspace({
   records = [],
   recoveryEvents = [],
   onReplaceRecords,
+  onSearchRemote = null,
   repository =
     createUnconfiguredTellerRecordRepository(),
 }) {
@@ -222,6 +228,20 @@ export default function TellerRecordsWorkspace({
   ] = useState({
     ...EMPTY_TELLER_RECORD_QUERY,
   });
+
+  const [remoteRecords, setRemoteRecords] = useState(null);
+  const [remoteSearchStatus, setRemoteSearchStatus] = useState("idle");
+  const [remoteSearchError, setRemoteSearchError] = useState("");
+  const searchSequenceRef = useRef(0);
+
+  useEffect(() => {
+    if (!open) {
+      searchSequenceRef.current += 1;
+      setRemoteRecords(null);
+      setRemoteSearchStatus("idle");
+      setRemoteSearchError("");
+    }
+  }, [open]);
 
 
   const repositoryTruth =
@@ -234,6 +254,10 @@ export default function TellerRecordsWorkspace({
     );
 
 
+  const repositoryConnection =
+    describeTellerRepositoryConnection(repositoryTruth);
+
+
   const facets =
     useMemo(
       () =>
@@ -244,30 +268,54 @@ export default function TellerRecordsWorkspace({
     );
 
 
-  const results =
-    useMemo(
-      () =>
-        searchTellerRecords(
-          records,
-          query
-        ),
-      [
-        records,
-        query,
-      ]
-    );
+  // The initial list searches loaded records only. Explicit authenticated
+  // search requests up to 100 matches from the current Tower/RLS business.
+  const visibleSource = remoteRecords === null ? records : remoteRecords;
+  const results = useMemo(
+    () => searchTellerRecords(
+      visibleSource,
+      remoteRecords === null ? query : { ...query, text: "" }
+    ),
+    [visibleSource, remoteRecords, query]
+  );
 
 
-  function updateQuery(
-    key,
-    value
-  ) {
-    setQuery(
-      (current) => ({
-        ...current,
-        [key]: value,
-      })
-    );
+  function updateQuery(key, value) {
+    searchSequenceRef.current += 1;
+    setRemoteRecords(null);
+    setRemoteSearchStatus("idle");
+    setRemoteSearchError("");
+    setQuery((current) => ({ ...current, [key]: value }));
+  }
+
+  function clearFilters() {
+    searchSequenceRef.current += 1;
+    setRemoteRecords(null);
+    setRemoteSearchStatus("idle");
+    setRemoteSearchError("");
+    setQuery(clearTellerRecordQuery());
+  }
+
+  async function runAuthenticatedSearch() {
+    if (typeof onSearchRemote !== "function") return;
+    const serial = ++searchSequenceRef.current;
+    setRemoteRecords(null);
+    setRemoteSearchStatus("loading");
+    setRemoteSearchError("");
+    try {
+      const found = await onSearchRemote(query);
+      if (serial !== searchSequenceRef.current) return;
+      if (!Array.isArray(found)) throw new Error("Invalid repository response.");
+      setRemoteRecords(found);
+      setRemoteSearchStatus("complete");
+    } catch {
+      if (serial !== searchSequenceRef.current) return;
+      setRemoteRecords(null);
+      setRemoteSearchStatus("error");
+      setRemoteSearchError(
+        "Authenticated search could not be completed. Loaded records may not include all history."
+      );
+    }
   }
 
 
@@ -298,8 +346,8 @@ export default function TellerRecordsWorkspace({
             </h1>
 
             <p>
-              Find workflow records prepared
-              during this Teller session.
+              Find loaded session records or search the
+              authenticated repository within your Tower business scope.
             </p>
           </div>
 
@@ -325,9 +373,7 @@ export default function TellerRecordsWorkspace({
 
             <strong>
               {
-                repositoryTruth.configured
-                  ? "Connected"
-                  : "Not connected"
+                repositoryConnection.label
               }
             </strong>
           </div>
@@ -346,7 +392,7 @@ export default function TellerRecordsWorkspace({
 
           <div>
             <small>
-              Search results
+              Loaded search results
             </small>
 
             <strong>
@@ -393,6 +439,13 @@ export default function TellerRecordsWorkspace({
                   event.target.value
                 )
               }
+
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && onSearchRemote) {
+                  event.preventDefault();
+                  void runAuthenticatedSearch();
+                }
+              }}
 
               placeholder="Search form, workflow, category, business…"
             />
@@ -466,16 +519,38 @@ export default function TellerRecordsWorkspace({
               type="button"
               className="teller-record-clear-filters"
 
-              onClick={() =>
-                setQuery(
-                  clearTellerRecordQuery()
-                )
-              }
+              onClick={clearFilters}
             >
               Clear
             </button>
 
+            {onSearchRemote ? (
+              <button
+                type="button"
+                className="teller-record-clear-filters"
+                onClick={() => { void runAuthenticatedSearch(); }}
+                disabled={remoteSearchStatus === "loading"}
+              >
+                {remoteSearchStatus === "loading"
+                  ? "Searching…"
+                  : "Search authenticated records"}
+              </button>
+            ) : null}
+
           </div>
+
+          {remoteSearchError ? (
+            <p role="alert" className="teller-form-error">
+              {remoteSearchError}
+            </p>
+          ) : null}
+
+          {remoteSearchStatus === "complete" ? (
+            <p role="status">
+              Showing up to 100 authenticated matches in the current
+              Tower-authorized business. Protected payload values are not searched.
+            </p>
+          ) : null}
 
         </section>
 
@@ -491,9 +566,11 @@ export default function TellerRecordsWorkspace({
 
               <h2>
                 {
-                  results.length
-                    ? `${results.length} found`
-                    : "No matching records"
+                  remoteSearchStatus === "loading"
+                    ? "Searching authenticated records…"
+                    : results.length
+                      ? `${results.length} found`
+                      : "No matching records"
                 }
               </h2>
             </div>
@@ -507,7 +584,11 @@ export default function TellerRecordsWorkspace({
           </div>
 
 
-          {results.length ? (
+          {remoteSearchStatus === "loading" ? (
+            <article className="teller-record-empty" role="status">
+              Searching the authenticated repository…
+            </article>
+          ) : results.length ? (
             <div className="teller-record-list">
 
               {results.map(
@@ -530,17 +611,21 @@ export default function TellerRecordsWorkspace({
 
               <strong>
                 {
-                  records.length
+                  visibleSource.length
                     ? "Nothing matches these filters."
-                    : "No records prepared yet."
+                    : remoteSearchStatus === "complete"
+                      ? "No authenticated matches."
+                      : "No records loaded yet."
                 }
               </strong>
 
               <p>
                 {
-                  records.length
+                  visibleSource.length
                     ? "Clear a filter or try another search."
-                    : "Prepare a Teller form and its session record will appear here."
+                    : remoteSearchStatus === "complete"
+                      ? "Change your filters or search text and try again."
+                      : "Prepare a Teller form or run an authenticated search."
                 }
               </p>
 
@@ -569,20 +654,20 @@ export default function TellerRecordsWorkspace({
         />
 
 
-        {!repositoryTruth.configured ? (
+        {!repositoryConnection.verified ? (
           <article className="teller-record-production-boundary">
-
             <strong>
-              Production record storage is not connected yet.
+              {repositoryConnection.label === "Checking"
+                ? "Checking the authenticated record connection."
+                : repositoryConnection.label === "Unavailable"
+                  ? "Authenticated record connection unavailable."
+                  : "Production record storage is not connected."}
             </strong>
-
             <p>
-              These searchable records exist only
-              in the active Teller session. This
-              screen does not pretend they were
-              saved to a production database.
+              Only records with an acknowledged persistence revision are
+              labelled durable. Session-only records are never presented as
+              confirmed database saves.
             </p>
-
           </article>
         ) : null}
 

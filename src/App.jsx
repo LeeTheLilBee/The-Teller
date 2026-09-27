@@ -285,6 +285,9 @@ export default function App() {
     setRecordRecoveryEvents,
   ] = useState([]);
 
+  const [repositoryStatus, setRepositoryStatus] =
+    useState("not_connected");
+
 
   const towerSession =
     readTellerTowerSession();
@@ -380,9 +383,11 @@ export default function App() {
         !towerSession ||
         !persistenceTransport?.connected
       ) {
+        setRepositoryStatus("not_connected");
         return undefined;
       }
 
+      setRepositoryStatus("checking");
 
       let cancelled =
         false;
@@ -429,6 +434,7 @@ export default function App() {
             reconciled
           );
 
+          setRepositoryStatus("ready");
 
           addRecoveryEvent({
             event:
@@ -447,6 +453,8 @@ export default function App() {
             return;
           }
 
+
+          setRepositoryStatus("error");
 
           addRecoveryEvent({
             event:
@@ -508,6 +516,36 @@ export default function App() {
   function openRecords() {
     closeAllWorkspaces();
     setRecordsOpen(true);
+  }
+
+
+  async function searchDurableRecords(query) {
+    if (
+      !persistenceTransport?.connected ||
+      repositoryStatus !== "ready"
+    ) {
+      throw new Error("Authenticated repository is not verified.");
+    }
+
+    const result = await persistenceTransport.searchRecords({
+      text: query?.text || "",
+      category: query?.category || "",
+      status: query?.status || "",
+      limit: 100,
+    });
+
+    // The API applies Tower-derived RLS business scoping. Do not adopt
+    // a late response if the live browser identity has changed.
+    if (
+      tellerRecordScopeKey(readTellerTowerSession()) !== towerIdentityKey
+    ) {
+      throw new Error("Tower session changed before search completed.");
+    }
+
+    if (!Array.isArray(result?.records)) {
+      throw new Error("Authenticated search returned no records array.");
+    }
+    return result.records;
   }
 
 
@@ -789,6 +827,19 @@ export default function App() {
 
           onReplaceRecords={
             replaceSessionRecords
+          }
+
+          repository={{
+            repository_id: "teller_authenticated_api",
+            status: repositoryStatus,
+            configured: Boolean(persistenceTransport?.connected),
+            persistent: repositoryStatus === "ready",
+          }}
+
+          onSearchRemote={
+            repositoryStatus === "ready" && persistenceTransport?.connected
+              ? searchDurableRecords
+              : null
           }
         />
 

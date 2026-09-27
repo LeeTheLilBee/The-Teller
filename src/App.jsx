@@ -565,7 +565,15 @@ export default function App() {
 
     if (!result.accepted) {
       addRecoveryEvent({
-        event: "record_preparation_blocked",
+        // Retain the historical failure vocabulary for the recovery panel
+        // while never admitting an unacknowledged record to the durable list.
+        event: (
+          result.status === "persistence_failed" ||
+          result.status === "invalid_durable_ack" ||
+          result.status === "authenticated_repository_unavailable"
+        )
+          ? "record_persistence_failed"
+          : "record_preparation_blocked",
         record_id: record?.record_id || "",
         reason: result.status,
         ...(result.problemCount

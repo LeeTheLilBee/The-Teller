@@ -40,6 +40,12 @@ import {
   createTellerPersistenceTransportFromRuntime,
 } from "./teller/persistence/tellerPersistenceTransport.js";
 
+import {
+  tellerRecordScopeKey,
+  mergeTellerDurableRecords,
+  resolveTellerPreparedRecord,
+} from "./teller/records/tellerDurablePreparation.js";
+
 import "./teller/tellerShell.css";
 
 
@@ -266,6 +272,10 @@ export default function App() {
     useRef([]);
 
 
+  const pendingRecordIdsRef =
+    useRef(new Set());
+
+
   const lastTowerIdentityRef =
     useRef("");
 
@@ -302,20 +312,8 @@ export default function App() {
     "";
 
 
-  const towerIdentityKey = [
-    towerSession?.sessionId || "",
-    towerSession?.towerReceiptId || "",
-    towerSession?.actor?.id ||
-      towerSession?.actor?.actor_id ||
-      towerSession?.actor?.actorId ||
-      "",
-    towerSession?.business?.key ||
-      towerSession?.business?.business_key ||
-      towerSession?.business?.businessKey ||
-      "",
-    towerSession?.role || "",
-  ].join("|");
-
+  const towerIdentityKey =
+    tellerRecordScopeKey(towerSession);
 
 
   useEffect(
@@ -400,7 +398,10 @@ export default function App() {
               });
 
 
-          if (cancelled) {
+          if (
+            cancelled ||
+            tellerRecordScopeKey(readTellerTowerSession()) !== towerIdentityKey
+          ) {
             return;
           }
 
@@ -413,12 +414,19 @@ export default function App() {
               : [];
 
 
+          const reconciled =
+            mergeTellerDurableRecords(
+              sessionRecordsRef.current,
+              records
+            );
+
+
           sessionRecordsRef.current =
-            records;
+            reconciled;
 
 
           setSessionRecords(
-            records
+            reconciled
           );
 
 
@@ -538,199 +546,93 @@ export default function App() {
   }
 
 
-  function handleRecordPrepared(
+  async function handleRecordPrepared(
     record
   ) {
-    if (!record?.record_id) {
-      addRecoveryEvent({
-        event:
-          "record_blocked",
-
-        reason:
-          "Record ID missing",
-      });
-
-      return;
-    }
-
-
-    const validation =
-      validateTellerProductionRecord(
-        record
-      );
-
-
-    if (!validation.valid) {
-      addRecoveryEvent({
-        event:
-          "record_validation_blocked",
-
-        record_id:
-          record.record_id,
-
-        reason:
-          "Prepared record failed Teller production validation.",
-
-        problem_count:
-          validation.problems.length,
-      });
-
-      return;
-    }
-
-
-    const duplicate =
-      findDuplicateTellerRecord(
-        sessionRecordsRef.current,
-        record
-      );
-
-
-    if (duplicate) {
-      addRecoveryEvent({
-        event:
-          "duplicate_preparation_blocked",
-
-        record_id:
-          record.record_id,
-
-        duplicate_of:
-          duplicate.record_id,
-
-        reason:
-          "An identical prepared workflow already exists in this Teller session.",
-      });
-
-      return;
-    }
-
-
-    const nextRecords = [
+    const result = await resolveTellerPreparedRecord({
       record,
-
-      ...sessionRecordsRef.current.filter(
-        (item) =>
-          item.record_id !==
-          record.record_id
-      ),
-    ].slice(
-      0,
-      250
-    );
-
-
-    sessionRecordsRef.current =
-      nextRecords;
-
-
-    setSessionRecords(
-      nextRecords
-    );
-
-
-    addRecoveryEvent({
-      event:
-        "record_accepted",
-
-      record_id:
-        record.record_id,
-
-      reason:
-        "Prepared Teller record passed validation and duplicate checks.",
+      readRecords: () => sessionRecordsRef.current,
+      validateRecord: validateTellerProductionRecord,
+      findDuplicate: findDuplicateTellerRecord,
+      pendingIds: pendingRecordIdsRef.current,
+      transport: persistenceTransport,
+      hostedSession:
+        towerSession?.source === "tower_window_injection",
+      expectedScopeKey: towerIdentityKey,
+      readScopeKey: () =>
+        tellerRecordScopeKey(readTellerTowerSession()),
     });
 
-
-    if (
-      persistenceTransport?.connected
-    ) {
-      void persistenceTransport
-        .saveRecord(
-          record
-        )
-        .then(
-          (result) => {
-            const persistedRecord =
-              result?.record;
-
-
-            if (
-              !persistedRecord
-                ?.record_id
-            ) {
-              throw new Error(
-                "Teller persistence transport returned no durable record."
-              );
-            }
-
-
-            const durableRecords = [
-              persistedRecord,
-
-              ...sessionRecordsRef.current
-                .filter(
-                  (item) =>
-                    item.record_id !==
-                    persistedRecord.record_id
-                ),
-            ].slice(
-              0,
-              250
-            );
-
-
-            sessionRecordsRef.current =
-              durableRecords;
-
-
-            setSessionRecords(
-              durableRecords
-            );
-
-
-            addRecoveryEvent({
-              event:
-                "record_persisted",
-
-              record_id:
-                persistedRecord.record_id,
-
-              reason:
-                result
-                  ?.idempotent_replay
-                  ? "Teller confirmed the durable record already existed."
-                  : "Teller saved the prepared record to the authenticated production repository.",
-
-              persistence_revision:
-                persistedRecord
-                  ?.persistence_revision ||
-                1,
-            });
-          }
-        )
-        .catch(
-          (error) => {
-            addRecoveryEvent({
-              event:
-                "record_persistence_failed",
-
-              record_id:
-                record.record_id,
-
-              reason:
-                String(
-                  error?.message ||
-                  "Authenticated Teller persistence failed."
-                ),
-            });
-          }
-        );
+    if (!result.accepted) {
+      addRecoveryEvent({
+        event: "record_preparation_blocked",
+        record_id: record?.record_id || "",
+        reason: result.status,
+        ...(result.problemCount
+          ? { problem_count: result.problemCount }
+          : {}),
+        ...(result.duplicateOf
+          ? { duplicate_of: result.duplicateOf }
+          : {}),
+      });
+      return result;
     }
+
+    // A record can be displayed as durable only AFTER an authenticated
+    // acknowledgement. In DEV/UI-only mode it is session-only instead.
+    if (
+      tellerRecordScopeKey(readTellerTowerSession()) !== towerIdentityKey
+    ) {
+      addRecoveryEvent({
+        event: "record_preparation_blocked",
+        record_id: record?.record_id || "",
+        reason: "tower_identity_changed",
+      });
+      return { accepted: false, status: "tower_identity_changed" };
+    }
+
+    const accepted = result.record;
+    const nextRecords = [
+      accepted,
+      ...sessionRecordsRef.current.filter(
+        (item) => item.record_id !== accepted.record_id
+      ),
+    ].slice(0, 250);
+
+    sessionRecordsRef.current = nextRecords;
+    setSessionRecords(nextRecords);
+
+    addRecoveryEvent({
+      event: result.durable
+        ? "record_persisted"
+        : "record_prepared_session_only",
+      record_id: accepted.record_id,
+      reason: result.durable
+        ? (
+            result.idempotentReplay
+              ? "Authenticated repository confirmed an existing durable record."
+              : "Authenticated repository acknowledged the durable record."
+          )
+        : "Prepared in this browser session only; no durable save was requested.",
+      ...(result.durable
+        ? { persistence_revision: accepted.persistence_revision || 1 }
+        : {}),
+    });
+    return result;
   }
 
 
   function replaceSessionRecords(
     nextRecords
   ) {
+    if (towerSession?.source === "tower_window_injection") {
+      addRecoveryEvent({
+        event: "record_recovery_requires_repository",
+        reason: "Hosted durable records must be restored through authenticated repository hydration, not an in-memory snapshot.",
+      });
+      return;
+    }
+
     const resolvedRecords =
       Array.isArray(
         nextRecords

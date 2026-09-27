@@ -1,6 +1,7 @@
 import React, {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -207,6 +208,10 @@ export default function TellerFormRenderer({
   const [showErrors, setShowErrors] =
     useState(false);
 
+  const [preparing, setPreparing] = useState(false);
+  const [prepareError, setPrepareError] = useState("");
+  const preparingRef = useRef(false);
+
   const validation = useMemo(
     () =>
       validateTellerFormValues(
@@ -252,19 +257,37 @@ export default function TellerFormRenderer({
   }
 
 
-  function prepareWorkflow() {
+  async function prepareWorkflow() {
+    if (preparingRef.current) return;
+
     setShowErrors(true);
+    if (!validation.valid) return;
 
-    if (!validation.valid) {
-      return;
-    }
+    const packet = createTellerFormSubmissionPacket(draft);
 
-    const packet =
-      createTellerFormSubmissionPacket(
-        draft
+    preparingRef.current = true;
+    setPreparing(true);
+    setPrepareError("");
+
+    try {
+      const result = await onPrepared?.(packet);
+      if (result?.accepted !== true) {
+        setPrepareError(
+          result?.status === "authenticated_repository_unavailable"
+            ? "The protected record connection is unavailable. Your draft remains open."
+            : result?.status === "tower_identity_changed"
+              ? "Your Tower session changed. Open Teller again through The Tower."
+              : "The record was not confirmed. Your draft remains open; review and try again."
+        );
+      }
+    } catch {
+      setPrepareError(
+        "The record was not confirmed. Your draft remains open; review and try again."
       );
-
-    onPrepared?.(packet);
+    } finally {
+      preparingRef.current = false;
+      setPreparing(false);
+    }
   }
 
 
@@ -276,6 +299,7 @@ export default function TellerFormRenderer({
             type="button"
             className="teller-form-back"
             onClick={onBack}
+              disabled={preparing}
           >
             ← Forms
           </button>
@@ -328,7 +352,7 @@ export default function TellerFormRenderer({
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          prepareWorkflow();
+          void prepareWorkflow();
         }}
       >
         {form.sections.map(
@@ -391,6 +415,12 @@ export default function TellerFormRenderer({
           )
         )}
 
+        {prepareError ? (
+          <p role="alert" className="teller-form-error">
+            {prepareError}
+          </p>
+        ) : null}
+
         <div className="teller-form-footer">
           <div>
             <strong>
@@ -414,6 +444,7 @@ export default function TellerFormRenderer({
               type="button"
               className="teller-form-secondary"
               onClick={onBack}
+              disabled={preparing}
             >
               Back
             </button>
@@ -421,8 +452,9 @@ export default function TellerFormRenderer({
             <button
               type="submit"
               className="teller-form-primary"
+              disabled={preparing}
             >
-              Prepare workflow
+              {preparing ? "Confirming record…" : "Prepare workflow"}
             </button>
           </div>
         </div>

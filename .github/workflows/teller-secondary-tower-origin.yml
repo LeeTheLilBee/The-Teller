@@ -1,0 +1,35 @@
+name: Teller canonical secondary Tower origin
+
+on:
+  pull_request:
+    branches:
+      - teller-tower-request-handoff-dev
+    paths:
+      - "deploy/render/teller-static-secure-bootstrap-staging.json"
+      - "deploy/render/teller-api-staging.json"
+      - "docs/teller/TELLER_TOWER_V2_SOURCE_CROSSING_TINT081_090.md"
+      - "tests/teller_secondary_tower_origin_contract.mjs"
+      - ".github/workflows/teller-secondary-tower-origin.yml"
+  push:
+    branches:
+      - teller-tower-request-handoff-dev
+    paths:
+      - "deploy/render/teller-static-secure-bootstrap-staging.json"
+      - "deploy/render/teller-api-staging.json"
+      - "docs/teller/TELLER_TOWER_V2_SOURCE_CROSSING_TINT081_090.md"
+      - "tests/teller_secondary_tower_origin_contract.mjs"
+      - ".github/workflows/teller-secondary-tower-origin.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-origin-no-activation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: node tests/teller_secondary_tower_origin_contract.mjs

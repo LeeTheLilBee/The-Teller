@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - teller-tower-v2-crossrepo-proof-tint081-090
+      - teller-tower-request-handoff-dev
   pull_request:
     branches:
       - teller-tower-request-handoff-dev
@@ -24,11 +25,11 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Checkout exact Tower v2 source candidate
+      - name: Checkout exact current hosted Tower source
         uses: actions/checkout@v4
         with:
           repository: LeeTheLilBee/SimpleeMrkTrade
-          ref: c70d0327f56668f65d9f579d5259083c516c9db2
+          ref: 26f695c06e77284c41000dcb49bb04a6c7433498
           path: tower-candidate
           persist-credentials: false
 
@@ -48,10 +49,16 @@ jobs:
           npm ci
           python -m pip install -r tower-candidate/deploy/hosted_tower/requirements.txt pytest
 
-      - name: Run Tower v2 source security tests
+      - name: Run current Tower Teller security regression wall
         working-directory: tower-candidate
         run: |
-          python -m pytest -q tests/test_tower_teller_persistence_exchange_twr193_197.py
+          python -m pytest -q \
+            tests/test_tower_owner_teller_handoff_twr188.py \
+            tests/test_tower_teller_handoff_exchange_twr189.py \
+            tests/test_tower_teller_activation_twr190.py \
+            tests/test_teller_runtime_publication_authority_twr191.py \
+            tests/test_tower_teller_persistence_exchange_twr193_197.py \
+            tests/test_tower_teller_hosted_single_worker_twr198.py
 
       - name: Verify actual Tower issuer against Teller verifier
         shell: bash

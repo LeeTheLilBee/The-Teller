@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - teller-tower-request-handoff-dev
+  pull_request:
+    branches:
+      - teller-tower-request-handoff-dev
   workflow_dispatch:
 
 permissions:

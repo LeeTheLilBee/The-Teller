@@ -219,7 +219,7 @@ for marker in [
     "Search records",
     "Production repository",
     "Session records",
-    "Search results",
+    "Loaded search results",
     "Production record storage is not connected yet.",
 ]:
     require(

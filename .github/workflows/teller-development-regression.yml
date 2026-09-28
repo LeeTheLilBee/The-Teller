@@ -59,6 +59,7 @@ jobs:
           node tools/teller_records_truth_contract_tint111_120.mjs
           node --test tests/tellerBuyBoxQuestionV1.test.mjs
           node --test tests/tellerReleaseIdentity.test.mjs
+          node --test tests/tellerTowerConnectionManifest.test.mjs
 
       - name: Structural and workflow regressions
         run: |

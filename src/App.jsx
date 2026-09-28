@@ -611,7 +611,11 @@ export default function App() {
           result.status === "authenticated_repository_unavailable"
         )
           ? "record_persistence_failed"
-          : "record_preparation_blocked",
+          : result.status === "duplicate"
+            ? "duplicate_preparation_blocked"
+            : result.status === "validation_failed"
+              ? "record_validation_blocked"
+              : "record_preparation_blocked",
         record_id: record?.record_id || "",
         reason: result.status,
         ...(result.problemCount

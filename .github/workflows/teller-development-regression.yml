@@ -45,6 +45,7 @@ jobs:
           node --check src/teller/records/tellerDurablePreparation.js
           node --check src/teller/records/tellerRecordStorageTruth.js
           node --check server/teller/readiness/tellerBuyBoxQuestionV1.js
+          node --check server/teller/transport/tellerReleaseIdentity.js
 
       - name: Integration contracts
         run: |
@@ -57,6 +58,7 @@ jobs:
           node tools/teller_durable_preparation_contract_tint101_110.mjs
           node tools/teller_records_truth_contract_tint111_120.mjs
           node --test tests/tellerBuyBoxQuestionV1.test.mjs
+          node --test tests/tellerReleaseIdentity.test.mjs
 
       - name: Structural and workflow regressions
         run: |

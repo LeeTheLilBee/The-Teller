@@ -2393,6 +2393,37 @@
         "historical_tests": "pending",
         "vite_build": "pending"
       }
+    },
+    "TINT121-TINT130": {
+      "name": "Hosted Teller release identity and deployment observability",
+      "parent": "a8bf7ce150747de4b9475c81e468ac54a3c8c184",
+      "lane": "real_integration",
+      "status": "source_candidate_pending_ci",
+      "files": [
+        "server/teller/transport/tellerReleaseIdentity.js",
+        "server/teller/transport/tellerPersistenceHttpServer.js",
+        "tests/tellerReleaseIdentity.test.mjs",
+        ".github/workflows/teller-development-regression.yml",
+        "data/teller_release_identity_tint121_130.json",
+        "docs/teller/TELLER_RELEASE_IDENTITY_TINT121_130.md",
+        "checkpoint_manifest.json"
+      ],
+      "truth": {
+        "release_identity_endpoint": true,
+        "health_includes_release_identity": true,
+        "readiness_includes_release_identity": true,
+        "secrets_exposed": false,
+        "database_credentials_exposed": false,
+        "render_mutation": false,
+        "deployment": false,
+        "static_site_activated": false,
+        "hosted_revision_verified": false
+      },
+      "acceptance": {
+        "release_identity_contract": "pending",
+        "development_regression": "pending",
+        "production_build": "pending"
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {

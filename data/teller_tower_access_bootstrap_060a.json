@@ -1,0 +1,15 @@
+{
+  "accepted_initial_role": "owner",
+  "exchange_required": true,
+  "hosted_teller_fail_closed": true,
+  "local_dev_shortcuts_require_explicit_flag": true,
+  "name": "Tower Access Bootstrap and Hosted Query-Clearance Retirement",
+  "pack": "060A",
+  "parent": "90b9ba29b1c82b79dcc3d37931438090563f35e8",
+  "product": "The Teller",
+  "production_https_required": true,
+  "query_clearance_authority": false,
+  "status": "source_ready_unsealed",
+  "teller_view_authority": false,
+  "tower_handoff_required": true
+}

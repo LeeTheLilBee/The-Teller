@@ -1,0 +1,50 @@
+{
+  "accepted_owner_destinations": {
+    "owner_money_workspace": {
+      "surface": "teller-owner-money-workspace"
+    },
+    "payroll_review": {
+      "business": "simpleepay",
+      "calm_mode": "disabled_to_reveal_review_desk",
+      "surface": "teller-owner-payroll-review"
+    }
+  },
+  "depends_on": [
+    "Teller060A",
+    "TWR186",
+    "TWR187",
+    "TWR188",
+    "TWR189"
+  ],
+  "name": "Tower Destination and Return Context Consumption",
+  "navigation_context": {
+    "arbitrary_urls": false,
+    "correlation_id_preserved": true,
+    "destination_app": "teller",
+    "item_id_preserved": true,
+    "native_item_key_can_open_detail": true,
+    "return_apps": [
+      "tower",
+      "clouds"
+    ],
+    "source_apps": [
+      "tower",
+      "clouds"
+    ],
+    "unknown_external_item_not_guessed": true
+  },
+  "next": "TWR190 activate real owner Teller doorway and effective entitlement",
+  "pack": "060B",
+  "parent": "90b9ba29b1c82b79dcc3d37931438090563f35e8",
+  "product": "The Teller",
+  "status": "source_ready_unsealed",
+  "still_inactive": {
+    "bank_authority": false,
+    "capital_authority": false,
+    "effective_teller_entitlement": false,
+    "employee_hosted_access": false,
+    "manager_hosted_access": false,
+    "payroll_execution": false,
+    "teller_launchable": false
+  }
+}

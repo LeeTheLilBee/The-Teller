@@ -5,7 +5,7 @@
     "url": "https://simplee-teller.onrender.com"
   },
   "future_build_environment": {
-    "VITE_TOWER_TELLER_EXCHANGE_URL": "https://simplee-tower-ob.onrender.com/tower/teller/exchange",
+    "VITE_TOWER_TELLER_EXCHANGE_URL": "https://simplee-tower-ob-tunv.onrender.com/tower/teller/exchange",
     "VITE_TELLER_PERSISTENCE_API_URL": "https://simplee-teller-api-staging.onrender.com"
   },
   "current_truth": {

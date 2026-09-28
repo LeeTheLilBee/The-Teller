@@ -55,15 +55,11 @@ It is not placed in URL query parameters, the retained URL fragment, localStorag
 
 Teller's configured primary Tower endpoint is:
 
-`https://simplee-tower-ob.onrender.com/tower/teller/exchange`
+`https://simplee-tower-ob-tunv.onrender.com/tower/teller/exchange`
 
-The primary `simplee-tower-ob` service is currently live on Tower commit:
+The owner-selected canonical Tower service is the secondary Render service `srv-dag3sv2jnfac73bjqj8g` at `simplee-tower-ob-tunv.onrender.com`. The old `simplee-tower-ob.onrender.com` service is **not** the Teller integration target.
 
-`b106db5498d09ae292aa029dda4435c7b1cbfe3c`
-
-The Tower Teller exchange, persistence-token issuer, and persistence-authority files on `b106db5` are byte-identical to the same files on tested Tower commit `26f695c`.
-
-A second Tower service currently has `26f695c` live, but Teller remains configured to use the canonical primary URL above.
+The earlier Teller cross-repository proof against Tower `26f695c` remains historical source evidence. Re-run that security proof against the exact **currently deployed secondary Tower revision** before treating a new Teller hosted crossing as accepted; a matched historical serializer is not a live signed exchange or authenticated owner-browser proof.
 
 The Teller API service is live, but on older Teller commit:
 
@@ -85,7 +81,7 @@ Tower:
 
 Teller static build:
 
-- `VITE_TOWER_TELLER_EXCHANGE_URL=https://simplee-tower-ob.onrender.com/tower/teller/exchange`
+- `VITE_TOWER_TELLER_EXCHANGE_URL=https://simplee-tower-ob-tunv.onrender.com/tower/teller/exchange`
 - `VITE_TELLER_PERSISTENCE_API_URL=https://simplee-teller-api-staging.onrender.com`
 
 Teller API:

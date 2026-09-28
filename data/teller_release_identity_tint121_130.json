@@ -1,0 +1,38 @@
+{
+  "pack": "TINT121-TINT130",
+  "title": "Hosted Teller release identity and deployment observability",
+  "parent": "a8bf7ce150747de4b9475c81e468ac54a3c8c184",
+  "status": "source_candidate_pending_ci",
+  "purpose": "Make the hosted Teller API prove which source revision and protocol contracts are running without exposing secrets.",
+  "endpoints": [
+    "/versionz",
+    "/healthz",
+    "/readyz"
+  ],
+  "release_identity": {
+    "revision_sources": [
+      "TELLER_SOURCE_REVISION",
+      "RENDER_GIT_COMMIT"
+    ],
+    "branch_sources": [
+      "TELLER_SOURCE_BRANCH",
+      "RENDER_GIT_BRANCH"
+    ],
+    "api_contract": "teller-persistence-http.v1",
+    "persistence_token_contract": "teller-persistence-token-v1",
+    "tower_exchange_contract": "tower-teller-exchange.v2",
+    "exposes_signing_secret": false,
+    "exposes_database_credentials": false
+  },
+  "truth": {
+    "render_mutation": false,
+    "deployment": false,
+    "static_site_activated": false,
+    "hosted_revision_verified": false
+  },
+  "acceptance": {
+    "release_identity_unit_tests": "pending",
+    "comprehensive_development_regression": "pending",
+    "production_build": "pending"
+  }
+}

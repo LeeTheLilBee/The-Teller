@@ -19,6 +19,11 @@ import {
 } from "./tellerHostedReadiness.js";
 
 import {
+  readTellerReleaseIdentity,
+  tellerReleaseIdentitySafeSummary,
+} from "./tellerReleaseIdentity.js";
+
+import {
   tellerPersistenceScopeFromClaims,
   verifyTellerPersistenceAccessToken,
 } from "./tellerPersistenceAccessToken.js";
@@ -326,6 +331,14 @@ export function createTellerPersistenceHttpServer({
     );
 
 
+  const release =
+    tellerReleaseIdentitySafeSummary(
+      readTellerReleaseIdentity(
+        env
+      )
+    );
+
+
   if (!config.configured) {
     throw new Error(
       "Teller persistence HTTP transport is not configured."
@@ -431,6 +444,40 @@ export function createTellerPersistenceHttpServer({
           request.method ===
             "GET" &&
           url.pathname ===
+            "/versionz"
+        ) {
+          json(
+            response,
+            200,
+            {
+              status:
+                "ok",
+
+              service:
+                "teller-persistence",
+
+              release,
+
+              database_credentials_exposed:
+                false,
+
+              token_secret_exposed:
+                false,
+
+              request_id:
+                requestId,
+            },
+            responseContext
+          );
+
+          return;
+        }
+
+
+        if (
+          request.method ===
+            "GET" &&
+          url.pathname ===
             "/healthz"
         ) {
           json(
@@ -460,6 +507,8 @@ export function createTellerPersistenceHttpServer({
                 Boolean(
                   config.configured
                 ),
+
+              release,
 
               database_credentials_exposed:
                 false,
@@ -516,6 +565,8 @@ export function createTellerPersistenceHttpServer({
                   ?.hostedRuntime
                   ?.runtime ||
                 "local",
+
+              release,
 
               database_credentials_exposed:
                 false,

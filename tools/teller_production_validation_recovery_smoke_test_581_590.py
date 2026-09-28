@@ -44,6 +44,10 @@ duplicate = read(
     "src/teller/recovery/tellerSubmissionGuard.js"
 )
 
+durable_preparation = read(
+    "src/teller/records/tellerDurablePreparation.js"
+)
+
 correction = read(
     "src/teller/recovery/tellerRecordCorrection.js"
 )
@@ -196,18 +200,33 @@ require(
 
 
 # GP588
+# Modern durable preparation records one generic blocked event and preserves
+# the concrete failure reason in result.status. The old duplicate/validation
+# event names were retired when authenticated durability was introduced.
 for marker in [
     "validateTellerProductionRecord",
     "findDuplicateTellerRecord",
     "recordRecoveryEvents",
-    "duplicate_preparation_blocked",
-    "record_validation_blocked",
+    "record_preparation_blocked",
+    "result.status",
     "session_records_recovered",
     "replaceSessionRecords",
 ]:
     require(
         marker in app,
         f"App reliability gate missing {marker}"
+    )
+
+for marker in [
+    'status: "validation_failed"',
+    'status: "duplicate"',
+    'status: "submission_in_progress"',
+    'status: "authenticated_repository_unavailable"',
+    'status: "persistence_failed"',
+]:
+    require(
+        marker in durable_preparation,
+        f"Durable preparation reliability status missing {marker}"
     )
 
 

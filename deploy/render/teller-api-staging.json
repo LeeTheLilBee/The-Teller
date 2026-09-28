@@ -22,7 +22,7 @@
     "TELLER_DATABASE_POOL_MAX": "5",
     "TELLER_DATABASE_STATEMENT_TIMEOUT_MS": "15000",
     "TELLER_TRANSPORT_MAX_BODY_BYTES": "524288",
-    "TELLER_ALLOWED_ORIGINS": "https://simplee-teller.onrender.com,https://simplee-tower-ob.onrender.com"
+    "TELLER_ALLOWED_ORIGINS": "https://simplee-teller.onrender.com,https://simplee-tower-ob-tunv.onrender.com"
   },
   "secret_runtime": {
     "DATABASE_URL": "Render INTERNAL database URL for simplee-teller-postgres-staging",

@@ -1,0 +1,225 @@
+.teller-recovery-panel {
+  margin-top: 20px;
+  border:
+    1px solid rgba(119, 226, 183, 0.15);
+  border-radius: 20px;
+  padding: 17px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(93, 190, 153, 0.055),
+      rgba(255, 255, 255, 0.025)
+    );
+}
+
+.teller-recovery-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.teller-recovery-head h2,
+.teller-recovery-record-tools h3,
+.teller-recovery-events h3 {
+  margin: 0;
+}
+
+.teller-recovery-head p,
+.teller-recovery-snapshot p,
+.teller-recovery-lock-copy,
+.teller-recovery-empty {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.teller-recovery-health {
+  display: flex;
+  gap: 9px;
+}
+
+.teller-recovery-health > div {
+  min-width: 72px;
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.teller-recovery-health strong {
+  font-size: 1.35rem;
+}
+
+.teller-recovery-health span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+}
+
+.teller-recovery-truth {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.teller-recovery-truth > div {
+  display: grid;
+  gap: 3px;
+  border-radius: 11px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.teller-recovery-truth small {
+  color: rgba(255, 255, 255, 0.47);
+}
+
+.teller-recovery-snapshot,
+.teller-recovery-record-tools,
+.teller-recovery-events {
+  margin-top: 14px;
+  border:
+    1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 15px;
+  padding: 13px;
+  background: rgba(255, 255, 255, 0.027);
+}
+
+.teller-recovery-snapshot {
+  display: grid;
+  gap: 10px;
+}
+
+.teller-recovery-snapshot p {
+  margin-bottom: 0;
+  font-size: 0.79rem;
+}
+
+.teller-recovery-snapshot > small {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.teller-recovery-button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.teller-recovery-button-row button,
+.teller-recovery-lock-button {
+  border:
+    1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.teller-recovery-button-row button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.teller-recovery-record-tools {
+  display: grid;
+  gap: 11px;
+}
+
+.teller-recovery-record-tools label {
+  display: grid;
+  gap: 5px;
+}
+
+.teller-recovery-record-tools label > span {
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.teller-recovery-record-tools select,
+.teller-recovery-record-tools textarea,
+.teller-recovery-record-tools input {
+  width: 100%;
+  box-sizing: border-box;
+  border:
+    1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 11px;
+  padding: 10px 11px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font: inherit;
+}
+
+.teller-recovery-record-tools select option {
+  background: #191725;
+  color: #fff;
+}
+
+.teller-recovery-record-tools textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.teller-recovery-selected-state {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.76rem;
+}
+
+.teller-recovery-lock-copy {
+  margin: 0;
+  font-size: 0.73rem;
+}
+
+.teller-recovery-event-list {
+  display: grid;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.teller-recovery-event-list article {
+  display: grid;
+  gap: 3px;
+  border-radius: 10px;
+  padding: 9px 10px;
+  background: rgba(255, 255, 255, 0.038);
+}
+
+.teller-recovery-event-list span {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.74rem;
+}
+
+.teller-recovery-message {
+  margin-top: 12px;
+  border-radius: 11px;
+  padding: 10px 12px;
+  background: rgba(111, 223, 188, 0.08);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 760px) {
+  .teller-recovery-head {
+    flex-direction: column;
+  }
+
+  .teller-recovery-health > div {
+    text-align: left;
+  }
+
+  .teller-recovery-truth {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .teller-recovery-truth {
+    grid-template-columns: 1fr;
+  }
+}

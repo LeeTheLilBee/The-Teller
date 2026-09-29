@@ -1,0 +1,38 @@
+{
+  "pack": "TINT091-TINT100",
+  "name": "Live Tower session expiry and authenticated transport revocation",
+  "parent": "620a2c7af35272b333fca6c9bde3cf5f347ba742",
+  "status": "source_ci_verified_hosted_proof_pending",
+  "behavior": {
+    "expiry_source": "Tower v2 response expires_at_epoch (also installed as ISO expires_at)",
+    "production_storage_fallback": false,
+    "expired_browser_live_session_recognized": false,
+    "expired_persistence_access_token_returned": false,
+    "authenticated_transport_rechecks_live_session_each_request": true,
+    "stale_captured_transport_fails_before_fetch": true,
+    "ui_unmounts_and_locks_at_expiry": true,
+    "automatic_token_refresh": false,
+    "fresh_tower_handoff_required_to_reenter": true
+  },
+  "security_boundary": {
+    "server_cryptographic_verification_unchanged": true,
+    "tower_issuer_unchanged": true,
+    "browser_signing_secret": false,
+    "browser_database_credentials": false,
+    "local_or_session_storage_token": false,
+    "session_token_log": false,
+    "teller_to_vault_direct": false,
+    "bank_payment_or_payroll_execution": false
+  },
+  "test_status": "passed_in_github_actions",
+  "hosted_crossing_proven": false,
+  "tower_deployment": false,
+  "teller_api_deployment": false,
+  "teller_static_activation": false,
+  "ci": {
+    "run_id": 36273531735,
+    "head": "28f97d708cd74fa227e78cd32f5147e2dc46b97e",
+    "conclusion": "success",
+    "url": "https://github.com/LeeTheLilBee/The-Teller/actions/runs/36273531735"
+  }
+}

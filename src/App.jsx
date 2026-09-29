@@ -1,19 +1,50 @@
 import React, {
   Component,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
-import EmployeeDocumentVaultPanel from "./teller/EmployeeDocumentVaultPanel.jsx";
-import ManagerStandaloneWorkspace from "./teller/ManagerStandaloneWorkspace.jsx";
-import EmployeeStandaloneWorkspace from "./teller/EmployeeStandaloneWorkspace.jsx";
-import OwnerMoneyWorkspace from "./teller/OwnerMoneyWorkspace.jsx";
-import TowerBackupWorkspace from "./teller/TowerBackupWorkspace.jsx";
+import EmployeeStandaloneWorkspace
+  from "./teller/EmployeeStandaloneWorkspace.jsx";
+
+import ManagerStandaloneWorkspace
+  from "./teller/ManagerStandaloneWorkspace.jsx";
+
+import OwnerMoneyWorkspace
+  from "./teller/OwnerMoneyWorkspace.jsx";
+
+import TellerFormsWorkspace
+  from "./teller/forms/TellerFormsWorkspace.jsx";
+
+import TellerCaptureWorkspace
+  from "./teller/capture/TellerCaptureWorkspace.jsx";
+
+import TellerRecordsWorkspace
+  from "./teller/records/TellerRecordsWorkspace.jsx";
 
 import {
-  resolveTellerAccess,
-  tellerDevShortcutsEnabled,
-} from "./teller/towerAccess.js";
+  readTellerLiveTowerSession,
+  readTellerTowerSession,
+} from "./teller/tellerRuntimeSession.js";
+
+import {
+  validateTellerProductionRecord,
+} from "./teller/recovery/tellerProductionValidation.js";
+
+import {
+  findDuplicateTellerRecord,
+} from "./teller/recovery/tellerSubmissionGuard.js";
+
+import {
+  createTellerPersistenceTransportFromRuntime,
+} from "./teller/persistence/tellerPersistenceTransport.js";
+
+import {
+  tellerRecordScopeKey,
+  mergeTellerDurableRecords,
+  resolveTellerPreparedRecord,
+} from "./teller/records/tellerDurablePreparation.js";
 
 import "./teller/tellerShell.css";
 
@@ -27,17 +58,21 @@ class TellerErrorBoundary extends Component {
     };
   }
 
+
   static getDerivedStateFromError(error) {
     return {
       error,
     };
   }
 
+
   render() {
     if (this.state.error) {
       return (
         <main className="teller-error">
+
           <section className="teller-error-card">
+
             <p className="teller-kicker">
               The Teller caught a screen error
             </p>
@@ -52,7 +87,9 @@ class TellerErrorBoundary extends Component {
                 this.state.error
               )}
             </pre>
+
           </section>
+
         </main>
       );
     }
@@ -62,39 +99,16 @@ class TellerErrorBoundary extends Component {
 }
 
 
-function TellerOpeningScreen() {
-  return (
-    <main className="teller-shell">
-      <div className="teller-lock-wrap">
-        <section className="teller-lock-card">
-          <p className="teller-kicker">
-            Tower handoff
-          </p>
-
-          <h1>
-            Opening The Teller…
-          </h1>
-
-          <p>
-            The Teller is checking the protected
-            Tower handoff before opening your
-            money workspace.
-          </p>
-        </section>
-      </div>
-    </main>
-  );
-}
-
-
 function TowerLockedScreen({
-  reason,
-  devShortcuts,
+  reason = "",
 }) {
   return (
     <main className="teller-shell">
+
       <div className="teller-lock-wrap">
+
         <section className="teller-lock-card">
+
           <p className="teller-kicker">
             Tower clearance required
           </p>
@@ -104,58 +118,42 @@ function TowerLockedScreen({
           </h1>
 
           <p>
-            This workspace is not a public doorway.
-            Hosted employee, manager, and owner access
-            must be issued and verified by The Tower.
+            The Tower must issue an employee,
+            manager, or owner Teller session
+            before this workspace opens.
           </p>
 
-          {reason ? (
-            <p>
-              Access status · {reason}
-            </p>
-          ) : null}
+          {
+            reason
+              ? (
+                  <p>
+                    Access status · {reason}
+                  </p>
+                )
+              : null
+          }
 
-          {devShortcuts ? (
-            <div className="teller-dev-box">
-              <strong>
-                Local development shortcuts
-              </strong>
-
-              <p>
-                These links work only when Vite is
-                running in development mode and
-                VITE_TELLER_DEV_CLEARANCE_ENABLED=1.
-              </p>
-
-              <div className="teller-dev-links">
-                <a href="?tower_clearance=employee">
-                  Open as Employee
-                </a>
-
-                <a href="?tower_clearance=manager">
-                  Open as Manager
-                </a>
-
-                <a href="?tower_clearance=owner">
-                  Open as Owner
-                </a>
-              </div>
-            </div>
-          ) : null}
         </section>
+
       </div>
+
     </main>
   );
 }
 
 
 function TellerHeader({
-  clearance,
-  source,
+  role,
+  recordCount,
+  onOpenForms,
+  onOpenCapture,
+  onOpenRecords,
 }) {
   return (
     <nav className="teller-topbar">
+
       <div className="teller-topbar-inner">
+
         <div>
           <p className="teller-kicker">
             Opened by The Tower
@@ -166,62 +164,73 @@ function TellerHeader({
           </h1>
         </div>
 
-        <div className="teller-clearance-chip">
-          Tower clearance · {clearance}
-          {source === "explicit_local_development"
-            ? " · local dev"
-            : ""}
+
+        <div className="teller-global-actions">
+
+          <button
+            type="button"
+            className="teller-global-new"
+            onClick={onOpenForms}
+          >
+            + New
+          </button>
+
+
+          <button
+            type="button"
+            className="teller-global-new teller-global-scan"
+            onClick={onOpenCapture}
+          >
+            Scan
+          </button>
+
+
+          <button
+            type="button"
+            className="teller-global-new teller-global-search"
+            onClick={onOpenRecords}
+          >
+            Search
+            {
+              recordCount
+                ? ` · ${recordCount}`
+                : ""
+            }
+          </button>
+
+
+          <div className="teller-clearance-chip">
+            Tower clearance · {role}
+          </div>
+
         </div>
+
       </div>
+
     </nav>
   );
 }
 
 
-function workspaceFor({
-  clearance,
-  devShortcuts,
-  navigationContext,
+function TellerWorkspace({
+  role,
 }) {
-
-  if (
-    clearance === "owner"
-  ) {
+  if (role === "employee") {
     return (
-      <OwnerMoneyWorkspace
-        navigationContext={
-          navigationContext
-        }
-      />
+      <EmployeeStandaloneWorkspace />
     );
   }
 
-  if (
-    devShortcuts &&
-    clearance === "manager"
-  ) {
+  if (role === "manager") {
     return (
       <ManagerStandaloneWorkspace />
     );
   }
 
-  if (
-    devShortcuts &&
-    clearance === "employee"
-  ) {
+  if (role === "owner") {
     return (
-      <>
-        <EmployeeDocumentVaultPanel />
-        <EmployeeStandaloneWorkspace />
-      </>
+      <OwnerMoneyWorkspace />
     );
-  }
-
-  if (
-    devShortcuts &&
-    clearance === "tower"
-  ) {
-    return <TowerBackupWorkspace />;
   }
 
   return null;
@@ -229,140 +238,617 @@ function workspaceFor({
 
 
 export default function App() {
-  const devShortcuts =
-    tellerDevShortcutsEnabled(
-      import.meta.env
-    );
+  const [
+    formsOpen,
+    setFormsOpen,
+  ] = useState(false);
+
 
   const [
-    access,
-    setAccess,
-  ] = useState({
-    status: "checking",
-    clearance: "",
-    source: "none",
-    reason: "",
-    navigationContext: null,
-  });
+    captureOpen,
+    setCaptureOpen,
+  ] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
 
-    resolveTellerAccess({
-      locationLike:
-        window.location,
+  const [
+    recordsOpen,
+    setRecordsOpen,
+  ] = useState(false);
 
-      historyLike:
-        window.history,
 
-      fetchImpl:
-        window.fetch.bind(
-          window
-        ),
+  const [
+    verifiedAutofillHandoff,
+    setVerifiedAutofillHandoff,
+  ] = useState(null);
 
-      env:
-        import.meta.env,
-    })
-      .then((result) => {
-        if (!cancelled) {
-          setAccess(
-            result
+
+  const [
+    sessionRecords,
+    setSessionRecords,
+  ] = useState([]);
+
+
+  const sessionRecordsRef =
+    useRef([]);
+
+
+  const pendingRecordIdsRef =
+    useRef(new Set());
+
+
+  const lastTowerIdentityRef =
+    useRef("");
+
+
+  const [
+    recordRecoveryEvents,
+    setRecordRecoveryEvents,
+  ] = useState([]);
+
+  const [repositoryStatus, setRepositoryStatus] =
+    useState("not_connected");
+
+
+  const towerSession =
+    readTellerTowerSession();
+
+
+  const liveTowerSession =
+    readTellerLiveTowerSession();
+
+
+  /*
+   * Do not even construct the hosted persistence
+   * transport until the LIVE Tower session exists.
+   *
+   * A stored UI-only Teller session is insufficient.
+   */
+  const persistenceTransport =
+    liveTowerSession
+      ? createTellerPersistenceTransportFromRuntime()
+      : null;
+
+
+  const persistenceIdentityKey =
+    persistenceTransport
+      ?.identityKey ||
+    "";
+
+
+  const towerIdentityKey =
+    tellerRecordScopeKey(towerSession);
+
+
+  useEffect(
+    () => {
+      sessionRecordsRef.current =
+        sessionRecords;
+    },
+    [
+      sessionRecords,
+    ]
+  );
+
+
+  useEffect(
+    () => {
+      if (!towerIdentityKey) {
+        lastTowerIdentityRef.current =
+          "";
+
+        return;
+      }
+
+
+      const previous =
+        lastTowerIdentityRef.current;
+
+
+      if (
+        previous &&
+        previous !==
+          towerIdentityKey
+      ) {
+        sessionRecordsRef.current =
+          [];
+
+
+        setSessionRecords(
+          []
+        );
+
+
+        addRecoveryEvent({
+          event:
+            "tower_identity_changed",
+
+          reason:
+            "Teller cleared in-memory records because the Tower session identity or business changed.",
+        });
+      }
+
+
+      lastTowerIdentityRef.current =
+        towerIdentityKey;
+    },
+    [
+      towerIdentityKey,
+    ]
+  );
+
+
+  useEffect(
+    () => {
+      if (
+        !towerSession ||
+        !persistenceTransport?.connected
+      ) {
+        setRepositoryStatus("not_connected");
+        return undefined;
+      }
+
+      setRepositoryStatus("checking");
+
+      let cancelled =
+        false;
+
+
+      async function hydrate() {
+        try {
+          const result =
+            await persistenceTransport
+              .searchRecords({
+                limit:
+                  100,
+              });
+
+
+          if (
+            cancelled ||
+            tellerRecordScopeKey(readTellerTowerSession()) !== towerIdentityKey
+          ) {
+            return;
+          }
+
+
+          const records =
+            Array.isArray(
+              result?.records
+            )
+              ? result.records
+              : [];
+
+
+          const reconciled =
+            mergeTellerDurableRecords(
+              sessionRecordsRef.current,
+              records
+            );
+
+
+          sessionRecordsRef.current =
+            reconciled;
+
+
+          setSessionRecords(
+            reconciled
           );
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setAccess({
-            status: "locked",
-            clearance: "",
-            source: "none",
+
+          setRepositoryStatus("ready");
+
+          addRecoveryEvent({
+            event:
+              "production_records_hydrated",
+
             reason:
-              "tower_access_bootstrap_failed",
+              "Teller restored authenticated durable records from the production repository.",
+
+            record_count:
+              records.length,
+          });
+
+        } catch (error) {
+
+          if (cancelled) {
+            return;
+          }
+
+
+          setRepositoryStatus("error");
+
+          addRecoveryEvent({
+            event:
+              "production_hydration_failed",
+
+            reason:
+              String(
+                error?.message ||
+                "Authenticated Teller persistence hydration failed."
+              ),
           });
         }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+      }
 
 
-  if (
-    access.status
-    === "checking"
-  ) {
+      void hydrate();
+
+
+      return () => {
+        cancelled =
+          true;
+      };
+    },
+    [
+      towerIdentityKey,
+      persistenceIdentityKey,
+    ]
+  );
+
+
+  if (!towerSession) {
     return (
       <TellerErrorBoundary>
-        <TellerOpeningScreen />
+        <TowerLockedScreen />
       </TellerErrorBoundary>
     );
   }
 
 
-  if (
-    access.status
-    !== "granted"
-  ) {
-    return (
-      <TellerErrorBoundary>
-        <TowerLockedScreen
-          reason={
-            access.reason
-          }
-          devShortcuts={
-            devShortcuts
-          }
-        />
-      </TellerErrorBoundary>
-    );
+  function closeAllWorkspaces() {
+    setFormsOpen(false);
+    setCaptureOpen(false);
+    setRecordsOpen(false);
   }
 
 
-  const workspace =
-    workspaceFor({
-      clearance:
-        access.clearance,
+  function openForms() {
+    closeAllWorkspaces();
+    setFormsOpen(true);
+  }
 
-      devShortcuts,
 
-      navigationContext:
-        access.navigationContext,
+  function openCapture() {
+    closeAllWorkspaces();
+    setCaptureOpen(true);
+  }
+
+
+  function openRecords() {
+    closeAllWorkspaces();
+    setRecordsOpen(true);
+  }
+
+
+  async function searchDurableRecords(query) {
+    if (
+      !persistenceTransport?.connected ||
+      repositoryStatus !== "ready"
+    ) {
+      throw new Error("Authenticated repository is not verified.");
+    }
+
+    const result = await persistenceTransport.searchRecords({
+      text: query?.text || "",
+      category: query?.category || "",
+      status: query?.status || "",
+      limit: 100,
     });
 
+    // The API applies Tower-derived RLS business scoping. Do not adopt
+    // a late response if the live browser identity has changed.
+    if (
+      tellerRecordScopeKey(readTellerTowerSession()) !== towerIdentityKey
+    ) {
+      throw new Error("Tower session changed before search completed.");
+    }
 
-  if (!workspace) {
-    return (
-      <TellerErrorBoundary>
-        <TowerLockedScreen
-          reason="unsupported_clearance"
-          devShortcuts={
-            devShortcuts
-          }
-        />
-      </TellerErrorBoundary>
+    if (!Array.isArray(result?.records)) {
+      throw new Error("Authenticated search returned no records array.");
+    }
+    return result.records;
+  }
+
+
+  function handleVerifiedAutofill(
+    handoff
+  ) {
+    setVerifiedAutofillHandoff(
+      handoff
     );
+
+    closeAllWorkspaces();
+    setFormsOpen(true);
+  }
+
+
+  function addRecoveryEvent(
+    event
+  ) {
+    setRecordRecoveryEvents(
+      (current) => [
+        {
+          event_id:
+            `recovery_event_${Date.now()}_${Math.random()
+              .toString(36)
+              .slice(2, 8)}`,
+
+          at:
+            new Date().toISOString(),
+
+          ...event,
+        },
+
+        ...current,
+      ].slice(0, 100)
+    );
+  }
+
+
+  async function handleRecordPrepared(
+    record
+  ) {
+    const result = await resolveTellerPreparedRecord({
+      record,
+      readRecords: () => sessionRecordsRef.current,
+      validateRecord: validateTellerProductionRecord,
+      findDuplicate: findDuplicateTellerRecord,
+      pendingIds: pendingRecordIdsRef.current,
+      transport: persistenceTransport,
+      hostedSession:
+        towerSession?.source === "tower_window_injection",
+      expectedScopeKey: towerIdentityKey,
+      readScopeKey: () =>
+        tellerRecordScopeKey(readTellerTowerSession()),
+    });
+
+    if (!result.accepted) {
+      addRecoveryEvent({
+        // Retain the historical failure vocabulary for the recovery panel
+        // while never admitting an unacknowledged record to the durable list.
+        event: (
+          result.status === "persistence_failed" ||
+          result.status === "invalid_durable_ack" ||
+          result.status === "authenticated_repository_unavailable"
+        )
+          ? "record_persistence_failed"
+          : result.status === "duplicate"
+            ? "duplicate_preparation_blocked"
+            : result.status === "validation_failed"
+              ? "record_validation_blocked"
+              : "record_preparation_blocked",
+        record_id: record?.record_id || "",
+        reason: result.status,
+        ...(result.problemCount
+          ? { problem_count: result.problemCount }
+          : {}),
+        ...(result.duplicateOf
+          ? { duplicate_of: result.duplicateOf }
+          : {}),
+      });
+      return result;
+    }
+
+    // A record can be displayed as durable only AFTER an authenticated
+    // acknowledgement. In DEV/UI-only mode it is session-only instead.
+    if (
+      tellerRecordScopeKey(readTellerTowerSession()) !== towerIdentityKey
+    ) {
+      addRecoveryEvent({
+        event: "record_preparation_blocked",
+        record_id: record?.record_id || "",
+        reason: "tower_identity_changed",
+      });
+      return { accepted: false, status: "tower_identity_changed" };
+    }
+
+    const accepted = result.record;
+    const nextRecords = [
+      accepted,
+      ...sessionRecordsRef.current.filter(
+        (item) => item.record_id !== accepted.record_id
+      ),
+    ].slice(0, 250);
+
+    sessionRecordsRef.current = nextRecords;
+    setSessionRecords(nextRecords);
+
+    addRecoveryEvent({
+      event: result.durable
+        ? "record_persisted"
+        : "record_prepared_session_only",
+      record_id: accepted.record_id,
+      reason: result.durable
+        ? (
+            result.idempotentReplay
+              ? "Authenticated repository confirmed an existing durable record."
+              : "Authenticated repository acknowledged the durable record."
+          )
+        : "Prepared in this browser session only; no durable save was requested.",
+      ...(result.durable
+        ? { persistence_revision: accepted.persistence_revision || 1 }
+        : {}),
+    });
+    return result;
+  }
+
+
+  function replaceSessionRecords(
+    nextRecords
+  ) {
+    if (towerSession?.source === "tower_window_injection") {
+      addRecoveryEvent({
+        event: "record_recovery_requires_repository",
+        reason: "Hosted durable records must be restored through authenticated repository hydration, not an in-memory snapshot.",
+      });
+      return;
+    }
+
+    const resolvedRecords =
+      Array.isArray(
+        nextRecords
+      )
+        ? nextRecords.slice(
+            0,
+            250
+          )
+        : [];
+
+
+    sessionRecordsRef.current =
+      resolvedRecords;
+
+
+    setSessionRecords(
+      resolvedRecords
+    );
+
+
+    addRecoveryEvent({
+      event:
+        "session_records_recovered",
+
+      reason:
+        "Teller session records were restored from an in-memory recovery point.",
+    });
   }
 
 
   return (
     <TellerErrorBoundary>
+
       <div className="teller-shell">
+
         <TellerHeader
-          clearance={
-            access.clearance
+          role={
+            towerSession.role
           }
-          source={
-            access.source
+
+          recordCount={
+            sessionRecords.length
+          }
+
+          onOpenForms={
+            openForms
+          }
+
+          onOpenCapture={
+            openCapture
+          }
+
+          onOpenRecords={
+            openRecords
           }
         />
 
+
         <main className="teller-main">
+
           <section className="teller-screen-card">
-            {workspace}
+
+            <TellerWorkspace
+              role={
+                towerSession.role
+              }
+            />
+
           </section>
+
         </main>
+
+
+        <TellerFormsWorkspace
+          open={
+            formsOpen
+          }
+
+          onClose={() =>
+            setFormsOpen(false)
+          }
+
+          role={
+            towerSession.role
+          }
+
+          towerSession={
+            towerSession
+          }
+
+          externalHandoff={
+            verifiedAutofillHandoff
+          }
+
+          onHandoffConsumed={() =>
+            setVerifiedAutofillHandoff(
+              null
+            )
+          }
+
+          onRecordPrepared={
+            handleRecordPrepared
+          }
+        />
+
+
+        <TellerCaptureWorkspace
+          open={
+            captureOpen
+          }
+
+          onClose={() =>
+            setCaptureOpen(false)
+          }
+
+          role={
+            towerSession.role
+          }
+
+          onFormHandoff={
+            handleVerifiedAutofill
+          }
+        />
+
+
+        <TellerRecordsWorkspace
+          open={
+            recordsOpen
+          }
+
+          onClose={() =>
+            setRecordsOpen(false)
+          }
+
+          role={
+            towerSession.role
+          }
+
+          records={
+            sessionRecords
+          }
+
+          recoveryEvents={
+            recordRecoveryEvents
+          }
+
+          onReplaceRecords={
+            replaceSessionRecords
+          }
+
+          repository={{
+            repository_id: "teller_authenticated_api",
+            status: repositoryStatus,
+            configured: Boolean(persistenceTransport?.connected),
+            persistent: repositoryStatus === "ready",
+          }}
+
+          onSearchRemote={
+            repositoryStatus === "ready" && persistenceTransport?.connected
+              ? searchDurableRecords
+              : null
+          }
+        />
+
       </div>
+
     </TellerErrorBoundary>
   );
 }

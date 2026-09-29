@@ -1,0 +1,297 @@
+.teller-records-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1090;
+  overflow-y: auto;
+  background: rgba(7, 8, 15, 0.76);
+  backdrop-filter: blur(14px);
+  color: #fff;
+}
+
+.teller-records-shell {
+  width: min(1120px, calc(100% - 32px));
+  box-sizing: border-box;
+  margin: 28px auto;
+  border:
+    1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 24px;
+  padding: 22px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(24, 23, 37, 0.99),
+      rgba(13, 14, 23, 0.99)
+    );
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.4);
+}
+
+.teller-records-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.teller-records-header h1,
+.teller-record-results-head h2 {
+  margin: 0;
+}
+
+.teller-records-header p {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.teller-records-kicker {
+  margin: 0 0 5px;
+  color: #cdb6ff;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.teller-records-close {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.teller-records-truth {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.teller-records-truth > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  border-radius: 13px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.teller-records-truth small,
+.teller-record-meta small {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.teller-record-search-controls {
+  margin-top: 18px;
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.028);
+}
+
+.teller-record-search-box,
+.teller-record-filter {
+  display: grid;
+  gap: 6px;
+}
+
+.teller-record-search-box > span,
+.teller-record-filter > span {
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.teller-record-search-box input,
+.teller-record-filter select {
+  width: 100%;
+  box-sizing: border-box;
+  border:
+    1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 12px;
+  padding: 11px 12px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #fff;
+  font: inherit;
+}
+
+.teller-record-filter select option {
+  background: #191725;
+  color: #fff;
+}
+
+.teller-record-filter-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr))
+    auto;
+  gap: 9px;
+  margin-top: 12px;
+  align-items: end;
+}
+
+.teller-record-clear-filters {
+  height: 42px;
+  border:
+    1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 12px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.teller-record-results {
+  margin-top: 22px;
+}
+
+.teller-record-results-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.teller-record-results-head > span {
+  max-width: 380px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.74rem;
+  text-align: right;
+}
+
+.teller-record-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.teller-record-card {
+  border:
+    1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.teller-record-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.teller-record-card-top > div {
+  display: grid;
+  gap: 3px;
+}
+
+.teller-record-card-top small {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.teller-record-card-top > span {
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: rgba(205, 182, 255, 0.09);
+  color: rgba(255, 255, 255, 0.69);
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.teller-record-meta {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.teller-record-meta > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  border-radius: 11px;
+  padding: 9px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.teller-record-meta strong {
+  overflow-wrap: anywhere;
+}
+
+.teller-record-card-truth {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 11px;
+}
+
+.teller-record-card-truth span {
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: rgba(113, 226, 177, 0.06);
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.teller-record-empty,
+.teller-record-production-boundary {
+  margin-top: 14px;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.teller-record-empty {
+  border:
+    1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.teller-record-production-boundary {
+  border:
+    1px solid rgba(255, 195, 103, 0.16);
+  background: rgba(255, 195, 103, 0.055);
+}
+
+.teller-record-empty p,
+.teller-record-production-boundary p {
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 850px) {
+  .teller-records-truth,
+  .teller-record-meta {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .teller-record-filter-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .teller-records-shell {
+    width: calc(100% - 16px);
+    margin: 8px auto;
+    padding: 16px;
+  }
+
+  .teller-records-truth,
+  .teller-record-meta,
+  .teller-record-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-record-results-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .teller-record-results-head > span {
+    text-align: left;
+  }
+}

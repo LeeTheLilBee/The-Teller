@@ -1,0 +1,55 @@
+{
+  "pack": "GP521-GP530",
+  "name": "People + Employment Intake",
+  "parent": "afd8a276ca8a841cb8a27836f9f5507252bf82af",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T15:15:57.579244+00:00",
+  "completed": {
+    "GP521": "canonical person record model",
+    "GP522": "canonical employment relationship model",
+    "GP523": "employee setup packet planner",
+    "GP524": "employee personal profile intake",
+    "GP525": "employment assignment intake",
+    "GP526": "compensation setup intake",
+    "GP527": "employment document workflow checklist",
+    "GP528": "separation/final-pay intake",
+    "GP529": "progressive People Intake UI inside Forms & Requests",
+    "GP530": "regression wall and acceptance evidence"
+  },
+  "new_forms": [
+    "employee_personal_profile",
+    "employment_assignment_setup",
+    "compensation_setup_request",
+    "employment_document_checklist",
+    "final_pay_termination_request"
+  ],
+  "employee_setup_packet": [
+    "new_hire_request",
+    "employee_personal_profile",
+    "employment_assignment_setup",
+    "compensation_setup_request",
+    "employment_document_checklist"
+  ],
+  "truth": {
+    "production_people_database_connected": false,
+    "production_employment_database_connected": false,
+    "prepared_packets_are_records": false,
+    "session_memory_only": true,
+    "official_tax_forms_embedded": false,
+    "employment_eligibility_document_numbers_collected": false,
+    "raw_ssn_tin_collected": false,
+    "raw_bank_credentials_collected": false,
+    "scanner_ocr_connected": false,
+    "tower_api_connected": false,
+    "direct_vault_access": false
+  },
+  "next": {
+    "pack": "GP531-GP540",
+    "name": "Payroll + Payment Intake"
+  },
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false
+  }
+}

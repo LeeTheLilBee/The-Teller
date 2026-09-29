@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+import { getTellerRuntimeActor } from "./tellerRuntimeSession.js";
 import {
   createBridgeId,
   createTowerBackupItem,
@@ -34,16 +35,7 @@ function saveSeenEmployeeResponseIds(ids) {
   }
 }
 
-const portalEmployee = {
-  name: "Maya J.",
-  businessKey: "simpleepay",
-  businessLabel: "SimpleePay",
-  role: "Payroll Assistant",
-  manager: "Manager Portal",
-  hours: "32.5",
-  payStatus: "Pending review",
-  nextPayday: "Friday",
-};
+const portalEmployee = getTellerRuntimeActor("employee");
 
 const employeeRequestTypes = [
   ["missing_punch", "Missing punch"],
@@ -53,7 +45,7 @@ const employeeRequestTypes = [
   ["schedule_question", "Schedule question"],
   ["tax_document", "Tax document"],
   ["manager_help", "Need manager help"],
-  ["tower_record", "Tower record / secure document request"],
+  ["tower_record", "Secure document / proof request"],
 ];
 
 function EmployeeBadge({ children, tone = "quiet" }) {
@@ -557,7 +549,7 @@ saveTowerBackupItem(towerBackup);
     pushEmployeeNotice(createEmployeeNotice({
       type: followUp.requestType === "tower_record" ? "tower" : "sent",
       title: "Follow-up sent",
-      body: "Your added information was sent back to the manager and backed up to The Tower.",
+      body: "Your added information was sent back to the manager and recorded in the Teller workflow.",
       target: followUp.id,
     }));
     setEmployeeNotificationsOpen(true);
@@ -594,7 +586,7 @@ saveTowerBackupItem(towerBackup);
       source: "employee_portal",
       action: "Employee sent request to manager",
       target: request.title,
-      summary: "Employee-to-manager request backed up to The Tower local handoff queue.",
+      summary: "Employee-to-manager request recorded for workflow review.",
       payload: request,
     });
 
@@ -603,8 +595,8 @@ saveTowerBackupItem(towerBackup);
 
     pushEmployeeNotice(createEmployeeNotice({
       type: request.requestType === "tower_record" ? "tower" : "sent",
-      title: request.requestType === "tower_record" ? "Tower request sent" : "Sent to manager",
-      body: `${request.title} was sent to your manager and backed up to The Tower.`,
+      title: request.requestType === "tower_record" ? "Secure request sent" : "Sent to manager",
+      body: `${request.title} was sent to your manager and recorded in the Teller workflow.`,
       target: request.id,
     }));
     setEmployeeNotificationsOpen(true);
@@ -613,7 +605,7 @@ saveTowerBackupItem(towerBackup);
       {
         id: createBridgeId("EMP-ACTIVITY"),
         title: "Sent to manager",
-        body: `${request.title} was sent to the manager board and backed up to The Tower.`,
+        body: `${request.title} was sent to the manager board and recorded in the Teller workflow.`,
         createdAt: new Date().toISOString(),
         requestId: request.id,
         towerBackupId: towerBackup.id,
@@ -654,7 +646,7 @@ saveTowerBackupItem(towerBackup);
           <h1>Pay questions, proof, and manager help.</h1>
           <p>
             This is the employee’s calm money lane. Hours and payroll status are visible here.
-            Questions or proof can be sent to the manager, and the request is backed up to The Tower.
+            Questions or proof can be sent to the manager, and the request is recorded in the Teller workflow.
           </p>
 
           <div className="emp-command-badges">

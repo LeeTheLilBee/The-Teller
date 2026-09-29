@@ -1,0 +1,52 @@
+{
+  "pack_id": "GP471-GP480",
+  "title": "TELLER \u2014 WORKFLOW-SAFE REQUEST STATUS WIRING",
+  "source_app": "teller",
+  "target_app": "tower",
+  "doctrine": {
+    "tower": "face and permission authority",
+    "teller": "workflow request source and workflow operator",
+    "vault": "sealed memory that answers Tower only",
+    "key_rule": "Teller can ask. Tower must decide. Vault only answers Tower."
+  },
+  "purpose": [
+    "convert Teller queue items into workflow-safe status cards",
+    "support employee/manager/owner role display policies",
+    "redact sensitive labels for employee/vendor/tenant contexts",
+    "surface next Teller action without exposing Vault details",
+    "prepare later UI wiring without adding visible UI clutter now"
+  ],
+  "safe_status_outputs": [
+    "request id",
+    "workflow type",
+    "business context",
+    "safe subject label",
+    "display label",
+    "tone",
+    "priority",
+    "safe summary",
+    "next action",
+    "safe receipt ids for permitted roles",
+    "safe Vault reference label only"
+  ],
+  "role_policies": {
+    "employee": "redacted subject, no Tower receipts",
+    "manager": "subject visible, no Tower receipt drawer",
+    "owner": "subject visible, Tower receipt ids visible",
+    "payroll_admin": "subject visible, Tower receipt ids visible",
+    "vendor": "redacted subject, no Tower receipts",
+    "tenant": "redacted subject, no Tower receipts"
+  },
+  "not_built_here": [
+    "visible UI panel",
+    "Tower API call",
+    "Vault API call",
+    "raw Vault preview",
+    "raw Vault download",
+    "public links",
+    "shared folders",
+    "download links"
+  ],
+  "status": "workflow_safe_request_status_wiring_ready",
+  "next_corridor": "TELLER GP481-GP490 \u2014 Workflow-Safe Status Drawer Wiring"
+}

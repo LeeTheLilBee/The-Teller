@@ -1,0 +1,55 @@
+{
+  "pack": "GP561-GP570",
+  "name": "Vendor + Document Intake",
+  "parent": "6c0be9c6bcb2bcba44fe0264a730c4f1b769e615",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T15:58:56.413696+00:00",
+  "completed": {
+    "GP561": "canonical Vendor record model",
+    "GP562": "canonical Document workflow model",
+    "GP563": "vendor and document intake planners",
+    "GP564": "Vendor Profile intake",
+    "GP565": "protected Vendor Payment Setup request",
+    "GP566": "Missing Document request",
+    "GP567": "Replacement Document request",
+    "GP568": "Document Verification review",
+    "GP569": "Vendors & Documents UI inside Forms & Requests",
+    "GP570": "regression wall and evidence"
+  },
+  "new_forms": [
+    "vendor_profile_intake",
+    "vendor_payment_setup_request",
+    "missing_document_request",
+    "replacement_document_request",
+    "document_verification_review"
+  ],
+  "existing_forms_preserved": [
+    "vendor_setup_request",
+    "invoice_intake",
+    "payment_request",
+    "reimbursement_request"
+  ],
+  "truth": {
+    "raw_tin_ein_collected": false,
+    "raw_bank_account_collected": false,
+    "routing_number_collected": false,
+    "identity_document_number_collected": false,
+    "raw_document_saved": false,
+    "raw_document_uploaded": false,
+    "vault_link_present": false,
+    "automatic_document_acceptance": false,
+    "payment_execution": false,
+    "production_persistence": false,
+    "tower_api": false,
+    "direct_vault": false
+  },
+  "next": {
+    "pack": "GP571-GP580",
+    "name": "Production Records + Search"
+  },
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false
+  }
+}

@@ -1,0 +1,1111 @@
+{
+  "packs": {
+    "050A": {
+      "name": "Secure Money Intelligence Foundation",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:26:26.084574",
+      "files_written": [
+        "src/teller/securityIntelligence.js",
+        "src/teller/SecureMoneyComponents.jsx"
+      ],
+      "purpose": "Reusable security chips, source confidence, secure documents, Tower routing, receipts, final review, calm money mode, and money focus foundation."
+    },
+    "050B": {
+      "name": "Employee Document Vault Wiring",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:28:43.511764",
+      "files_written": [
+        "src/teller/EmployeeDocumentVaultPanel.jsx",
+        "src/teller/Pack050BDemo.jsx"
+      ],
+      "files_patched": [],
+      "purpose": "Employee W-2, W-4, I-9, pay stubs, direct deposit form, handbook signature routing, Tower change receipts, secure download warnings, and access receipt trail."
+    },
+    "050B_REPAIR_MOUNT": {
+      "name": "Mount Employee Document Vault Preview",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:32:04.525797",
+      "files_written": [
+        "src/AppBefore050B.jsx"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "purpose": "Safely mount Pack 050B employee document vault preview underneath the existing app.",
+      "backup": "pack_backups/pack_050B_REPAIR_MOUNT_20260525_033201"
+    },
+    "050C": {
+      "name": "Manager Meld Panel",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:35:19.823369",
+      "files_written": [
+        "src/teller/ManagerMeldPanel.jsx",
+        "src/teller/Pack050CDemo.jsx"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "purpose": "Manager = employee portal + manager schedule-to-payroll tools, manager ID, employee ID, receipts, escalation, and secure employee document vault access.",
+      "backup": "pack_backups/pack_050C_20260525_033519"
+    },
+    "050C_REPAIR_TOWER_OPEN_ONLY": {
+      "name": "Tower Opens The Teller Only",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:43:28.463516",
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050C_REPAIR_TOWER_OPEN_ONLY_20260525_034326",
+      "purpose": "Make The Teller require Tower clearance and remove casual Employee/Manager/Owner tab access."
+    },
+    "050C_REPAIR_VISUAL_SHELL": {
+      "name": "Visual Shell Fix",
+      "status": "complete",
+      "timestamp": "2026-05-25T03:53:51.009092",
+      "files_written": [
+        "src/teller/tellerShell.css"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050C_REPAIR_VISUAL_SHELL_20260525_035349",
+      "purpose": "Give The Teller its own styled Tower-gated shell so it does not render as plain left-aligned text."
+    },
+    "050C_REPAIR_STYLE_INNER_PANELS": {
+      "name": "Style Inner Employee and Manager Panels",
+      "status": "complete",
+      "timestamp": "2026-05-25T04:00:44.589271",
+      "files_patched": [
+        "src/teller/tellerShell.css"
+      ],
+      "backup": "pack_backups/pack_050C_REPAIR_STYLE_INNER_PANELS_20260525_040043",
+      "purpose": "Style the inner Employee and Manager panels so they render as designed cards, grids, buttons, chips, document vaults, and receipt sections instead of plain text."
+    },
+    "050D_A": {
+      "name": "Owner Money Foundation",
+      "status": "complete",
+      "timestamp": "2026-05-25T14:16:05.282924",
+      "files_written": [
+        "src/teller/ownerMoneyData.js"
+      ],
+      "purpose": "Create owner money data, whimsical themes, business money lanes, owner queue, trust snapshot, protected MrkTrade lane, skincare money-only lane, and calm mode seed without mounting UI yet.",
+      "backup": "pack_backups/pack_050D_A_20260525_141605"
+    },
+    "050D_B": {
+      "name": "Owner Visual Workspace and Theme Closet",
+      "status": "complete",
+      "timestamp": "2026-05-25T14:25:29.172474",
+      "files_written": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "purpose": "Mount the owner money workspace behind Tower owner clearance with whimsical themes, Today\u2019s Money Focus, snapshot cards, business lanes, calm mode, and protected MrkTrade handling.",
+      "backup": "pack_backups/pack_050D_B_20260525_142527"
+    },
+    "050D_C_FOCUS_BOARD_PREVIEW": {
+      "name": "Owner Anti-List Focus Board Preview",
+      "status": "complete",
+      "timestamp": "2026-05-25T14:50:02.039712",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_FOCUS_BOARD_PREVIEW_20260525_145002",
+      "purpose": "Replace the list-heavy owner dashboard with a focus-board preview: large priority focus, business orbit, grouped constellations, quiet snapshot ribbon, and calm mode."
+    },
+    "050D_C_REPAIR_PRIORITY_LAYOUT": {
+      "name": "Owner Focus Board Priority Layout Repair",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:03:56.246991",
+      "files_patched": [
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_REPAIR_PRIORITY_LAYOUT_20260525_150354",
+      "purpose": "Fix Start Here priority card layout so text stays readable and the amount panel no longer crowds the right side."
+    },
+    "050D_C_REPAIR_URGENT_MATTERS": {
+      "name": "Owner Urgent Matters Clarity Repair",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:07:29.799005",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_REPAIR_URGENT_MATTERS_20260525_150728",
+      "purpose": "Rename Start Here to Most Urgent Matters and replace the unclear bottom amount strip with due, money involved, and next move priority context."
+    },
+    "050D_C_REPAIR_BUSINESS_SPECIFIC_SWITCH": {
+      "name": "Owner Business Specific Switch",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:15:05.566466",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_C_REPAIR_BUSINESS_SPECIFIC_SWITCH_20260525_151504",
+      "purpose": "Make business orbit selection control the business-specific workspace, actions, items, snapshot focus, and lower sections."
+    },
+    "050D_C_ADD_OWNER_THEMES": {
+      "name": "Add More Owner Themes",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:26:57.932967",
+      "files_patched": [
+        "src/teller/ownerMoneyData.js"
+      ],
+      "backup": "pack_backups/pack_050D_C_ADD_OWNER_THEMES_20260525_152656",
+      "purpose": "Add more whimsical owner-only themes to the private Tower-opened owner money workspace."
+    },
+    "050D_D_SETTINGS_CORNER_AND_CALM_MODE": {
+      "name": "Settings Corner and Calm Mode in Settings",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:40:47.991545",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_D_SETTINGS_CORNER_AND_CALM_MODE_20260525_154046",
+      "purpose": "Move owner settings into a corner drawer and move Calm Money Mode into settings so the main owner workspace stays clear."
+    },
+    "050D_E_OWNER_ACTION_RECEIPTS": {
+      "name": "Owner Action Receipts and Final Review",
+      "status": "complete",
+      "timestamp": "2026-05-25T15:54:01.798749",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_E_OWNER_ACTION_RECEIPTS_20260525_155400",
+      "purpose": "Add final action previews, owner receipts, and click behavior for owner workspace actions so buttons feel real."
+    },
+    "050D_F_OWNER_GUIDANCE_POLISH": {
+      "name": "Owner Guidance Polish",
+      "status": "complete",
+      "timestamp": "2026-05-25T16:10:53.891642",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_F_OWNER_GUIDANCE_POLISH_20260525_161052",
+      "purpose": "Add visible workflow guidance so the owner dashboard clearly shows what to touch and in what order."
+    },
+    "050D_G_OWNER_REVIEW_DESK": {
+      "name": "Owner Review Desk",
+      "status": "complete",
+      "timestamp": "2026-05-25T16:28:18.053562",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050D_G_OWNER_REVIEW_DESK_20260525_162816",
+      "purpose": "Add big-picture plus small-picture review desk with manager view, clock-in cards, proof cards, pay impact, approve/hold/request proof/send Tower actions."
+    },
+    "050H_REVIEW_DESK_FILTERS_DECISION_LANES": {
+      "name": "Review Desk Filters and Decision Lanes",
+      "status": "complete",
+      "timestamp": "2026-05-25T17:22:57.194781",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050H_REVIEW_DESK_FILTERS_DECISION_LANES_20260525_172255",
+      "purpose": "Add owner Review Desk filters, decision state badges, approved/held/proof/Tower lanes, and filter counts."
+    },
+    "050I_AUTO_CREATE_RECEIPTS_AND_TOWER_COPY": {
+      "name": "Auto Create Receipts and Tower Copy",
+      "status": "complete",
+      "timestamp": "2026-05-25T17:45:33.367239",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050I_AUTO_CREATE_RECEIPTS_AND_TOWER_COPY_20260525_174531",
+      "purpose": "Make Review Desk decisions automatically create local owner receipts and a Tower handoff receipt copy at the same time."
+    },
+    "050J_OWNER_NOTIFICATIONS_DROPDOWN": {
+      "name": "Owner Notifications Dropdown",
+      "status": "complete",
+      "timestamp": "2026-05-25T17:53:41.181682",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050J_OWNER_NOTIFICATIONS_DROPDOWN_20260525_175339",
+      "purpose": "Add owner notifications dropdown for auto-created owner receipts, Tower receipt copies, review decisions, and proof/Tower activity."
+    },
+    "050K_REVIEW_DETAIL_DRAWER": {
+      "name": "Review Detail Drawer",
+      "status": "complete",
+      "timestamp": "2026-05-25T18:13:05.763379",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050K_REVIEW_DETAIL_DRAWER_20260525_181304",
+      "purpose": "Add Review Desk detail panel with time-card details, proof checklist, manager note, and detail-level approve/hold/proof/Tower actions."
+    },
+    "050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3": {
+      "name": "Review Detail Popup and Auto Receipt Repair V3",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:48.009115",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050K_REPAIR_DETAIL_POPUP_AUTO_RECEIPT_V3_20260525_225346",
+      "purpose": "Replace ReviewDetailPanel by function boundary so details open as a popup and detail-level decisions auto-create receipts and Tower copies."
+    },
+    "050L_DECISION_REASONS_NOTES": {
+      "name": "Decision Reasons and Notes",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:46.872484",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050L_DECISION_REASONS_NOTES_20260525_225345",
+      "purpose": "Add decision reason picker, optional owner note, receipt reason capture, Tower copy reason capture, and notification reason display."
+    },
+    "050M_PROOF_EVIDENCE_SLOTS": {
+      "name": "Proof Evidence Slots",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:45.713979",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050M_PROOF_EVIDENCE_SLOTS_20260525_225344",
+      "purpose": "Add proof/evidence slots, missing proof warnings, Archive Vault placeholders, and proof-reviewed data copied into owner/Tower receipts."
+    },
+    "050N_ARCHIVE_VAULT_HANDOFF_PREVIEW": {
+      "name": "Archive Vault Handoff Preview",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:43.977189",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050N_ARCHIVE_VAULT_HANDOFF_PREVIEW_20260525_225342",
+      "purpose": "Add local Archive Vault evidence packet handoff preview from Review Detail evidence slots, with receipts and notifications."
+    },
+    "050O_MANAGER_OWNER_REVIEW_BRIDGE": {
+      "name": "Manager Owner Review Bridge",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:42.030582",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050O_MANAGER_OWNER_REVIEW_BRIDGE_20260525_225340",
+      "purpose": "Add manager-submitted context, manager recommendations, owner decision lane, conflict/Tower escalation indicators, and manager context in receipts."
+    },
+    "050P_MANAGER_SUBMISSION_FLOW": {
+      "name": "Manager Submission Flow Into Owner Review Desk",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:40.567992",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050P_MANAGER_SUBMISSION_FLOW_20260525_225339",
+      "purpose": "Add local manager submission bridge that creates owner Review Desk cards with manager context, notifications, detail popup support, receipts, and Tower copies."
+    },
+    "050Q_MANAGER_SUBMISSION_FORM_REFINEMENT": {
+      "name": "Manager Submission Form Refinement",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:39.392579",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050Q_MANAGER_SUBMISSION_FORM_REFINEMENT_20260525_225338",
+      "purpose": "Replace sample-only manager submission bridge with a usable form for issue type, person, money impact, proof status, risk, manager note, Tower-sensitive flag, and owner Review Desk submission."
+    },
+    "050R_BUSINESS_SPECIFIC_MANAGER_SUBMISSION_TEMPLATES": {
+      "name": "Business Specific Manager Submission Templates",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:38.002089",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050R_BUSINESS_SPECIFIC_MANAGER_SUBMISSION_TEMPLATES_20260525_225336",
+      "purpose": "Make manager submission templates, issue types, placeholders, quick-fill buttons, and submitted card details change based on selected business."
+    },
+    "050S_MANAGER_STANDALONE_OWNER_SEND_BACK": {
+      "name": "Manager Standalone Board and Owner Send Back Bridge",
+      "status": "complete",
+      "timestamp": "2026-05-25T22:53:35.714088",
+      "files_written": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css",
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050S_MANAGER_STANDALONE_OWNER_SEND_BACK_20260525_225334",
+      "purpose": "Create standalone manager workspace, local manager-owner bridge, owner send-back action, and manager return queue."
+    },
+    "050S_REPAIR_FIX_TELLER_VIEW_RUNTIME": {
+      "name": "Fix Teller View Runtime Guard Error",
+      "status": "complete",
+      "timestamp": "2026-05-25T23:29:17.486149",
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050S_REPAIR_FIX_TELLER_VIEW_RUNTIME_20260525_232915",
+      "purpose": "Define manager route query variable inside App render scope so owner and manager views do not crash."
+    },
+    "050T_MANAGER_RETURN_DETAIL_SEND_BACK_TO_OWNER": {
+      "name": "Manager Return Detail and Send Back To Owner",
+      "status": "complete",
+      "timestamp": "2026-05-27T14:31:29.934369",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_050T_MANAGER_RETURN_DETAIL_SEND_BACK_TO_OWNER_20260527_143129",
+      "purpose": "Add manager return-item popup, manager response/proof/correction flow, and send-back-to-owner re-review submissions."
+    },
+    "050T_REPAIR_FORCE_SEND_BACK_VISIBLE": {
+      "name": "Force Send Back Button Visible",
+      "status": "complete",
+      "timestamp": "2026-05-27T14:54:19.887508",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050T_REPAIR_FORCE_SEND_BACK_VISIBLE_20260527_145418",
+      "purpose": "Force owner Send back to manager button into Review Desk cards and Review Detail popup."
+    },
+    "050T_REPAIR_C_SEND_BACK_DETAIL_ACTION_ROW": {
+      "name": "Force Send Back Into Detail Action Row",
+      "status": "complete",
+      "timestamp": "2026-05-27T15:15:52.044734",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050T_REPAIR_C_SEND_BACK_DETAIL_ACTION_ROW_20260527_151551",
+      "purpose": "Inject Send back to manager into ReviewDetailPanel action row without relying on Archive button text."
+    },
+    "050U_MANAGER_BOARD_FILTERS_RETURN_QUEUE_LANES": {
+      "name": "Manager Board Filters and Return Queue Lanes",
+      "status": "complete",
+      "timestamp": "2026-05-27T16:09:36.295580",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050U_MANAGER_BOARD_FILTERS_RETURN_QUEUE_LANES_20260527_160935",
+      "purpose": "Add manager filter tabs, unified work queue, return/submission lanes, filter counts, and clearer manager work order."
+    },
+    "050U_REPAIR_REMOVE_MANAGER_SUBMISSION_FROM_OWNER": {
+      "name": "Remove Manager Submission Bridge From Owner Dashboard",
+      "status": "complete",
+      "timestamp": "2026-05-27T16:16:16.730002",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050U_REPAIR_REMOVE_MANAGER_SUBMISSION_FROM_OWNER_20260527_161615",
+      "purpose": "Remove manager submission form from owner dashboard while keeping manager submissions, owner send-back, and re-review flow working."
+    },
+    "050V_V2_MANAGER_NOTIFICATIONS_ACTIVITY_TRAIL": {
+      "name": "Manager Notifications and Activity Trail V2",
+      "status": "complete",
+      "timestamp": "2026-05-27T16:51:31.495571",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050V_V2_MANAGER_NOTIFICATIONS_ACTIVITY_TRAIL_20260527_165130",
+      "purpose": "Add manager-side notifications dropdown, activity trail, and manager action notices for submissions/status changes/re-review sends."
+    },
+    "050V_REPAIR_PIN_MANAGER_NOTIFICATIONS": {
+      "name": "Pin Manager Notifications To Corner",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:07:20.340999",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050V_REPAIR_PIN_MANAGER_NOTIFICATIONS_20260527_170719",
+      "purpose": "Move manager notifications dropdown into fixed top-right corner so it is visible and usable."
+    },
+    "050W_EMPLOYEE_PORTAL_SEND_TO_MANAGER_TOWER_BACKUP": {
+      "name": "Employee Portal Send To Manager Tower Backup",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:19:39.447694",
+      "files_written": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050W_EMPLOYEE_PORTAL_SEND_TO_MANAGER_TOWER_BACKUP_20260527_171938",
+      "purpose": "Add employee portal foundation, employee-to-manager requests, local Tower backup queue, and manager board employee request dock."
+    },
+    "050W_REPAIR_EMPLOYEE_VISUAL_COHESION": {
+      "name": "Employee Portal Visual Cohesion",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:37:20.773707",
+      "files_rewritten": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050W_REPAIR_EMPLOYEE_VISUAL_COHESION_20260527_173719",
+      "purpose": "Redesign employee portal into a cohesive Teller-style employee lane while preserving employee-to-manager requests and Tower backup flow."
+    },
+    "050X_EMPLOYEE_LANE_SECURE_DOCS_PROFILE_MERGE": {
+      "name": "Employee Lane Secure Docs Profile Merge",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:43:06.319850",
+      "files_rewritten": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx"
+      ],
+      "files_patched": [
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050X_EMPLOYEE_LANE_SECURE_DOCS_PROFILE_MERGE_20260527_174305",
+      "purpose": "Merge employee lane, secure documents, profile, pay placeholders, proof requests, and Tower-backed document language into one cohesive employee portal."
+    },
+    "050X_REPAIR_SIMPLIFY_EMPLOYEE_LANE_REMOVE_NAME": {
+      "name": "Simplify Employee Lane Remove Name Field",
+      "status": "complete",
+      "timestamp": "2026-05-27T17:50:15.466596",
+      "files_rewritten": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050X_REPAIR_SIMPLIFY_EMPLOYEE_LANE_REMOVE_NAME_20260527_175014",
+      "purpose": "Simplify employee portal to hours/pay card plus request form, remove employee name field, and reserve clock-in for The Tower."
+    },
+    "050Y_EMPLOYEE_REQUEST_DETAIL_MANAGER_RESPONSE": {
+      "name": "Employee Request Detail Manager Response Back To Employee",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:15:18.533040",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_050Y_EMPLOYEE_REQUEST_DETAIL_MANAGER_RESPONSE_20260527_181517",
+      "purpose": "Add employee request detail popup on manager board, manager response back to employee, employee response queue, and Tower backup for manager responses."
+    },
+    "050Z_TOWER_BACKUP_VIEWER_PLUGIN_BRIDGE": {
+      "name": "Tower Backup Viewer Plugin Bridge",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:28:44.270169",
+      "files_written": [
+        "src/teller/towerBackupPlugin.js",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_050Z_TOWER_BACKUP_VIEWER_PLUGIN_BRIDGE_20260527_182843",
+      "purpose": "Add visible local Tower evidence dock and reusable Tower plugin bridge for Teller backup records."
+    },
+    "050Z_REPAIR_V2_TOWER_CLEARANCE_ENTRY_EMPLOYEE_REQUEST": {
+      "name": "Tower Clearance Entry Employee Tower Request V2",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:38:16.925699",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/EmployeeStandaloneWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_050Z_REPAIR_V2_TOWER_CLEARANCE_ENTRY_EMPLOYEE_REQUEST_20260527_183815",
+      "purpose": "Add Tower Evidence entry buttons to owner/manager dashboards, require Tower clearance, and let employees request Tower records via manager request flow."
+    },
+    "050Z_REPAIR_V3_FORCE_TOWER_BUTTON_ROUTE": {
+      "name": "Force Tower Button Route To Open",
+      "status": "complete",
+      "timestamp": "2026-05-27T18:43:00.719188",
+      "files_patched": [
+        "src/App.jsx",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_050Z_REPAIR_V3_FORCE_TOWER_BUTTON_ROUTE_20260527_184259",
+      "purpose": "Force owner/manager Tower Evidence button to open teller_view=tower and ensure App renders TowerBackupWorkspace for tower route."
+    },
+    "051A_FORMAL_TOWER_HANDOFF_PACKETS_SOULAANA": {
+      "name": "Formal Tower Handoff Packets Soulaana",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:04:30.872669",
+      "files_patched": [
+        "src/teller/towerBackupPlugin.js",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051A_FORMAL_TOWER_HANDOFF_PACKETS_SOULAANA_20260527_190429",
+      "purpose": "Add formal Tower handoff packets and Soulaana plain-language evidence guidance to Tower Backup Viewer."
+    },
+    "051A_REPAIR_FORCE_TOWER_ROUTE_BEFORE_DEV_LINKS": {
+      "name": "Force Tower Route Before Dev Links",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:13:40.724279",
+      "files_patched": [
+        "src/App.jsx"
+      ],
+      "backup": "pack_backups/pack_051A_REPAIR_FORCE_TOWER_ROUTE_BEFORE_DEV_LINKS_20260527_191339",
+      "purpose": "Make teller_view=tower and tower_clearance=tower render TowerBackupWorkspace before dev/test links route can take over."
+    },
+    "051B_TOWER_REDIRECT_CLEARANCE_TOKEN_SIMULATION": {
+      "name": "Tower Redirect Clearance Token Simulation",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:29:40.983025",
+      "files_patched": [
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051B_TOWER_REDIRECT_CLEARANCE_TOKEN_SIMULATION_20260527_192939",
+      "purpose": "Simulate real Tower redirect/clearance token flow from owner/manager dashboards into Tower Evidence."
+    },
+    "051B_REPAIR_OWNER_CLEARANCE_CANNOT_BE_REVOKED": {
+      "name": "Owner Tower Clearance Cannot Be Revoked",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:40:24.102909",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051B_REPAIR_OWNER_CLEARANCE_CANNOT_BE_REVOKED_20260527_194023",
+      "purpose": "Prevent owner-level Tower clearance from being revoked from local Tower Evidence UI while preserving revoke for non-owner local sessions."
+    },
+    "051C_TOWER_ACCESS_REQUEST_INBOX_AUTHORITY_RULES": {
+      "name": "Tower Access Request Inbox Authority Rules",
+      "status": "complete",
+      "timestamp": "2026-05-27T19:49:47.876491",
+      "files_patched": [
+        "src/teller/towerBackupPlugin.js",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051C_TOWER_ACCESS_REQUEST_INBOX_AUTHORITY_RULES_20260527_194946",
+      "purpose": "Add auditable Tower access request inbox, authority rules, Soulaana authority read, and owner/manager/direct/employee access distinctions."
+    },
+    "051D_MANAGER_EMPLOYEE_REQUEST_REVIEW_CENTER": {
+      "name": "Manager Employee Request Review Center",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:15:52.039970",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051D_MANAGER_EMPLOYEE_REQUEST_REVIEW_CENTER_20260527_201550",
+      "purpose": "Make employee requests the primary manager work area and add approve/reject/needs-proof decisions with Tower-backed employee responses."
+    },
+    "051E_ROLE_SCOPED_TOWER_EVIDENCE_VIEWS": {
+      "name": "Role Scoped Tower Evidence Views",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:22:42.959667",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051E_ROLE_SCOPED_TOWER_EVIDENCE_VIEWS_20260527_202241",
+      "purpose": "Make Tower Evidence role-scoped so managers see only employee Tower/secure document requests while owners keep full Tower dashboard."
+    },
+    "051E_REPAIR_TOWER_ACCESS_STATE_051F_EMPLOYEE_NOTIFICATIONS": {
+      "name": "Fix Tower Access State And Employee Notifications",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:33:19.496918",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051E_REPAIR_TOWER_ACCESS_STATE_051F_EMPLOYEE_NOTIFICATIONS_20260527_203317",
+      "purpose": "Fix towerAccessRequest runtime error and add employee notification dropdown for sent requests and manager responses."
+    },
+    "051E_REPAIR_B_FULL_TOWER_WORKSPACE_SCOPE_FIX": {
+      "name": "Full Tower Workspace Scope Fix",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:45:44.572030",
+      "files_rewritten": [
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_051E_REPAIR_B_FULL_TOWER_WORKSPACE_SCOPE_FIX_20260527_204543",
+      "purpose": "Fully rewrite TowerBackupWorkspace so towerAccessRequest and related Tower state are safely scoped before role-based Tower rendering."
+    },
+    "051G_MANAGER_TOWER_REQUEST_DECISIONS": {
+      "name": "Manager Tower Request Decisions",
+      "status": "complete",
+      "timestamp": "2026-05-27T20:59:35.171916",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051G_MANAGER_TOWER_REQUEST_DECISIONS_20260527_205933",
+      "purpose": "Add approve/reject/needs-info/send-upward decisions for employee Tower/secure document requests inside manager-limited Tower view."
+    },
+    "051G_REPAIR_EMPLOYEE_MANAGER_RESPONSE_NOTIFICATIONS": {
+      "name": "Employee Manager Response Notifications",
+      "status": "complete",
+      "timestamp": "2026-05-27T21:13:41.527497",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051G_REPAIR_EMPLOYEE_MANAGER_RESPONSE_NOTIFICATIONS_20260527_211340",
+      "purpose": "Ensure new manager responses and manager Tower decisions trigger employee notification dropdown badges."
+    },
+    "051H_EMPLOYEE_RESPONSE_DETAIL_ADD_MORE_INFO_LOOP": {
+      "name": "Employee Response Detail Add More Info Loop",
+      "status": "complete",
+      "timestamp": "2026-05-27T21:27:36.622086",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_051H_EMPLOYEE_RESPONSE_DETAIL_ADD_MORE_INFO_LOOP_20260527_212735",
+      "purpose": "Allow employees to click manager responses and send follow-up information back to manager with Tower backup."
+    },
+    "051IJK_V3_MANAGER_LANES_OWNER_ESCALATION_FINAL_RECEIPTS": {
+      "name": "Manager Lanes Owner Escalation Final Receipts V3",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:02:49.943158",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx"
+      ],
+      "files_written": [
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_051IJK_V3_MANAGER_LANES_OWNER_ESCALATION_FINAL_RECEIPTS_20260527_220248",
+      "purpose": "Add manager request lanes, owner escalation queue, and final resolution receipt packets after repairing missing exports."
+    },
+    "051LMN_RECEIPT_VIEWER_ARCHIVE_PREP_EMPLOYEE_RESOLVED_RECORDS": {
+      "name": "Receipt Viewer Archive Prep Employee Resolved Records",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:30:44.463089",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "files_written": [
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css"
+      ],
+      "backup": "pack_backups/pack_051LMN_RECEIPT_VIEWER_ARCHIVE_PREP_EMPLOYEE_RESOLVED_RECORDS_20260527_223043",
+      "purpose": "Add final receipt packet viewer, owner archive prep dock, and employee resolved records view."
+    },
+    "051LMN_REPAIR_ARCHIVE_READY_BUTTON_FEEDBACK_BACKUP": {
+      "name": "Archive Ready Button Feedback Backup",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:41:34.852047",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_ARCHIVE_READY_BUTTON_FEEDBACK_BACKUP_20260527_224133",
+      "purpose": "Make Mark Archive Vault Ready visibly update receipt UI and create a Tower backup record."
+    },
+    "051LMN_REPAIR_B_MOVE_ARCHIVE_READY_OUT_OF_ACTIVE_VIEW": {
+      "name": "Move Archive Ready Receipts Out Of Active View",
+      "status": "complete",
+      "timestamp": "2026-05-27T22:52:58.305387",
+      "files_patched": [
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_B_MOVE_ARCHIVE_READY_OUT_OF_ACTIVE_VIEW_20260527_225257",
+      "purpose": "Move archive-ready receipts out of active/default receipt list and into Archive Ready filter/drawer."
+    },
+    "051LMN_REPAIR_C_CLEAN_OWNER_ACTIVE_QUEUES_AFTER_COMPLETION": {
+      "name": "Clean Owner Active Queues After Completion",
+      "status": "complete",
+      "timestamp": "2026-05-27T23:00:38.935089",
+      "files_patched": [
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/FinalReceiptViewer.jsx"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_C_CLEAN_OWNER_ACTIVE_QUEUES_AFTER_COMPLETION_20260527_230037",
+      "purpose": "Move completed owner escalations and archive-ready receipts out of active owner work queues."
+    },
+    "051LMN_REPAIR_D_HIDE_OWNER_WORK_INTERFACES_WHEN_EMPTY": {
+      "name": "Hide Owner Work Interfaces When Empty",
+      "status": "complete",
+      "timestamp": "2026-05-27T23:07:06.287520",
+      "files_patched": [
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/FinalReceiptViewer.jsx"
+      ],
+      "backup": "pack_backups/pack_051LMN_REPAIR_D_HIDE_OWNER_WORK_INTERFACES_WHEN_EMPTY_20260527_230705",
+      "purpose": "Hide owner oversight and receipt/archive-prep interfaces when no active work remains, then reappear when new work exists."
+    },
+    "052A_STREAMLINE_MODE_MANAGER_OWNER_WORK_QUEUES": {
+      "name": "Streamline Mode Manager Owner Work Queues",
+      "status": "complete",
+      "timestamp": "2026-05-27T23:51:59.413150",
+      "files_patched": [
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052A_STREAMLINE_MODE_MANAGER_OWNER_WORK_QUEUES_20260527_235158",
+      "purpose": "Add Streamline Mode panels that surface one highest-priority manager/owner task at a time."
+    },
+    "052B_EMPLOYEE_STREAMLINE_MODE": {
+      "name": "Employee Streamline Mode",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:27:55.710557",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_052B_EMPLOYEE_STREAMLINE_MODE_20260528_142754",
+      "purpose": "Add employee Streamline Mode that surfaces one next-best employee action at a time."
+    },
+    "052B_REPAIR_FORCE_EMPLOYEE_STREAMLINE_VISIBLE": {
+      "name": "Force Employee Streamline Panel Visible",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:34:53.672566",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_052B_REPAIR_FORCE_EMPLOYEE_STREAMLINE_VISIBLE_20260528_143452",
+      "purpose": "Force Employee Streamline Mode panel to render directly under the employee main page opening."
+    },
+    "052C_STREAMLINE_POLISH_DISMISS_WHY_NEXT": {
+      "name": "Streamline Mode Polish Dismiss Why Next",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:46:38.785512",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052C_STREAMLINE_POLISH_DISMISS_WHY_NEXT_20260528_144636",
+      "purpose": "Add dismiss, show full dashboard, and why-this-is-next controls to Employee, Manager, and Owner Streamline Mode."
+    },
+    "052D_STREAMLINE_RESET_CONTROLS": {
+      "name": "Streamline Reset Controls",
+      "status": "complete",
+      "timestamp": "2026-05-28T14:54:42.952126",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052D_STREAMLINE_RESET_CONTROLS_20260528_145441",
+      "purpose": "Add Show Streamline reset controls after Streamline Mode is dismissed for Employee, Manager, and Owner lanes."
+    },
+    "052E_STREAMLINE_OPT_IN_CHOICE_GATE": {
+      "name": "Streamline Opt In Choice Gate",
+      "status": "complete",
+      "timestamp": "2026-05-28T15:28:44.757931",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052E_STREAMLINE_OPT_IN_CHOICE_GATE_20260528_152842",
+      "purpose": "Let Employee, Manager, and Owner choose whether to enter Streamline Mode or stay in the full dashboard."
+    },
+    "052FH_STREAMLINE_WORKFLOW_COHESION_BATCH": {
+      "name": "Streamline Workflow Cohesion Batch",
+      "status": "complete",
+      "timestamp": "2026-05-28T15:45:11.796135",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css"
+      ],
+      "backup": "pack_backups/pack_052FH_STREAMLINE_WORKFLOW_COHESION_BATCH_20260528_154510",
+      "purpose": "Bundle Streamline choice controls, mode reset, mode chips, cleaner reset states, and cohesive language across Employee, Manager, and Owner lanes."
+    },
+    "053AF_WORKFLOW_STATUS_LIFECYCLE_COHESION_BATCH": {
+      "name": "Workflow Status Lifecycle Cohesion Batch",
+      "status": "complete",
+      "timestamp": "2026-05-28T15:57:19.216872",
+      "files_written": [
+        "src/teller/workflowLifecycle.js",
+        "src/teller/WorkflowLifecyclePanel.jsx",
+        "src/teller/workflowLifecyclePanel.css"
+      ],
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_053AF_WORKFLOW_STATUS_LIFECYCLE_COHESION_BATCH_20260528_155717",
+      "purpose": "Add shared lifecycle/status timeline, unified workflow language, human proof refs, empty states, and cross-role workflow cohesion."
+    },
+    "053AF_REPAIR_A_MOVE_LIFECYCLE_PANEL_TO_TOWER_ONLY": {
+      "name": "Move Lifecycle Panel To Tower Only",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:02:48.723952",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_053AF_REPAIR_A_MOVE_LIFECYCLE_PANEL_TO_TOWER_ONLY_20260528_160247",
+      "purpose": "Remove duplicate lifecycle panel from Employee, Manager, and Owner pages while keeping lifecycle/proof trail in Tower only."
+    },
+    "053AF_REPAIR_B_EMPLOYEE_RESOLVED_RECORD_WORKFLOW_BADGES": {
+      "name": "Employee Resolved Record Workflow Badges",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:07:25.726325",
+      "files_patched": [
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css"
+      ],
+      "backup": "pack_backups/pack_053AF_REPAIR_B_EMPLOYEE_RESOLVED_RECORD_WORKFLOW_BADGES_20260528_160724",
+      "purpose": "Upgrade Employee Resolved Records with workflow-style completion badges, current location, archive state, and human proof references."
+    },
+    "054AF_REQUEST_DETAIL_THREADING_COHESION_BATCH": {
+      "name": "Request Detail Threading Cohesion Batch",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:30:54.161385",
+      "files_written": [
+        "src/teller/requestThreading.js",
+        "src/teller/RequestThreadPanel.jsx",
+        "src/teller/requestThreadPanel.css"
+      ],
+      "files_patched": [
+        "src/teller/FinalReceiptViewer.jsx",
+        "src/teller/finalReceiptViewer.css",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_054AF_REQUEST_DETAIL_THREADING_COHESION_BATCH_20260528_163051",
+      "purpose": "Add shared request-threading utility and connected thread panels across resolved records, employee response detail, owner escalation detail, and Tower proof room."
+    },
+    "054AF_REPAIR_A_RESTORE_TOWER_CLEARANCE_GATE": {
+      "name": "Restore Tower Clearance Gate",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:39:32.682264",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_054AF_REPAIR_A_RESTORE_TOWER_CLEARANCE_GATE_20260528_163930",
+      "purpose": "Ensure Tower request thread/proof panels render only after Tower clearance gate, not before password/owner clearance."
+    },
+    "054AF_REPAIR_B_REMOVE_PROOF_TRAIL_FROM_TOWER_CLEARANCE_PAGE": {
+      "name": "Remove Proof Trail From Tower Clearance Page",
+      "status": "complete",
+      "timestamp": "2026-05-28T16:43:55.849599",
+      "files_patched": [
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_054AF_REPAIR_B_REMOVE_PROOF_TRAIL_FROM_TOWER_CLEARANCE_PAGE_20260528_164354",
+      "purpose": "Remove RequestThreadPanel and WorkflowLifecyclePanel from TowerBackupWorkspace so proof/thread content cannot appear on Tower clearance/login page."
+    },
+    "055AF_ROLE_DASHBOARD_COHESION_NO_DUPLICATE_WORK": {
+      "name": "Role Dashboard Cohesion No Duplicate Work",
+      "status": "complete",
+      "timestamp": "2026-05-28T17:01:39.176228",
+      "files_written": [
+        "src/teller/RoleDashboardCohesionPanel.jsx",
+        "src/teller/roleDashboardCohesionPanel.css"
+      ],
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/ownerMoneyWorkspace.css",
+        "src/teller/TowerBackupWorkspace.jsx",
+        "src/teller/towerBackupWorkspace.css"
+      ],
+      "backup": "pack_backups/pack_055AF_ROLE_DASHBOARD_COHESION_NO_DUPLICATE_WORK_20260528_170137",
+      "purpose": "Add role-focused dashboard cohesion panels, no-duplicate-work guidance, calm empty-state language, and safe Tower clearance note without exposing proof before clearance."
+    },
+    "055AF_REPAIR_A_REMOVE_ROLE_COHESION_PANELS": {
+      "name": "Remove Role Cohesion Panels From UI",
+      "status": "complete",
+      "timestamp": "2026-05-28T17:10:39.576408",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/OwnerMoneyWorkspace.jsx",
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_055AF_REPAIR_A_REMOVE_ROLE_COHESION_PANELS_20260528_171038",
+      "purpose": "Remove the disliked role dashboard cohesion panels from visible UI while keeping existing working workflows intact."
+    },
+    "056AF_PRACTICAL_USABILITY_FLOW_POLISH": {
+      "name": "Practical Usability Flow Polish",
+      "status": "complete",
+      "timestamp": "2026-05-28T17:58:39.279188",
+      "files_patched": [
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/ownerMoneyWorkspace.css",
+        "src/teller/ownerEscalationDock.css",
+        "src/teller/towerBackupWorkspace.css",
+        "src/teller/finalReceiptViewer.css",
+        "src/teller/requestThreadPanel.css"
+      ],
+      "backup": "pack_backups/pack_056AF_PRACTICAL_USABILITY_FLOW_POLISH_20260528_175837",
+      "purpose": "Polish existing working Teller flows for spacing, button hierarchy, modal scanability, completed states, reduced density, and responsive comfort without adding redundant UI panels."
+    },
+    "057AF_REQUEST_FORM_REVIEW_SPEED_RESPONSE_CLARITY": {
+      "name": "Request Form Review Speed Response Clarity",
+      "status": "complete",
+      "timestamp": "2026-05-28T18:19:04.726791",
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_057AF_REQUEST_FORM_REVIEW_SPEED_RESPONSE_CLARITY_20260528_181901",
+      "purpose": "Improve employee request submit confirmation, manager review speed, manager response clarity, employee follow-up clarity, and keep Tower clearance untouched."
+    },
+    "057AF_REPAIR_A_FIX_EMPLOYEE_CONFIRMATION_SCOPE": {
+      "name": "Fix Employee Request Confirmation Scope",
+      "status": "complete",
+      "timestamp": "2026-05-28T18:42:53.269226",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_057AF_REPAIR_A_FIX_EMPLOYEE_CONFIRMATION_SCOPE_20260528_184251",
+      "purpose": "Fix requestSubmitConfirmation runtime error by placing the confirmation state hook inside EmployeeStandaloneWorkspace component scope."
+    },
+    "058AF_END_TO_END_DAILY_USE_CLEANUP": {
+      "name": "End To End Daily Use Cleanup",
+      "status": "complete",
+      "timestamp": "2026-05-28T19:00:22.795884",
+      "files_patched": [
+        "src/teller/EmployeeStandaloneWorkspace.jsx",
+        "src/teller/employeeStandaloneWorkspace.css",
+        "src/teller/ManagerStandaloneWorkspace.jsx",
+        "src/teller/managerStandaloneWorkspace.css",
+        "src/teller/OwnerEscalationDock.jsx",
+        "src/teller/ownerEscalationDock.css",
+        "src/teller/finalReceiptViewer.css",
+        "src/teller/requestThreadPanel.css",
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "files_written": [
+        "tools/teller_daily_use_smoke_test_058AF.py"
+      ],
+      "backup": "pack_backups/pack_058AF_END_TO_END_DAILY_USE_CLEANUP_20260528_190021",
+      "purpose": "Clean the end-to-end daily-use flow across employee requests, manager review, employee follow-up, owner decisions, resolved records, and Tower safety without adding redundant UI."
+    },
+    "059AF_FINAL_READINESS_BETA_SAFETY": {
+      "name": "Final Readiness Beta Safety",
+      "status": "complete",
+      "timestamp": "2026-05-28T19:06:43.110923",
+      "files_written": [
+        "data/teller_beta_readiness_059AF.json",
+        "src/teller/tellerFeedbackLocal.js",
+        "tools/teller_final_readiness_smoke_test_059AF.py"
+      ],
+      "files_patched": [
+        "src/teller/managerOwnerBridge.js",
+        "src/teller/TowerBackupWorkspace.jsx"
+      ],
+      "backup": "pack_backups/pack_059AF_FINAL_READINESS_BETA_SAFETY_20260528_190641",
+      "purpose": "Add demo/local readiness metadata, local feedback utility, final route/static smoke checks, and Tower pre-clearance safety guards without adding redundant UI."
+    }
+  },
+  "050C_REPAIR_PRIMARY_VIEW": {
+    "name": "Make New Teller View Primary",
+    "status": "complete",
+    "timestamp": "2026-05-25T03:39:55.677918",
+    "files_patched": [
+      "src/App.jsx"
+    ],
+    "backup": "pack_backups/pack_050C_REPAIR_PRIMARY_VIEW_20260525_033954",
+    "purpose": "Stop showing the old brown app first and make the new secure Employee/Manager Teller views the primary visible app."
+  },
+  "checkpoints": [
+    {
+      "pack": "GP451-GP460",
+      "name": "ARCHIVE VAULT \u2014 TELLER TO TOWER REQUEST HANDOFF LAYER",
+      "timestamp_utc": "2026-08-14T14:55:42.338114+00:00",
+      "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
+      "files": [
+        "src/teller/tellerTowerRequestHandoff.js",
+        "src/teller/tellerTowerRequestHandoffFixtures.js",
+        "data/teller_tower_request_handoff_gp451_460.json",
+        "tools/teller_tower_request_handoff_smoke_test_451_460.py"
+      ],
+      "direct_vault_access_allowed": false,
+      "tower_approval_required": true,
+      "status": "built_local_not_saved"
+    },
+    {
+      "pack": "GP461-GP470",
+      "name": "TELLER \u2014 TOWER REQUEST QUEUE + SAFE RESULT INTAKE",
+      "timestamp_utc": "2026-08-14T15:33:02.634559+00:00",
+      "doctrine": "Teller can ask. Tower must decide. Vault only answers Tower.",
+      "files": [
+        "src/teller/tellerTowerRequestQueue.js",
+        "src/teller/tellerTowerRequestQueueFixtures.js",
+        "data/teller_tower_request_queue_gp461_470.json",
+        "tools/teller_tower_request_queue_smoke_test_461_470.py"
+      ],
+      "direct_tower_call_allowed": false,
+      "direct_vault_access_allowed": false,
+      "workflow_safe_result_only": true,
+      "status": "built_local_not_saved"
+    }
+  ]
+}

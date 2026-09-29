@@ -1,0 +1,70 @@
+name: Teller BuyBox proposed readiness question TBR001-005
+on:
+  push:
+    branches: [teller-buybox-question-boundary-tbr001-005]
+  pull_request:
+    paths:
+      - 'server/teller/readiness/tellerBuyBoxQuestionV1.js'
+      - 'tests/tellerBuyBoxQuestionV1.test.mjs'
+      - 'docs/TELLER_BUYBOX_QUESTION_TBR001_005.md'
+      - '.github/workflows/teller-buybox-question-tbr001-005.yml'
+permissions:
+  contents: read
+jobs:
+  source-bound-question:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: LeeTheLilBee/SimpleeMrkTrade
+          ref: 8c93f7e882d216048b6a86370e28f174d7e4dc90
+          path: buybox-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate an actual synthetic saved BuyBox terms packet
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=buybox-source python - <<'PY' > "$RUNNER_TEMP/pinned_buybox_question.json"
+          import json
+          import tempfile
+          from pathlib import Path
+          from datetime import datetime, timezone
+          from buybox.core import new_opportunity
+          from buybox.store import connect, save
+          from buybox.teller_readiness_question import prepare_unsubmitted_teller_readiness_question
+          with tempfile.TemporaryDirectory() as d:
+              with connect(str(Path(d) / "synthetic.sqlite3")) as db:
+                  op = save(db, new_opportunity("atm", "Synthetic fictional route", "95000"))
+                  terms = {
+                      "proposed_purchase_price": "95000.00",
+                      "proposed_debt_amount": "75000.00",
+                      "proposed_equity_amount": "20000.00",
+                      "estimated_closing_costs": "5000.00",
+                      "proposed_reserve": "12000.00",
+                      "funding_lane": "ATM_SET_1_ACQUISITION",
+                      "terms_reference": "synthetic-proposal",
+                  }
+                  pkt = prepare_unsubmitted_teller_readiness_question(
+                      db, op["id"], proposed_terms=terms,
+                      now_utc=datetime.fromtimestamp(2000000000, timezone.utc),
+                  )
+                  assert pkt["state"] == "LOCAL_TERMS_QUESTION_UNSUBMITTED"
+                  assert pkt["teller_readiness"] == "UNKNOWN"
+                  print(json.dumps(pkt["packet"], sort_keys=True))
+          PY
+      - name: Cross-language exact proposal fingerprint and negative wall
+        shell: bash
+        run: |
+          export TELLER_PINNED_BUYBOX_QUESTION="$RUNNER_TEMP/pinned_buybox_question.json"
+          node --test tests/tellerBuyBoxQuestionV1.test.mjs
+          rm -f "$TELLER_PINNED_BUYBOX_QUESTION"

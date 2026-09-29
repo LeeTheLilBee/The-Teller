@@ -19,12 +19,11 @@ import {
 } from "./managerOwnerBridge";
 import "./managerStandaloneWorkspace.css";
 
-import { saveTowerAccessRequest } from "./towerBackupPlugin";
 const managerBusinessOptions = [
   ["simpleepay", "SimpleePay"],
   ["skincare", "SimpleeSkincare"],
   ["onthego", "SimpleeOnTheGo"],
-  ["property", "SimpleeProperty"],
+  ["property", "The Grounds"],
   ["mrktrade", "MrkTrade"],
 ];
 
@@ -765,29 +764,19 @@ export default function ManagerStandaloneWorkspace() {
   });
 
   function openTowerEvidence() {
-    try {
-      const now = new Date();
-      const request = {
-        id: `TOWER-ACCESS-${Math.floor(100000 + Math.random() * 900000)}`,
-        sourceApp: "The Teller",
-        sourceLane: "manager",
-        requestedBy: "Manager Dashboard",
-        requestedAccess: "Tower Evidence Viewer",
-        reason: "Open Teller backup/evidence queue from manager dashboard.",
-        createdAt: now.toISOString(),
-        status: "Pending Tower clearance",
-      };
-
-      saveTowerAccessRequest(request);
-      window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
-      window.sessionStorage.removeItem("the_teller_tower_clearance_token_v1");
-      window.sessionStorage.setItem("the_teller_tower_access_request_v1", JSON.stringify(request));
-    } catch {
-      // session storage is optional
-    }
-
-    window.location.href = `${window.location.origin}${window.location.pathname}?teller_view=tower`;
-  }
+  setActivity((current) => [
+    {
+      id: `MGR-TOWER-${Math.floor(100000 + Math.random() * 900000)}`,
+      type: "tower",
+      title: "Tower review required",
+      body:
+        "Protected evidence must open through a Tower-issued handoff. Teller does not open Tower evidence directly.",
+      target: "The Tower",
+      createdAt: new Date().toISOString(),
+    },
+    ...current,
+  ].slice(0, 20));
+}
 
   function refreshBridgeData() {
     setSubmissions(readManagerSubmissions());

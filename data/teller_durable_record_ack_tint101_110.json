@@ -1,0 +1,42 @@
+{
+  "pack": "TINT101-TINT110",
+  "title": "Durable record acknowledgment and form draft preservation",
+  "parent": "a9b43effbfb8d4be06619379b6710738a8496a44",
+  "status": "source_candidate_pending_ci",
+  "finding": "App marked a record accepted and put it in session search before authenticated saveRecord resolved. An API failure left an apparently prepared record even though no durable acknowledgement existed; Forms closed the draft before awaiting the caller.",
+  "source_changes": [
+    "An authenticated record is displayed as durable only after matching API record_id acknowledgement.",
+    "Hosted Tower session without connected authenticated repository fails closed; it does not silently downgrade to session-only.",
+    "Forms waits for App acceptance, retains the draft and shows a retry message on denied or ambiguous save.",
+    "Duplicate in-flight record_id submissions are suppressed; validation and duplicate checks remain.",
+    "Late saves from a changed Tower actor/business cannot enter the new view.",
+    "Hydration reconciles accepted in-memory records so an old search response cannot erase a newly acknowledged save.",
+    "Session-only DEV mode remains distinct; hosted recovery cannot replace durable records from a browser snapshot."
+  ],
+  "verification": {
+    "pure_contract": "pending_github_actions",
+    "structural_form_gate": "pending_github_actions",
+    "historical_regressions": "pending_github_actions",
+    "vite_build": "pending_github_actions",
+    "hosted_record_write": "not_tested",
+    "tower_v2_hosted": "not_deployed"
+  },
+  "current_render_observation": {
+    "teller_api_live_source": "13b21ef5b39974c06857ca60bf8427fcf90435cc",
+    "teller_static_live_source": "1b24db502bbf170b11c081b20b49b5640417b2e8",
+    "tower_live_source": "1cfe40a385710c292f49ca2db20428605a1d5b43",
+    "checked": "2026-09-27",
+    "note": "Read-only Render inspection, no configuration or deployment changes"
+  },
+  "boundaries": {
+    "issuer": "Tower",
+    "database_access": "Teller API only",
+    "vault": "Tower-mediated only",
+    "bank_or_payroll_execution": false,
+    "direct_teller_vault": false,
+    "render_mutation": false,
+    "static_activation": false,
+    "new_paid_resources": false,
+    "signing_secret_in_browser": false
+  }
+}

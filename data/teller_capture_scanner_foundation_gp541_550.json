@@ -1,0 +1,53 @@
+{
+  "pack": "GP541-GP550",
+  "name": "Teller Capture / Scanner Foundation",
+  "parent": "d293b8e3eb8cfc34886db315dc549aaa0fc41dd4",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-15T15:31:24.461790+00:00",
+  "completed": {
+    "GP541": "capture document vocabulary and role-aware document types",
+    "GP542": "JPG/PNG/WEBP/PDF validation and 25 MB limit",
+    "GP543": "local SHA-256 fingerprint and session duplicate detection",
+    "GP544": "document classification contract with human review required",
+    "GP545": "replaceable OCR adapter boundary with no configured provider",
+    "GP546": "extraction field provenance model",
+    "GP547": "human verification gate before capture preparation",
+    "GP548": "role-safe capture-to-form suggestion boundary",
+    "GP549": "global Scan drawer with camera/image/PDF intake",
+    "GP550": "regression wall and evidence"
+  },
+  "capture_types": [
+    "invoice",
+    "receipt",
+    "employee_document",
+    "tax_document",
+    "vendor_document",
+    "payment_proof",
+    "other"
+  ],
+  "truth": {
+    "camera_file_selection": true,
+    "image_file_selection": true,
+    "pdf_file_selection": true,
+    "local_sha256_fingerprint": true,
+    "session_duplicate_detection": true,
+    "ocr_provider_connected": false,
+    "document_uploaded": false,
+    "raw_file_persisted": false,
+    "classification_auto_accepted": false,
+    "human_review_required": true,
+    "form_autofill_connected": false,
+    "production_persistence_connected": false,
+    "tower_api_connected": false,
+    "direct_vault_access": false
+  },
+  "next": {
+    "pack": "GP551-GP560",
+    "name": "Scanner \u2192 Form Autofill + Verification"
+  },
+  "authorization": {
+    "commit": false,
+    "push": false,
+    "deploy": false
+  }
+}

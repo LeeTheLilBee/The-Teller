@@ -1,0 +1,67 @@
+{
+  "contract_id": "teller-persistence-token-v1",
+  "owner_system": "The Teller",
+  "issuer_system": "The Tower",
+  "purpose": "Authorize a short-lived Teller persistence session without exposing PostgreSQL credentials to the browser.",
+  "token_format": {
+    "version": "tpt1",
+    "parts": [
+      "version",
+      "base64url-json-payload",
+      "hmac-sha256-signature"
+    ],
+    "signature": "HMAC-SHA256"
+  },
+  "issuer": "tower",
+  "audience": "teller-persistence",
+  "maximum_lifetime_seconds": 600,
+  "required_claims": [
+    "iss",
+    "aud",
+    "iat",
+    "exp",
+    "jti",
+    "tower_session_id",
+    "tower_receipt_id",
+    "actor_id",
+    "actor_role",
+    "business_key"
+  ],
+  "allowed_actor_roles": [
+    "employee",
+    "manager",
+    "owner"
+  ],
+  "authority_rules": {
+    "tower_decides_identity": true,
+    "tower_decides_role": true,
+    "tower_decides_business": true,
+    "tower_decides_session": true,
+    "teller_accepts_body_authority": false,
+    "browser_database_credentials": false,
+    "browser_signing_secret": false
+  },
+  "teller_environment": {
+    "shared_signing_secret": "TELLER_TOWER_TOKEN_SECRET",
+    "issuer": "TELLER_TRANSPORT_TOKEN_ISSUER",
+    "audience": "TELLER_TRANSPORT_TOKEN_AUDIENCE",
+    "max_lifetime": "TELLER_TRANSPORT_MAX_TOKEN_LIFETIME_SECONDS"
+  },
+  "tower_handoff": {
+    "tower_must_issue_token": true,
+    "tower_must_inject_into": "window.__TELLER_TOWER_SESSION__.persistence_access_token",
+    "tower_must_not_put_token_in_query_string": true,
+    "tower_must_not_put_token_in_local_storage": true,
+    "tower_must_not_put_token_in_session_storage": true,
+    "tower_must_rotate_or_reissue_on_session_change": true
+  },
+  "teller_behavior": {
+    "verify_signature": true,
+    "verify_issuer": true,
+    "verify_audience": true,
+    "verify_expiry": true,
+    "verify_maximum_lifetime": true,
+    "derive_database_scope_from_verified_claims": true,
+    "postgres_rls_is_second_authorization_wall": true
+  }
+}

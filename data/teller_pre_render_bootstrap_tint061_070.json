@@ -1,0 +1,71 @@
+{
+  "pack": "TINT061-TINT070",
+  "name": "Pre-Render Tower Launch Bootstrap + Explicit Exchange Versioning",
+  "lane": "real_integration",
+  "status": "sealed_source_verified",
+  "timestamp": "2026-09-24T14:01:06.653260+00:00",
+  "parent": "8eba601d137fac7c8e13f55a054c5bbf0cb4b772",
+  "exchange_versions": {
+    "historical_v1": "tower-teller-exchange.v1",
+    "persistence_v2": "tower-teller-exchange.v2",
+    "production_pre_render": "tower-teller-exchange.v2",
+    "v1_silently_redefined": false
+  },
+  "truth": {
+    "pre_render_tower_bootstrap": true,
+    "tower_exchange_before_react_mount": true,
+    "live_tower_session_before_react_mount": true,
+    "failed_bootstrap_prevents_react_mount": true,
+    "app_network_bootstrap_removed": true,
+    "exchange_v1_preserved": true,
+    "exchange_v2_explicit": true,
+    "production_pre_render_uses_v2": true,
+    "v1_response_to_v2_request_blocked": true,
+    "production_direct_open_blocked": true,
+    "development_ui_only_fallback": true,
+    "persistence_token_live_memory_only": true,
+    "persistence_token_query_parameter": false,
+    "persistence_token_url_fragment": false,
+    "persistence_token_local_storage": false,
+    "persistence_token_session_storage": false,
+    "persistence_token_history_state": false,
+    "persistence_token_react_state": false,
+    "persistence_token_logs": false,
+    "browser_database_credentials": false,
+    "browser_signing_secret": false,
+    "tower_source_modified": false,
+    "database_connection": false,
+    "database_write": false,
+    "render_mutation": false,
+    "static_site_activated": false,
+    "direct_vault": false,
+    "deployment": false
+  },
+  "supersedes": {
+    "tint051_app_bootstrap_location": "TINT051 placed hosted network bootstrap inside App.jsx. TINT061 moves startup orchestration before React mount.",
+    "tint051_secure_exchange": "preserved",
+    "tint051_memory_only_token": "preserved",
+    "tint051_destination_hardening": "preserved"
+  },
+  "acceptance": {
+    "pre_render_bootstrap_contract": "passed",
+    "pre_render_security_wall": "passed",
+    "tint051_low_level_exchange_contract": "passed",
+    "tint041_050_persistence_gate": "passed",
+    "tint031_040_hosted_api": "passed",
+    "tint021_030_authenticated_transport": "passed",
+    "tint001_010_foundation": "passed",
+    "production_vite_build": "passed"
+  },
+  "next_gate": "Seal TINT061-TINT070 and return the explicit tower-teller-exchange.v2 contract to Tower. Tower must implement and prove v2 before Teller static activation.",
+  "sealed_at": "2026-09-24T14:04:18.511916+00:00",
+  "authorization": {
+    "commit": true,
+    "push": true,
+    "tower_change": false,
+    "database_write": false,
+    "render_change": false,
+    "static_site_activation": false,
+    "deploy": false
+  }
+}

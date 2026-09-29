@@ -12,7 +12,6 @@ import {
 import { readManagerSubmissions, saveManagerReturnItem, saveManagerSubmission, createBridgeId } from "./managerOwnerBridge";
 import "./ownerMoneyWorkspace.css";
 
-import { saveTowerAccessRequest } from "./towerBackupPlugin";
 import OwnerEscalationDock from "./OwnerEscalationDock.jsx";
 import FinalReceiptViewer from "./FinalReceiptViewer.jsx";
 function statusLabel(status = "") {
@@ -76,15 +75,20 @@ function makeTowerReceiptCopy(ownerReceipt) {
     target: ownerReceipt.target,
     business: ownerReceipt.business,
     createdAt: ownerReceipt.createdAt,
-    status: "Queued for Tower",
+
+    status: "Waiting for Tower transport",
+
     reason: ownerReceipt.tower
-      ? "Protected or Tower-routed owner action."
-      : "Owner money action receipt copied to The Tower for audit trail.",
+      ? "Protected action requires Tower review."
+      : "Owner workflow receipt requires Tower-safe handoff.",
+
     decision: ownerReceipt.decision,
     decisionReason: ownerReceipt.decisionReason,
     decisionNote: ownerReceipt.decisionNote,
     proofReviewed: ownerReceipt.proofReviewed,
-    deliveryMode: "local_handoff_until_tower_api",
+
+    deliveryMode: "teller_request_waiting_for_tower_transport",
+    transportConnected: false,
   };
 }
 
@@ -234,67 +238,56 @@ function businessSpecificCopy(activeBusiness) {
     simpleepay: {
       title: "SimpleePay money workspace",
       subtitle: "Payroll readiness, worker pay, proof packets, tax/payment records, and employee-change money risk.",
-      focusTitle: "Payroll cannot move casually.",
-      focusBody: "Before payroll sends, The Teller checks worker changes, pay-cycle readiness, funding, proof packets, and whether anything needs Tower review.",
-      leftLabel: "Payroll pressure",
-      leftValue: "$4.8k",
-      middleLabel: "Records needing review",
-      middleValue: "3",
-      rightLabel: "Proof packet status",
-      rightValue: "Waiting",
+      focusTitle: "Payroll needs a clean real source.",
+      focusBody: "Live payroll totals and proof will appear when the production Teller money source is connected.",
     },
+
     mrktrade: {
       title: "MrkTrade protected paperwork workspace",
-      subtitle: "Only vague financial paperwork, receipts, proof health, deposits, expenses, and Tower handoff prep. No OB doorway.",
+      subtitle: "Financial paperwork, receipts, proof health, deposits, expenses, and Tower handoff preparation only.",
       focusTitle: "Protected details stay behind The Tower.",
-      focusBody: "The Teller can organize MrkTrade’s money paperwork, but trading, broker, engine, signals, OB, and protected details must open through The Tower.",
-      leftLabel: "Protected snapshot",
-      leftValue: "$50.0k",
-      middleLabel: "Paperwork packet",
-      middleValue: "$3.1k",
-      rightLabel: "Access route",
-      rightValue: "Tower",
+      focusBody: "Teller organizes money paperwork. Trading, broker, signals, and Observatory details do not open here.",
       protected: true,
     },
+
     skincare: {
       title: "SimpleeSkincare money workspace",
-      subtitle: "Sales, fees, refunds, shipping spend, costs, deposits, and proof records only.",
-      focusTitle: "Beauty money needs clean separation.",
-      focusBody: "The Teller separates sales from costs, fees, refunds, shipping spend, deposits, and proof so the business money view does not lie to you.",
-      leftLabel: "Sales snapshot",
-      leftValue: "$2.6k",
-      middleLabel: "Costs to review",
-      middleValue: "$740",
-      rightLabel: "Proof records",
-      rightValue: "5",
+      subtitle: "Sales, fees, refunds, shipping spend, costs, deposits, and proof records.",
+      focusTitle: "Business money needs a real source.",
+      focusBody: "Live skincare money will appear when a production source is connected.",
     },
+
     onthego: {
       title: "SimpleeOnTheGo route money workspace",
       subtitle: "Route revenue, location fees, cash movement, machine costs, worker pay, and route proof.",
-      focusTitle: "Route money needs receipts and movement records.",
-      focusBody: "The Teller keeps revenue, location fees, machine costs, cash needs, and proof tied together before the route looks clean.",
-      leftLabel: "Route revenue",
-      leftValue: "$8.1k",
-      middleLabel: "Missing proof",
-      middleValue: "1",
-      rightLabel: "Cash movement",
-      rightValue: "Track",
+      focusTitle: "Route money needs real records.",
+      focusBody: "Live route totals and proof will appear when a production source is connected.",
     },
+
     property: {
-      title: "SimpleeProperty money workspace",
+      title: "The Grounds money workspace",
       subtitle: "Income, vendor bills, reserves, repairs, taxes, insurance, acquisition costs, and property paperwork.",
-      focusTitle: "Property money should not blur together.",
-      focusBody: "The Teller separates income, bills, reserves, repairs, insurance, taxes, and paperwork before anything looks like profit.",
-      leftLabel: "Income tracked",
-      leftValue: "$12.4k",
-      middleLabel: "Vendor bills",
-      middleValue: "3",
-      rightLabel: "Reserve check",
-      rightValue: "$850",
+      focusTitle: "Property money stays separated.",
+      focusBody: "Live property money will appear when a production source is connected.",
     },
   };
 
-  return map[activeBusiness] || map.simpleepay;
+  const selected =
+    map[activeBusiness] ||
+    map.simpleepay;
+
+  return {
+    ...selected,
+
+    leftLabel: "Live money",
+    leftValue: "No live data",
+
+    middleLabel: "Open records",
+    middleValue: "No live data",
+
+    rightLabel: "Proof status",
+    rightValue: "No live data",
+  };
 }
 
 function OwnerFlowGuide({ activeBusiness, pendingAction, receipts }) {
@@ -531,9 +524,9 @@ function getEvidenceSlots(card) {
     },
     {
       key: "archive-vault",
-      label: "Archive Vault placeholder",
+      label: "Protected archive proof",
       status: "queued",
-      detail: "Later this evidence slot should connect to Archive Vault storage.",
+      detail: "Archive proof is requested through The Tower when required.",
     },
   ];
 
@@ -1451,7 +1444,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Paperwork packet",
           title: "Financial packet needs Tower review",
           detail: "The Teller can prepare the packet, but protected details must be opened by The Tower.",
-          money: "$3.1k",
+          money: "No live data",
           status: "Tower required",
           risk: "High",
           proof: "Protected packet",
@@ -1480,7 +1473,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Sales card",
           title: "Sales batch needs deposit match",
           detail: "Compare expected sales to deposit amount before showing net.",
-          money: "$2.6k",
+          money: "No live data",
           status: "Needs review",
           risk: "Medium",
           proof: "Sales report",
@@ -1520,7 +1513,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Cash movement",
           title: "Route cash movement needs proof",
           detail: "Cash movement should not be counted clean until route proof is attached.",
-          money: "$8.1k",
+          money: "No live data",
           status: "Needs proof",
           risk: "High",
           proof: "Route receipt",
@@ -1560,7 +1553,7 @@ function getReviewDeskData(activeBusiness) {
           label: "Reserve impact",
           title: "Repair may hit reserves",
           detail: "Review reserve impact before paying the repair bill.",
-          money: "$850",
+          money: "No live data",
           status: "Needs review",
           risk: "Medium",
           proof: "Repair estimate",
@@ -1919,11 +1912,7 @@ function OwnerReviewDesk({ activeBusiness, lane, onAction, onAutoReceipt, review
   };
 
   return (
-    <section
-      id="teller-owner-payroll-review"
-      className="fb-review-desk"
-      style={{ "--review-color": lane.color }}
-    >
+    <section className="fb-review-desk" style={{ "--review-color": lane.color }}>
       <div className="fb-section-head">
         <div>
           <p className="fb-kicker">Big picture + small picture</p>
@@ -2164,51 +2153,7 @@ function SnapshotRibbon({ cards }) {
   );
 }
 
-function towerNavigationSourceLabel(
-  navigationContext
-) {
-  if (
-    navigationContext?.source_app
-    === "clouds"
-  ) {
-    return "The Clouds";
-  }
-
-  return "The Tower";
-}
-
-
-function towerNavigationDestinationLabel(
-  navigationContext
-) {
-  if (
-    navigationContext?.destination
-    === "payroll_review"
-  ) {
-    return "Payroll Review";
-  }
-
-  return "Owner Money Workspace";
-}
-
-
-function towerNavigationReturnLabel(
-  navigationContext
-) {
-  if (
-    navigationContext?.return_app
-    === "clouds"
-  ) {
-    return "The Clouds";
-  }
-
-  return "The Tower";
-}
-
-
-export default function OwnerMoneyWorkspace({
-  navigationContext = null,
-}) {
+export default function OwnerMoneyWorkspace() {
   const [themeKey, setThemeKey] = useState(ownerProfile.defaultTheme);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [calmMode, setCalmMode] = useState(false);
@@ -2226,121 +2171,6 @@ export default function OwnerMoneyWorkspace({
   const theme = getOwnerTheme(themeKey);
   const focus = useMemo(() => getTodayOwnerFocus(ownerMoneyQueue), []);
   const activeLane = ownerBusinessLanes.find((lane) => lane.key === activeBusiness) || ownerBusinessLanes[0];
-
-  /*
-   * Tower already authenticated and signed the crossing.
-   *
-   * Teller only maps an allowed destination token
-   * to a real Teller-owned UI surface.
-   */
-  React.useEffect(() => {
-    const destination =
-      String(
-        navigationContext?.destination
-        || ""
-      );
-
-    const itemId =
-      String(
-        navigationContext?.item_id
-        || ""
-      );
-
-    if (!destination) {
-      return undefined;
-    }
-
-    let targetId =
-      "teller-owner-money-workspace";
-
-    if (
-      destination
-      === "payroll_review"
-    ) {
-      /*
-       * Payroll Review belongs to SimpleePay.
-       */
-      setActiveBusiness(
-        "simpleepay"
-      );
-
-      /*
-       * Calm mode hides the Review Desk,
-       * so reveal the actual destination.
-       */
-      setCalmMode(
-        false
-      );
-
-      targetId =
-        "teller-owner-payroll-review";
-
-      /*
-       * Only resolve item_id automatically
-       * when it already matches a native Teller
-       * review-card key.
-       *
-       * Never guess external IDs.
-       */
-      if (itemId) {
-        const desk =
-          getReviewDeskData(
-            "simpleepay"
-          );
-
-        const card =
-          desk.cards.find(
-            (candidate) =>
-              candidate.key
-              === itemId
-          );
-
-        if (card) {
-          setSelectedReview({
-            deskTitle:
-              desk.title,
-
-            card,
-          });
-        }
-      }
-    }
-
-    const timer =
-      window.setTimeout(
-        () => {
-          const target =
-            document.getElementById(
-              targetId
-            );
-
-          if (
-            target &&
-            typeof target.scrollIntoView
-            === "function"
-          ) {
-            target.scrollIntoView({
-              behavior:
-                "smooth",
-
-              block:
-                "start",
-            });
-          }
-        },
-        0,
-      );
-
-    return () => {
-      window.clearTimeout(
-        timer
-      );
-    };
-  }, [
-    navigationContext?.correlation_id,
-    navigationContext?.destination,
-    navigationContext?.item_id,
-  ]);
 
   function refreshManagerBridgeSubmissions() {
     const bridgeSubmissions = readManagerSubmissions();
@@ -2368,29 +2198,17 @@ export default function OwnerMoneyWorkspace({
   }, []);
 
   function openTowerEvidence() {
-    try {
-      const now = new Date();
-      const request = {
-        id: `TOWER-ACCESS-${Math.floor(100000 + Math.random() * 900000)}`,
-        sourceApp: "The Teller",
-        sourceLane: "owner",
-        requestedBy: "Owner Dashboard",
-        requestedAccess: "Tower Evidence Viewer",
-        reason: "Open Teller backup/evidence queue from owner dashboard.",
-        createdAt: now.toISOString(),
-        status: "Pending Tower clearance",
-      };
-
-      saveTowerAccessRequest(request);
-      window.sessionStorage.removeItem("the_teller_tower_clearance_v1");
-      window.sessionStorage.removeItem("the_teller_tower_clearance_token_v1");
-      window.sessionStorage.setItem("the_teller_tower_access_request_v1", JSON.stringify(request));
-    } catch {
-      // session storage is optional
-    }
-
-    window.location.href = `${window.location.origin}${window.location.pathname}?teller_view=tower`;
-  }
+  setPendingAction({
+    label: "Tower review required",
+    business: "The Tower",
+    target: "Protected evidence",
+    description:
+      "Protected evidence must open through a Tower-issued handoff. Teller does not open Tower evidence directly.",
+    money: false,
+    proof: true,
+    tower: true,
+  });
+}
 
   function openAction(action) {
     setPendingAction(action);
@@ -2566,7 +2384,6 @@ export default function OwnerMoneyWorkspace({
 
   return (
     <main
-      id="teller-owner-money-workspace"
       className={`focus-board ${calmMode ? "is-calm" : ""}`}
       style={{
         "--fb-bg": theme.bg,
@@ -2584,64 +2401,6 @@ export default function OwnerMoneyWorkspace({
     >
 <OwnerEscalationDock />
       <FinalReceiptViewer mode="owner" />
-
-      {navigationContext ? (
-        <section
-          className="fb-final-preview"
-          data-tower-source-app={
-            navigationContext.source_app
-          }
-          data-tower-destination={
-            navigationContext.destination
-          }
-          data-tower-return-app={
-            navigationContext.return_app
-          }
-          data-tower-correlation-id={
-            navigationContext.correlation_id
-          }
-        >
-          <div>
-            <p className="fb-kicker">
-              Opened through The Tower
-            </p>
-
-            <h2>
-              {towerNavigationSourceLabel(
-                navigationContext
-              )} brought you to{" "}
-              {towerNavigationDestinationLabel(
-                navigationContext
-              )}.
-            </h2>
-
-            <p>
-              The Teller is using the protected
-              destination that came with this
-              Tower handoff.
-            </p>
-
-            <div className="fb-badge-row">
-              <Badge tone="strong">
-                Tower verified
-              </Badge>
-
-              {navigationContext.item_id ? (
-                <Badge>
-                  Item context attached
-                </Badge>
-              ) : null}
-
-              <Badge>
-                Return path ·{" "}
-                {towerNavigationReturnLabel(
-                  navigationContext
-                )}
-              </Badge>
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       <div className="fb-tower-evidence-entry">
         <button type="button" onClick={openTowerEvidence}>

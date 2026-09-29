@@ -1,0 +1,62 @@
+{
+  "pack_id": "GP491-GP500",
+  "title": "TELLER \u2014 WORKFLOW-SAFE CLOSEOUT + SAVE",
+  "source_app": "teller",
+  "target_app": "tower",
+  "doctrine": {
+    "tower": "face and permission authority",
+    "teller": "workflow request source and workflow operator",
+    "vault": "sealed memory that answers Tower only",
+    "key_rule": "Teller can ask. Tower must decide. Vault only answers Tower."
+  },
+  "closed_corridor": [
+    {
+      "pack": "GP451-GP460",
+      "name": "ARCHIVE VAULT \u2014 TELLER TO TOWER REQUEST HANDOFF LAYER",
+      "status": "Teller creates structured request packets and stops there."
+    },
+    {
+      "pack": "GP461-GP470",
+      "name": "TELLER \u2014 TOWER REQUEST QUEUE + SAFE RESULT INTAKE",
+      "status": "Teller tracks queued/waiting/safe-result states without calling Tower or Vault."
+    },
+    {
+      "pack": "GP471-GP480",
+      "name": "TELLER \u2014 WORKFLOW-SAFE REQUEST STATUS WIRING",
+      "status": "Teller converts queue items into role-safe display status objects."
+    },
+    {
+      "pack": "GP481-GP490",
+      "name": "TELLER \u2014 WORKFLOW-SAFE STATUS DRAWER WIRING",
+      "status": "Reusable drawer component exists but remains unmounted from live pages."
+    }
+  ],
+  "locked_rules": [
+    "Teller can ask.",
+    "Tower must decide.",
+    "Vault only answers Tower.",
+    "Teller does not call Vault.",
+    "Teller does not call Tower directly in this corridor.",
+    "Teller does not display raw Vault links, raw files, preview URLs, download URLs, signed URLs, temporary URLs, public links, shared folders, Vault tokens, Vault secrets, Vault paths, or Vault object keys.",
+    "Teller displays workflow-safe results only.",
+    "No new visible UI is mounted to Employee, Manager, or Owner pages in this closeout."
+  ],
+  "ready_for_later": [
+    "Careful live UI mount behind a small drawer button",
+    "Clouds snapshot integration",
+    "Tower API adapter after Tower protocol closeout",
+    "Vault proof result display after Tower returns workflow-safe status"
+  ],
+  "not_built_here": [
+    "Tower API call",
+    "Vault API call",
+    "live page mount",
+    "direct preview",
+    "direct download",
+    "public sharing",
+    "shared folder access",
+    "raw file access"
+  ],
+  "status": "teller_workflow_safe_corridor_closed_ready_to_push",
+  "created_at_utc": "2026-08-14T15:39:41.565631+00:00"
+}

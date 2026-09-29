@@ -1,0 +1,84 @@
+name: Teller development regression
+
+on:
+  push:
+    branches:
+      - teller-tower-request-handoff-dev
+  pull_request:
+    branches:
+      - teller-tower-request-handoff-dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  teller-dev:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact Teller development head
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install locked JavaScript dependencies
+        run: npm ci
+
+      - name: Syntax checks
+        run: |
+          node --check src/teller/towerAccess.js
+          node --check src/teller/tellerPreRenderBootstrap.js
+          node --check src/teller/tellerRuntimeSession.js
+          node --check src/teller/persistence/tellerPersistenceTransport.js
+          node --check src/teller/records/tellerDurablePreparation.js
+          node --check src/teller/records/tellerRecordStorageTruth.js
+          node --check server/teller/readiness/tellerBuyBoxQuestionV1.js
+          node --check server/teller/transport/tellerReleaseIdentity.js
+
+      - name: Integration contracts
+        run: |
+          node tools/teller_persistence_contract_test_tint001_010.mjs
+          node tools/teller_hosted_browser_activation_contract_tint041_050.mjs
+          node tools/teller_hosted_bootstrap_contract_tint051_060.mjs
+          node tools/teller_pre_render_bootstrap_contract_tint061_070.mjs
+          node tools/teller_pre_render_bootstrap_security_tint071_080.mjs
+          node tools/teller_session_expiry_contract_tint091_100.mjs
+          node tools/teller_durable_preparation_contract_tint101_110.mjs
+          node tools/teller_records_truth_contract_tint111_120.mjs
+          node --test tests/tellerBuyBoxQuestionV1.test.mjs
+          node --test tests/tellerReleaseIdentity.test.mjs
+          node --test tests/tellerTowerConnectionManifest.test.mjs
+          node --test tests/tellerHostedActivationGates.test.mjs
+
+      - name: Structural and workflow regressions
+        run: |
+          python tools/teller_persistence_foundation_smoke_test_tint001_010.py
+          python tools/teller_authenticated_transport_smoke_test_tint021_030.py
+          python tools/teller_hosted_api_smoke_test_tint031_040.py
+          python tools/teller_hosted_browser_activation_smoke_test_tint041_050.py
+          python tools/teller_pre_render_bootstrap_smoke_test_tint061_070.py
+          python tools/teller_forms_durable_ack_smoke_tint101_110.py
+          python tools/teller_records_truth_smoke_tint111_120.py
+          python tools/teller_practical_use_certification_smoke_test_591_600.py
+          python tools/teller_production_validation_recovery_smoke_test_581_590.py
+          python tools/teller_production_records_search_smoke_test_571_580.py
+          python tools/teller_verified_scanner_autofill_smoke_test_551_560.py
+          python tools/teller_capture_scanner_smoke_test_541_550.py
+          python tools/teller_payroll_payment_intake_smoke_test_531_540.py
+          python tools/teller_people_employment_intake_smoke_test_521_530.py
+          python tools/teller_forms_engine_smoke_test_511_520.py
+
+      - name: Production build
+        run: npm run build

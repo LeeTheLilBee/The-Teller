@@ -1,0 +1,72 @@
+{
+  "pack": "TINT031-TINT040",
+  "name": "Hosted Persistence API + Tower Token Handoff Contract",
+  "parent": "d65bd271180ae6edfa27ea6209ac04a72424e07d",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-17T16:17:25.129152+00:00",
+  "repairs": [
+    {
+      "id": "TINT040-REPAIR-D",
+      "type": "verification",
+      "reason": "The hosted API smoke wall searched raw probe source for DATABASE_URL and matched an explanatory comment stating that the probe never accepts DATABASE_URL.",
+      "secondary_prevention": "The Teller-only Tower handoff is now verified semantically so the phrase 'does not implement or modify Tower' is not treated as Tower modification.",
+      "resolved": true
+    }
+  ],
+  "completed": {
+    "TINT031": "hosted Teller runtime configuration",
+    "TINT032": "hosted HTTPS-origin policy and 600-second token ceiling",
+    "TINT033": "liveness and database/auth readiness boundary",
+    "TINT034": "hosted persistence API runtime contract",
+    "TINT035": "Tower persistence-token handoff contract",
+    "TINT036": "Render staging deployment specification",
+    "TINT037": "secure browser hosted endpoint contract",
+    "TINT038": "hosted runtime and token-contract certification",
+    "TINT039": "post-deployment probe harness",
+    "TINT040": "comment-aware hosted probe regression wall, evidence, and handoff"
+  },
+  "truth": {
+    "hosted_runtime_source": true,
+    "https_origin_policy": true,
+    "token_lifetime_ceiling_600_seconds": true,
+    "tower_receipt_required": true,
+    "health_endpoint": true,
+    "readiness_endpoint": true,
+    "tower_handoff_contract": true,
+    "teller_modifies_tower": false,
+    "render_staging_spec": true,
+    "secure_browser_hosted_endpoint": true,
+    "post_deploy_probe": true,
+    "hosted_probe_database_url_access": false,
+    "database_credentials_in_browser": false,
+    "direct_vault": false,
+    "hosted_api_deployed": false,
+    "tower_token_issuer_connected": false,
+    "hosted_browser_persistence_active": false,
+    "static_site_redeployed": false,
+    "database_migration_performed": false,
+    "database_write_performed": false,
+    "money_movement": false
+  },
+  "render_target": {
+    "workspace": "Simplee World Staging",
+    "service_name": "simplee-teller-api-staging",
+    "region": "virginia",
+    "branch": "teller-tower-request-handoff-dev",
+    "auto_deploy": false,
+    "health_path": "/readyz"
+  },
+  "authorization": {
+    "commit": true,
+    "push": true,
+    "database_write": false,
+    "tower_change": false,
+    "deploy": false
+  },
+  "next": {
+    "step": "seal_and_push_then_create_render_staging_api",
+    "tower_work": "separate Tower-chat handoff"
+  },
+  "status": "sealed_source_verified",
+  "sealed_at": "2026-09-17T16:21:13.748139+00:00"
+}

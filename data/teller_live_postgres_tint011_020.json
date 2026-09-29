@@ -1,0 +1,60 @@
+{
+  "pack": "TINT011-TINT020",
+  "name": "Live Postgres Connection + Migration + Durability Proof",
+  "parent": "467f1ba87efef76e6cc18905027110a5884ce0c7",
+  "branch": "teller-tower-request-handoff-dev",
+  "timestamp_utc": "2026-09-17T15:08:01.965221+00:00",
+  "render": {
+    "workspace": "Simplee World Staging",
+    "postgres_id": "dpg-dalvmbrm8hqs73e90o80-a",
+    "postgres_name": "simplee-teller-postgres-staging",
+    "environment": "staging"
+  },
+  "proof": {
+    "proof_id": "f742980404314b7d99",
+    "record_id": "teller_live_proof_f742980404314b7d99",
+    "business_key": "simplee_world_staging",
+    "final_revision": 2,
+    "final_status": "approved",
+    "durable": true,
+    "idempotency": true,
+    "optimistic_conflict": true,
+    "cross_business_isolation": true
+  },
+  "completed": {
+    "TINT011": "live staging database configuration",
+    "TINT012": "real PostgreSQL health proof",
+    "TINT013": "migration 001 applied to live staging database",
+    "TINT014": "live schema, forced RLS, policy, and index verification",
+    "TINT015": "real Teller record persisted",
+    "TINT016": "record survived full pool disconnect and fresh reconnect",
+    "TINT017": "live idempotent replay proved",
+    "TINT018": "live optimistic revision conflict proved",
+    "TINT019": "cross-business isolation proved against live database",
+    "TINT020": "third-connection durability certification and regression wall"
+  },
+  "truth": {
+    "production_database_connected": true,
+    "database_environment": "staging",
+    "production_migration_applied": true,
+    "durable_persistence_proven": true,
+    "reload_restart_storage_layer_proven": true,
+    "idempotency_live": true,
+    "revision_conflict_live": true,
+    "business_isolation_live": true,
+    "audit_history_live": true,
+    "browser_repository_activated": false,
+    "tower_transport_connected": false,
+    "direct_vault": false,
+    "money_movement": false,
+    "deployment": false
+  },
+  "authorization": {
+    "commit": true,
+    "push": true,
+    "additional_database_write": false,
+    "deploy": false
+  },
+  "status": "sealed_live_verified",
+  "sealed_at": "2026-09-17T15:18:19.213395+00:00"
+}

@@ -6,6 +6,7 @@ const json = (p) => JSON.parse(readFileSync(p, "utf8"));
 const origin = "https://simplee-tower-ob-tunv.onrender.com";
 const retired = "https://simplee-tower-ob.onrender.com";
 const spec = json("deploy/render/teller-static-secure-bootstrap-staging.json");
+const preRender = json("deploy/render/teller-static-pre-render-bootstrap-staging.json");
 const api = json("deploy/render/teller-api-staging.json");
 const doc = readFileSync("docs/teller/TELLER_TOWER_V2_SOURCE_CROSSING_TINT081_090.md", "utf8");
 
@@ -13,6 +14,11 @@ assert.equal(
   spec.future_build_environment.VITE_TOWER_TELLER_EXCHANGE_URL,
   origin + "/tower/teller/exchange",
 );
+assert.equal(
+  preRender.future_build_environment.VITE_TOWER_TELLER_EXCHANGE_URL,
+  origin + "/tower/teller/exchange",
+);
+assert.equal(preRender.current_truth.teller_static_site_activated, false);
 const allowed = api.public_runtime.TELLER_ALLOWED_ORIGINS.split(",").map(s => s.trim());
 assert.ok(allowed.includes("https://simplee-teller.onrender.com"));
 assert.ok(allowed.includes(origin));

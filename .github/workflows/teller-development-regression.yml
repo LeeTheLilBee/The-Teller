@@ -60,6 +60,7 @@ jobs:
           node --test tests/tellerBuyBoxQuestionV1.test.mjs
           node --test tests/tellerReleaseIdentity.test.mjs
           node --test tests/tellerTowerConnectionManifest.test.mjs
+          node --test tests/tellerHostedActivationGates.test.mjs
 
       - name: Structural and workflow regressions
         run: |

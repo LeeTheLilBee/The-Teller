@@ -40,7 +40,7 @@ Exchange:
 
 ## Teller browser build must configure
 
-- `VITE_TOWER_TELLER_EXCHANGE_URL` = HTTPS Tower `/tower/teller/exchange` URL.
+- `VITE_TOWER_TELLER_EXCHANGE_URL=https://simplee-tower-ob-tunv.onrender.com/tower/teller/exchange` (canonical promoted secondary Tower origin, as checked against Render on 2026-09-29).
 - `VITE_TELLER_PERSISTENCE_API_URL` = HTTPS Teller API base URL.
 
 ## Teller API must configure

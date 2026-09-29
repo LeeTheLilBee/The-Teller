@@ -2424,6 +2424,39 @@
         "development_regression": "pending",
         "production_build": "pending"
       }
+    },
+    "TINT131-TINT140": {
+      "name": "Canonical Tower-deploy source pin and hosted activation config gates",
+      "parent": "7a17e2f8c29254a1cb5381c9930645dc08c4e894",
+      "lane": "real_integration",
+      "status": "source_candidate_pending_ci",
+      "source_truth": {
+        "tower_deployed_commit_as_observed": "3db5fbc15f4a59c4ba1eeaf5bea32e8377f355c1",
+        "canonical_tower_origin": "https://simplee-tower-ob-tunv.onrender.com",
+        "teller_api_source_deployed": "13b21ef5b39974c06857ca60bf8427fcf90435cc",
+        "teller_static_source_deployed": "1b24db502bbf170b11c081b20b49b5640417b2e8",
+        "hosted_browser_api_crossing_proven": false,
+        "render_mutation": false,
+        "static_activation": false,
+        "payroll_execution": false,
+        "payment_execution": false
+      },
+      "files": [
+        "deploy/render/teller-static-pre-render-bootstrap-staging.json",
+        "docs/teller/TELLER_TOWER_CONNECTION_HANDOFF_20260928.md",
+        "tests/teller_secondary_tower_origin_contract.mjs",
+        ".github/workflows/teller-tower-v2-crossrepo-proof.yml",
+        ".github/workflows/teller-development-regression.yml",
+        "tests/tellerHostedActivationGates.test.mjs",
+        "docs/teller/TELLER_HOSTED_ACTIVATION_GATES_TINT131_140.md",
+        "checkpoint_manifest.json"
+      ],
+      "acceptance": {
+        "configuration_contract": "pending_ci",
+        "tower_issuer_crossrepo_proof": "pending_ci",
+        "full_regression": "pending_ci",
+        "hosted_activation": "not_performed"
+      }
     }
   },
   "050C_REPAIR_PRIMARY_VIEW": {
